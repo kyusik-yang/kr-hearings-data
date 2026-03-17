@@ -1,0 +1,2807 @@
+{
+  "timestamp": "2026-03-17T00:05:33.893845",
+  "summary": {
+    "WARN": 12,
+    "OK": 17,
+    "INFO": 27,
+    "ISSUE": 2
+  },
+  "total_checks": 58,
+  "findings": [
+    {
+      "phase": "1. Date Integrity (Full)",
+      "check_id": "date_parse_rate",
+      "severity": "WARN",
+      "title": "99.79% parsed, 18,238 unparsed",
+      "detail": null,
+      "data": {
+        "2001年 9月 14日(金)": 1701,
+        "2001年 9月 19日(水)": 1433,
+        "2001年 9月 27日(木)": 1344,
+        "2001年 9月 25日(火)": 1022,
+        "2001年 9月 24日(月)": 977,
+        "2001年 9月 21日(金)": 974,
+        "2001年 9月 18日(火)": 770,
+        "2001年 9月 28日(金)": 758,
+        "2001年 9月 11日(火)": 726,
+        "2002年 2月 7日(木)": 699
+      }
+    },
+    {
+      "phase": "1. Date Integrity (Full)",
+      "check_id": "date_term_alignment",
+      "severity": "OK",
+      "title": "All dates fall within expected term ranges (30-day buffer)",
+      "detail": null
+    },
+    {
+      "phase": "1. Date Integrity (Full)",
+      "check_id": "date_null_check",
+      "severity": "OK",
+      "title": "No null/empty dates",
+      "detail": null
+    },
+    {
+      "phase": "1. Date Integrity (Full)",
+      "check_id": "date_temporal_gaps",
+      "severity": "OK",
+      "title": "No gaps > 3 months in temporal coverage",
+      "detail": null
+    },
+    {
+      "phase": "1. Date Integrity (Full)",
+      "check_id": "date_term_summary",
+      "severity": "INFO",
+      "title": "Per-term date ranges",
+      "detail": null,
+      "data": [
+        {
+          "term": 16,
+          "n_speeches": 862071,
+          "n_meetings": 2412,
+          "date_min": "2000-06-19",
+          "date_max": "2004-05-19"
+        },
+        {
+          "term": 17,
+          "n_speeches": 1406339,
+          "n_meetings": 2819,
+          "date_min": "2004-07-06",
+          "date_max": "2008-05-21"
+        },
+        {
+          "term": 18,
+          "n_speeches": 1592670,
+          "n_meetings": 2433,
+          "date_min": "2008-08-27",
+          "date_max": "2012-05-02"
+        },
+        {
+          "term": 19,
+          "n_speeches": 1656426,
+          "n_meetings": 2289,
+          "date_min": "2012-07-10",
+          "date_max": "2016-05-17"
+        },
+        {
+          "term": 20,
+          "n_speeches": 1393316,
+          "n_meetings": 1974,
+          "date_min": "2016-06-15",
+          "date_max": "2020-05-20"
+        },
+        {
+          "term": 21,
+          "n_speeches": 1241216,
+          "n_meetings": 1966,
+          "date_min": "2020-06-16",
+          "date_max": "2024-05-21"
+        },
+        {
+          "term": 22,
+          "n_speeches": 426902,
+          "n_meetings": 506,
+          "date_min": "2024-06-11",
+          "date_max": "2024-12-31"
+        }
+      ]
+    },
+    {
+      "phase": "1. Date Integrity (Full)",
+      "check_id": "date_meeting_consistency",
+      "severity": "OK",
+      "title": "Each meeting has exactly one date",
+      "detail": null
+    },
+    {
+      "phase": "2. member_id & Speaker Identity Integrity",
+      "check_id": "mid_format",
+      "severity": "OK",
+      "title": "All 1,465 unique member_ids are numeric",
+      "detail": null
+    },
+    {
+      "phase": "2. member_id & Speaker Identity Integrity",
+      "check_id": "mid_name_consistency",
+      "severity": "ISSUE",
+      "title": "1113 member_ids map to multiple person_names",
+      "detail": null,
+      "data": {
+        "1008": [
+          "김영숙",
+          "김영숙 의원",
+          "대리 김영숙"
+        ],
+        "1012": [
+          "김영우",
+          "대리 김영우",
+          "반장 김영우",
+          "김영우 의원"
+        ],
+        "1016": [
+          "김영일",
+          "반장 김영일"
+        ],
+        "102": [
+          "대리 강성천",
+          "강성천",
+          "강성천 의원"
+        ],
+        "1034": [
+          "김영진",
+          "김영진 의원"
+        ],
+        "1042": [
+          "직무대리 김영진",
+          "대리 김영진",
+          "김영진"
+        ],
+        "1043": [
+          "김영춘",
+          "대리 김영춘",
+          "김영춘 의원"
+        ],
+        "1050": [
+          "직무대리 김영호",
+          "반장대리 김영호",
+          "김영호 의원",
+          "김영호",
+          "반장 김영호",
+          "대리 김영호"
+        ],
+        "1051": [
+          "반장 김영환",
+          "직무대리 김영환",
+          "대리 김영환",
+          "김영환 의원",
+          "김영환"
+        ],
+        "107": [
+          "강숙자",
+          "강숙자 의원"
+        ],
+        "1080": [
+          "반장 김용갑",
+          "반장대리 김용갑",
+          "김용갑",
+          "대리 김용갑"
+        ],
+        "1083": [
+          "대리 김용구",
+          "김용구 의원",
+          "김용구"
+        ],
+        "1084": [
+          "반장 김용균",
+          "대리 김용균",
+          "김용균",
+          "김용균 의원"
+        ],
+        "111": [
+          "대리 강승규",
+          "강승규"
+        ],
+        "1123": [
+          "김용태",
+          "김용태 의원",
+          "반장 김용태",
+          "대리 김용태",
+          "직무대리 김용태"
+        ],
+        "1127": [
+          "김용학",
+          "김용학 의원",
+          "대리 김용학"
+        ],
+        "113": [
+          "대리 강신성일",
+          "강신성일",
+          "강신성일 의원"
+        ],
+        "1144": [
+          "반장 김우남",
+          "김우남",
+          "김우남 의원",
+          "대리 김우남"
+        ],
+        "1160": [
+          "김운용",
+          "대리 김운용"
+        ],
+        "1172": [
+          "김원기 의원",
+          "김원기",
+          "반장대리 김원기"
+        ],
+        "1187": [
+          "김원웅 의원",
+          "반장 김원웅",
+          "반장대리 김원웅",
+          "김원웅"
+        ],
+        "120": [
+          "강용석",
+          "강용석 의원"
+        ],
+        "1200": [
+          "대리 김유정",
+          "반장대리 김유정",
+          "김유정"
+        ],
+        "1211": [
+          "김윤덕",
+          "김윤덕 의원",
+          "대리 김윤덕"
+        ],
+        "1215": [
+          "김윤식",
+          "김윤식 의원",
+          "대리 김윤식"
+        ],
+        "1229": [
+          "김을동",
+          "김을동 의원"
+        ],
+        "1278": [
+          "김일윤",
+          "김일윤 의원"
+        ],
+        "1289": [
+          "김장수 의원",
+          "김장수",
+          "대리 김장수"
+        ],
+        "129": [
+          "강운태 의원",
+          "강운태",
+          "대리 강운태"
+        ],
+        "1293": [
+          "김장실 의원",
+          "반장대리 김장실",
+          "김장실"
+        ]
+      }
+    },
+    {
+      "phase": "2. member_id & Speaker Identity Integrity",
+      "check_id": "name_mid_uniqueness",
+      "severity": "INFO",
+      "title": "281 names map to multiple member_ids (homonyms expected)",
+      "detail": null,
+      "data": {
+        "": [
+          "1700",
+          "334",
+          "3778",
+          "4205",
+          "436",
+          "4685",
+          "497",
+          "6355",
+          "6375",
+          "731",
+          "845"
+        ],
+        "강기윤": [
+          "16",
+          "7357"
+        ],
+        "강병원": [
+          "58",
+          "7362"
+        ],
+        "강훈식": [
+          "176",
+          "7366"
+        ],
+        "고용진": [
+          "200",
+          "7369"
+        ],
+        "곽상도": [
+          "237",
+          "7370"
+        ],
+        "권성동": [
+          "316",
+          "7373"
+        ],
+        "권영세": [
+          "325",
+          "7374"
+        ],
+        "권은희": [
+          "346",
+          "348",
+          "7375"
+        ],
+        "권칠승": [
+          "370",
+          "7377"
+        ],
+        "기동민": [
+          "384",
+          "7378"
+        ],
+        "김경협": [
+          "410",
+          "7380"
+        ],
+        "김교흥": [
+          "452",
+          "7381"
+        ],
+        "김근태": [
+          "461",
+          "464"
+        ],
+        "김기현": [
+          "503",
+          "7382"
+        ],
+        "김도읍": [
+          "563",
+          "7384"
+        ],
+        "김두관": [
+          "611",
+          "7385"
+        ],
+        "김문수": [
+          "664",
+          "9083"
+        ],
+        "김문수 의원": [
+          "664",
+          "9083"
+        ],
+        "김민기": [
+          "674",
+          "7387"
+        ]
+      }
+    },
+    {
+      "phase": "2. member_id & Speaker Identity Integrity",
+      "check_id": "name_extraction_accuracy",
+      "severity": "OK",
+      "title": "All 2000 sampled person_names found in speaker field",
+      "detail": null
+    },
+    {
+      "phase": "2. member_id & Speaker Identity Integrity",
+      "check_id": "empty_person_name_detail",
+      "severity": "WARN",
+      "title": "25 rows with empty person_name",
+      "detail": null,
+      "data": {
+        "산업통상자원부 제1차관": 6,
+        "김부겸 위원장": 5,
+        "김한길 위원장": 3,
+        "김기춘 위원장": 1,
+        "유용태 위원장": 1,
+        "최재승 위원장": 1,
+        "김광원 위원장": 1,
+        "권오을 위원장": 1,
+        "이미경 위원장": 1,
+        "김낙연 위원장": 1,
+        "최인기 위원장": 1,
+        "여성가족부 장관": 1,
+        "이재선 위원장": 1,
+        "김성순 위원장": 1
+      }
+    },
+    {
+      "phase": "2. member_id & Speaker Identity Integrity",
+      "check_id": "legislator_cross_term",
+      "severity": "INFO",
+      "title": "525 legislators span multiple terms, 940 single-term, max terms: 5",
+      "detail": null,
+      "data": {
+        "term_span_distribution": {
+          "1": "940",
+          "2": "358",
+          "3": "110",
+          "4": "47",
+          "5": "10"
+        },
+        "total_unique_legislators": 1465
+      }
+    },
+    {
+      "phase": "2. member_id & Speaker Identity Integrity",
+      "check_id": "mid_role_consistency",
+      "severity": "OK",
+      "title": "All member_ids only have legislator/chair roles",
+      "detail": null
+    },
+    {
+      "phase": "3. Role Classification Deep Audit",
+      "check_id": "other_role_analysis",
+      "severity": "WARN",
+      "title": "26,461 speeches classified as 'other'",
+      "detail": "Top 50 speakers listed. 44 potentially reclassifiable.",
+      "data": {
+        "top_50_speakers": {
+          "국민연금공단기금이사 홍완선": 373,
+          "국립국악고등학교서무부 김기강": 255,
+          "방송위원회상임위원 강동순": 252,
+          "국민연금공단기금이사 김선정": 243,
+          "국가교육위원회상임위원 정대화": 231,
+          "한국농촌공사농지규모화팀 김영심": 208,
+          "육군사관학교장 권영호": 189,
+          "국민연금관리공단기금이사 김선영": 185,
+          "국민연금관리공단기금이사 조국준": 181,
+          "국립영상간행물제작소장 고석만": 179,
+          "국민건강보험공단업무상임이사 강암구": 168,
+          "공군사관학교장 이영만": 162,
+          "환경관리공단전무이사 김덕치": 162,
+          "양형위원회상임위원 김광태": 157,
+          "신용보증기금전무이사 손용문": 153,
+          "방송위원회상임위원 성유보": 150,
+          "예금보험공사전무이사 이형택": 146,
+          "국립생물자원관장 박종욱": 144,
+          "경주시청트라이애슬론선수단감독 김규봉": 140,
+          "국립대학법인서울대학교의과대학교수 이윤성": 139,
+          "대한석탄공사기획이사 김권식": 133,
+          "방송위원회상임위원 양휘부": 125,
+          "식품의약품안전청안전평가관 송인상": 123,
+          "금강홍수통제소장 이호상": 121,
+          "근로복지공단보험관리이사 양정의": 118,
+          "농수산물유통공사관리이사 하창정": 107,
+          "한국마사회상임감사 서규용": 105,
+          "국민연금공단기금이사 이찬우": 104,
+          "국립생물자원관장 김종천": 103,
+          "농림수산식품부어업자원관 손재학": 102,
+          "국민연금공단기금이사 안효준": 102,
+          "한국수출입은행전무이사 홍영표": 99,
+          "노사정위원회상임위원 김원배": 99,
+          "한국보훈복지의료공단기획이사 장성진": 96,
+          "환경관리공단전무이사 박명술": 91,
+          "용인소방서이동119안전센터 서헌식": 91,
+          "통신위원회상임위원 김인식": 90,
+          "근로복지공단감사 김재기": 89,
+          "국립공원관리공단운영이사 정진동": 87,
+          "환경관리공단사업이사 이구영": 84,
+          "국립생물자원관장 안연순": 83,
+          "노사정위원회상임위원 안영수": 82,
+          "한국기초과학지원연구원(부설)핵융합연구센터소장 신재인": 81,
+          "한국농촌경제연구원환경자원연구부 김종인": 81,
+          "진실ㆍ화해를위한과거사정리위원회상임위원 김갑배": 81,
+          "한국고용정보원직업연구센터선임연구위원 황기돈": 79,
+          "노동부노사협력관 서만식": 79,
+          "국민연금공단기획이사 류지형": 78,
+          "한국정책방송원방송보도부 조대익": 76,
+          "광주광역시서부교육청교육장 윤영월": 76
+        },
+        "reclassifiable": [
+          {
+            "speaker": "국민연금공단기금이사 홍완선",
+            "count": 373,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "국민연금공단기금이사 김선정",
+            "count": 243,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "국민연금관리공단기금이사 김선영",
+            "count": 185,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "국민연금관리공단기금이사 조국준",
+            "count": 181,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "국민건강보험공단업무상임이사 강암구",
+            "count": 168,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "환경관리공단전무이사 김덕치",
+            "count": 162,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "신용보증기금전무이사 손용문",
+            "count": 153,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "예금보험공사전무이사 이형택",
+            "count": 146,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "경주시청트라이애슬론선수단감독 김규봉",
+            "count": 140,
+            "suggested_role": "private_sector"
+          },
+          {
+            "speaker": "국립대학법인서울대학교의과대학교수 이윤성",
+            "count": 139,
+            "suggested_role": "expert_witness"
+          },
+          {
+            "speaker": "대한석탄공사기획이사 김권식",
+            "count": 133,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "근로복지공단보험관리이사 양정의",
+            "count": 118,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "농수산물유통공사관리이사 하창정",
+            "count": 107,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "국민연금공단기금이사 이찬우",
+            "count": 104,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "국민연금공단기금이사 안효준",
+            "count": 102,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "한국수출입은행전무이사 홍영표",
+            "count": 99,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "한국보훈복지의료공단기획이사 장성진",
+            "count": 96,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "환경관리공단전무이사 박명술",
+            "count": 91,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "국립공원관리공단운영이사 정진동",
+            "count": 87,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "환경관리공단사업이사 이구영",
+            "count": 84,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "국민연금공단기획이사 류지형",
+            "count": 78,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "국민연금공단기금이사 강면욱",
+            "count": 75,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "대한지방행정공제회관리이사 이종팔",
+            "count": 75,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "신용보증기금이사 조인제",
+            "count": 73,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "한국수출입은행전무이사 정문모",
+            "count": 67,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "국민연금공단업무이사 한수균",
+            "count": 65,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "서울올림픽기념국민체육진흥공단상무이사 김종완",
+            "count": 64,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "한국산업안전공단기술이사 이우봉",
+            "count": 63,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "국립오페라단예술감독 이소영",
+            "count": 62,
+            "suggested_role": "private_sector"
+          },
+          {
+            "speaker": "천원레일원이사 김순철",
+            "count": 61,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "한국산업인력공단기획운영이사 김동회",
+            "count": 61,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "한국농촌공사기반조성본부이사 류재헌",
+            "count": 60,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "한국자원재생공사사업이사 이치범",
+            "count": 60,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "공무원연금관리공단관리상임이사 김선영",
+            "count": 59,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "농수산물유통공사유통담당이사 김용한",
+            "count": 57,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "농수산물유통공사유통이사 장만진",
+            "count": 54,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "한국산업인력공단자격검정이사 박성수",
+            "count": 53,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "한국농촌공사유지관리본부이사 이종원",
+            "count": 53,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "대한주택공사사업이사 홍인의",
+            "count": 52,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "한국산업기술시험원선임비상임이사 오강현",
+            "count": 51,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "민주화운동기념사업회상임이사 나병식",
+            "count": 50,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "국립발레단예술감독 강수진",
+            "count": 49,
+            "suggested_role": "private_sector"
+          },
+          {
+            "speaker": "예금보험공사이사 김동일",
+            "count": 49,
+            "suggested_role": "org_head"
+          },
+          {
+            "speaker": "근로복지공단기획이사 남석현",
+            "count": 48,
+            "suggested_role": "org_head"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "3. Role Classification Deep Audit",
+      "check_id": "role_stability_nonleg",
+      "severity": "INFO",
+      "title": "5552 frequent non-legislator speakers have multiple roles",
+      "detail": "Expected for promotions (차관->장관), career changes, or homonyms",
+      "data": {
+        "감신": {
+          "roles": [
+            "public_corp_head",
+            "witness"
+          ],
+          "count": 80
+        },
+        "강갑수": {
+          "roles": [
+            "senior_bureaucrat",
+            "testifier"
+          ],
+          "count": 46
+        },
+        "강경근": {
+          "roles": [
+            "expert_witness",
+            "nominee",
+            "testifier"
+          ],
+          "count": 548
+        },
+        "강경량": {
+          "roles": [
+            "agency_head",
+            "police",
+            "witness"
+          ],
+          "count": 376
+        },
+        "강경필": {
+          "roles": [
+            "other_official",
+            "public_corp_head",
+            "witness"
+          ],
+          "count": 165
+        },
+        "강경호": {
+          "roles": [
+            "broadcasting",
+            "org_head",
+            "public_corp_head",
+            "witness"
+          ],
+          "count": 709
+        },
+        "강경화": {
+          "roles": [
+            "mid_bureaucrat",
+            "minister",
+            "minister_nominee",
+            "other_official",
+            "senior_bureaucrat"
+          ],
+          "count": 8345
+        },
+        "강경환": {
+          "roles": [
+            "org_head",
+            "other_official",
+            "senior_bureaucrat"
+          ],
+          "count": 101
+        },
+        "강계두": {
+          "roles": [
+            "public_corp_head",
+            "senior_bureaucrat"
+          ],
+          "count": 161
+        },
+        "강광호": {
+          "roles": [
+            "public_corp_head",
+            "senior_bureaucrat"
+          ],
+          "count": 377
+        },
+        "강구영": {
+          "roles": [
+            "military",
+            "org_head"
+          ],
+          "count": 10
+        },
+        "강국현": {
+          "roles": [
+            "private_sector",
+            "witness"
+          ],
+          "count": 119
+        },
+        "강권석": {
+          "roles": [
+            "financial_regulator",
+            "public_corp_head"
+          ],
+          "count": 1080
+        },
+        "강금식": {
+          "roles": [
+            "independent_official",
+            "witness"
+          ],
+          "count": 299
+        },
+        "강기정": {
+          "roles": [
+            "local_gov_head",
+            "other_official"
+          ],
+          "count": 366
+        },
+        "강기중": {
+          "roles": [
+            "police",
+            "public_corp_head"
+          ],
+          "count": 45
+        },
+        "강기창": {
+          "roles": [
+            "public_corp_head",
+            "senior_bureaucrat"
+          ],
+          "count": 98
+        },
+        "강길부": {
+          "roles": [
+            "org_head",
+            "vice_minister"
+          ],
+          "count": 166
+        },
+        "강남일": {
+          "roles": [
+            "public_corp_head",
+            "senior_bureaucrat"
+          ],
+          "count": 74
+        },
+        "강남훈": {
+          "roles": [
+            "expert_witness",
+            "mid_bureaucrat",
+            "other_official",
+            "public_corp_head",
+            "testifier",
+            "witness"
+          ],
+          "count": 1279
+        },
+        "강달호": {
+          "roles": [
+            "testifier",
+            "witness"
+          ],
+          "count": 23
+        },
+        "강대석": {
+          "roles": [
+            "expert_witness",
+            "senior_bureaucrat"
+          ],
+          "count": 28
+        },
+        "강대성": {
+          "roles": [
+            "other_official",
+            "witness"
+          ],
+          "count": 95
+        },
+        "강대영": {
+          "roles": [
+            "public_corp_head",
+            "senior_bureaucrat",
+            "testifier"
+          ],
+          "count": 58
+        },
+        "강대일": {
+          "roles": [
+            "senior_bureaucrat",
+            "witness"
+          ],
+          "count": 104
+        },
+        "강대임": {
+          "roles": [
+            "org_head",
+            "other_official",
+            "testifier"
+          ],
+          "count": 39
+        },
+        "강대형": {
+          "roles": [
+            "independent_official",
+            "police",
+            "senior_bureaucrat"
+          ],
+          "count": 217
+        },
+        "강도태": {
+          "roles": [
+            "mid_bureaucrat",
+            "public_corp_head",
+            "senior_bureaucrat",
+            "vice_minister"
+          ],
+          "count": 611
+        },
+        "강도현": {
+          "roles": [
+            "broadcasting",
+            "senior_bureaucrat",
+            "vice_minister",
+            "witness"
+          ],
+          "count": 395
+        },
+        "강도형": {
+          "roles": [
+            "minister",
+            "minister_nominee",
+            "org_head",
+            "witness"
+          ],
+          "count": 2869
+        }
+      }
+    },
+    {
+      "phase": "3. Role Classification Deep Audit",
+      "check_id": "chair_ratio_per_term",
+      "severity": "OK",
+      "title": "Chair/legislator ratio is consistent across terms",
+      "detail": null,
+      "data": {
+        "16": 0.1619,
+        "17": 0.1566,
+        "18": 0.1493,
+        "19": 0.1537,
+        "20": 0.1717,
+        "21": 0.1836,
+        "22": 0.2165
+      }
+    },
+    {
+      "phase": "3. Role Classification Deep Audit",
+      "check_id": "role_by_hearing_type",
+      "severity": "INFO",
+      "title": "Role distribution by hearing type",
+      "detail": null,
+      "data": {
+        "minister": {
+          "audit_pct": 7.06,
+          "standing_pct": 13.73
+        },
+        "chair": {
+          "audit_pct": 7.31,
+          "standing_pct": 12.14
+        },
+        "committee_staff": {
+          "audit_pct": 0.02,
+          "standing_pct": 0.37
+        },
+        "witness": {
+          "audit_pct": 2.99,
+          "standing_pct": 1.05
+        },
+        "expert_witness": {
+          "audit_pct": 0.79,
+          "standing_pct": 0.3
+        }
+      }
+    },
+    {
+      "phase": "3. Role Classification Deep Audit",
+      "check_id": "minister_pattern_check",
+      "severity": "WARN",
+      "title": "Minister speaker patterns (sample of 2000)",
+      "detail": null,
+      "data": {
+        "patterns": {
+          "standard (부처장관 이름)": 1995,
+          "other_pattern": 5
+        },
+        "issues": [
+          "법무부장관직무대리 이창재",
+          "중소벤처기업부장관직무대리 최수규",
+          "중소벤처기업부장관직무대리 최수규",
+          "농림축산식품부장관직무대리 김현수",
+          "교육부장관직무대리 나승일"
+        ]
+      }
+    },
+    {
+      "phase": "4. Meeting-level Integrity (Exhaustive)",
+      "check_id": "meeting_order_gaps_full",
+      "severity": "WARN",
+      "title": "9/14,479 meetings have speech_order gaps",
+      "detail": null,
+      "data": [
+        {
+          "meeting_id": "29135",
+          "n_speeches": 708,
+          "n_missing": 4,
+          "n_extra": 4,
+          "order_range": "1-712"
+        },
+        {
+          "meeting_id": "33966",
+          "n_speeches": 924,
+          "n_missing": 1,
+          "n_extra": 1,
+          "order_range": "1-925"
+        },
+        {
+          "meeting_id": "34322",
+          "n_speeches": 14,
+          "n_missing": 8,
+          "n_extra": 8,
+          "order_range": "1-22"
+        },
+        {
+          "meeting_id": "34736",
+          "n_speeches": 17,
+          "n_missing": 4,
+          "n_extra": 4,
+          "order_range": "1-26"
+        },
+        {
+          "meeting_id": "34907",
+          "n_speeches": 5,
+          "n_missing": 1,
+          "n_extra": 1,
+          "order_range": "1-12"
+        },
+        {
+          "meeting_id": "35232",
+          "n_speeches": 1693,
+          "n_missing": 4,
+          "n_extra": 4,
+          "order_range": "1-1697"
+        },
+        {
+          "meeting_id": "38268",
+          "n_speeches": 112,
+          "n_missing": 1,
+          "n_extra": 1,
+          "order_range": "1-113"
+        },
+        {
+          "meeting_id": "43570",
+          "n_speeches": 1572,
+          "n_missing": 1,
+          "n_extra": 1,
+          "order_range": "1-1573"
+        },
+        {
+          "meeting_id": "49612",
+          "n_speeches": 46,
+          "n_missing": 1,
+          "n_extra": 1,
+          "order_range": "1-47"
+        }
+      ]
+    },
+    {
+      "phase": "4. Meeting-level Integrity (Exhaustive)",
+      "check_id": "single_speech_meetings",
+      "severity": "WARN",
+      "title": "11 meetings with only 1 speech",
+      "detail": null,
+      "data": {
+        "meeting_ids": [
+          "053027",
+          "29068",
+          "30083",
+          "32467",
+          "33035",
+          "38357",
+          "38391",
+          "41141",
+          "44327",
+          "47234",
+          "49357"
+        ]
+      }
+    },
+    {
+      "phase": "4. Meeting-level Integrity (Exhaustive)",
+      "check_id": "meeting_size_distribution",
+      "severity": "INFO",
+      "title": "Meeting size stats: median=406, max=4343, 9 outliers (>3372)",
+      "detail": null,
+      "data": {
+        "stats": {
+          "min": 1,
+          "q1": 108,
+          "median": 406,
+          "q3": 924,
+          "max": 4343,
+          "mean": 593.8,
+          "std": 591.8
+        },
+        "outliers": [
+          {
+            "meeting_id": "053930",
+            "size": 3735,
+            "term": 22,
+            "committee": "과학기술정보방송통신위원회"
+          },
+          {
+            "meeting_id": "053933",
+            "size": 3494,
+            "term": 22,
+            "committee": "과학기술정보방송통신위원회"
+          },
+          {
+            "meeting_id": "053973",
+            "size": 4091,
+            "term": 22,
+            "committee": "과학기술정보방송통신위원회"
+          },
+          {
+            "meeting_id": "054207",
+            "size": 3452,
+            "term": 22,
+            "committee": "교육위원회"
+          },
+          {
+            "meeting_id": "054225",
+            "size": 4065,
+            "term": 22,
+            "committee": "과학기술정보방송통신위원회"
+          },
+          {
+            "meeting_id": "054263",
+            "size": 4343,
+            "term": 22,
+            "committee": "국회운영위원회"
+          },
+          {
+            "meeting_id": "054406",
+            "size": 3438,
+            "term": 22,
+            "committee": "과학기술정보방송통신위원회"
+          },
+          {
+            "meeting_id": "054510",
+            "size": 3448,
+            "term": 22,
+            "committee": "과학기술정보방송통신위원회"
+          },
+          {
+            "meeting_id": "49375",
+            "size": 3421,
+            "term": 20,
+            "committee": "법제사법위원회"
+          }
+        ]
+      }
+    },
+    {
+      "phase": "4. Meeting-level Integrity (Exhaustive)",
+      "check_id": "meeting_metadata_consistency",
+      "severity": "OK",
+      "title": "All meetings have consistent term/committee/hearing_type",
+      "detail": null
+    },
+    {
+      "phase": "4. Meeting-level Integrity (Exhaustive)",
+      "check_id": "meeting_sidedness",
+      "severity": "INFO",
+      "title": "Both sides: 12,670, Leg only: 1,809, Non-leg only: 0",
+      "detail": null,
+      "data": {
+        "counts": {
+          "leg_only": 1809,
+          "nonleg_only": 0,
+          "both": 12670,
+          "neither": 0
+        },
+        "examples": {
+          "leg_only": [
+            "050009",
+            "050053",
+            "050054",
+            "050055",
+            "050056"
+          ],
+          "nonleg_only": []
+        }
+      }
+    },
+    {
+      "phase": "4. Meeting-level Integrity (Exhaustive)",
+      "check_id": "meetings_per_term",
+      "severity": "INFO",
+      "title": "Meeting counts per term",
+      "detail": null,
+      "data": {
+        "16": 2492,
+        "17": 2819,
+        "18": 2433,
+        "19": 2289,
+        "20": 1974,
+        "21": 1966,
+        "22": 506
+      }
+    },
+    {
+      "phase": "5. Text Quality Deep Dive",
+      "check_id": "text_encoding",
+      "severity": "OK",
+      "title": "No mojibake or encoding issues detected",
+      "detail": null
+    },
+    {
+      "phase": "5. Text Quality Deep Dive",
+      "check_id": "text_html_remnants",
+      "severity": "WARN",
+      "title": "1 speeches contain HTML/XML tags",
+      "detail": null,
+      "data": {
+        "examples": [
+          "또 하나, 李元昌 위원께서도 거론하셨고 金成鎬 위원께서도 얘기를 하셨는데 시민방송이 처음 개국될 때에 기존 방송국에 종사하는 사람들이 참 우려했습니다. 지금 마침 이 자료를 요구하려고 하던 차에 자료를 갖고 오셨으니까 살펴봤습니다마는 기존 방송에서 하고 있는 프로그램하고는 어떤 점으로 봐서 전혀 시청자하고는 분위기가 맞지 않는 그런 프로그램을 갖고 시민방송"
+        ]
+      }
+    },
+    {
+      "phase": "5. Text Quality Deep Dive",
+      "check_id": "text_length_by_role",
+      "severity": "INFO",
+      "title": "Text length statistics by role",
+      "detail": null,
+      "data": {
+        "agency_head": {
+          "mean": 76.4,
+          "median": 19.0,
+          "min": 1,
+          "max": 17871,
+          "count": 346804
+        },
+        "assembly_official": {
+          "mean": 73.7,
+          "median": 18.0,
+          "min": 2,
+          "max": 3827,
+          "count": 6064
+        },
+        "audit_official": {
+          "mean": 82.0,
+          "median": 25.0,
+          "min": 1,
+          "max": 27061,
+          "count": 25184
+        },
+        "broadcasting": {
+          "mean": 83.5,
+          "median": 21.0,
+          "min": 2,
+          "max": 6242,
+          "count": 2971
+        },
+        "chair": {
+          "mean": 110.5,
+          "median": 40.0,
+          "min": 1,
+          "max": 12308,
+          "count": 814226
+        },
+        "committee_staff": {
+          "mean": 1456.6,
+          "median": 530.0,
+          "min": 2,
+          "max": 22519,
+          "count": 14891
+        },
+        "constitutional_court": {
+          "mean": 79.7,
+          "median": 21.0,
+          "min": 1,
+          "max": 9633,
+          "count": 13771
+        },
+        "cooperative_head": {
+          "mean": 66.3,
+          "median": 17.0,
+          "min": 1,
+          "max": 7769,
+          "count": 15285
+        },
+        "cultural_institution_head": {
+          "mean": 86.0,
+          "median": 17.0,
+          "min": 2,
+          "max": 5047,
+          "count": 7191
+        },
+        "election_official": {
+          "mean": 80.2,
+          "median": 23.0,
+          "min": 2,
+          "max": 9718,
+          "count": 24787
+        },
+        "expert_witness": {
+          "mean": 119.4,
+          "median": 27.0,
+          "min": 1,
+          "max": 6751,
+          "count": 48880
+        },
+        "financial_regulator": {
+          "mean": 75.1,
+          "median": 23.0,
+          "min": 1,
+          "max": 9607,
+          "count": 21360
+        },
+        "independent_official": {
+          "mean": 74.7,
+          "median": 22.0,
+          "min": 1,
+          "max": 16437,
+          "count": 267569
+        },
+        "legislator": {
+          "mean": 166.9,
+          "median": 69.0,
+          "min": 1,
+          "max": 11816,
+          "count": 4126047
+        },
+        "local_gov_head": {
+          "mean": 90.6,
+          "median": 22.0,
+          "min": 0,
+          "max": 22341,
+          "count": 80218
+        },
+        "mid_bureaucrat": {
+          "mean": 70.6,
+          "median": 20.0,
+          "min": 1,
+          "max": 10592,
+          "count": 22642
+        },
+        "military": {
+          "mean": 64.5,
+          "median": 20.0,
+          "min": 1,
+          "max": 9586,
+          "count": 42522
+        },
+        "minister": {
+          "mean": 84.1,
+          "median": 26.0,
+          "min": 1,
+          "max": 27548,
+          "count": 863826
+        },
+        "minister_acting": {
+          "mean": 57.1,
+          "median": 20.0,
+          "min": 2,
+          "max": 9045,
+          "count": 10567
+        },
+        "minister_nominee": {
+          "mean": 65.7,
+          "median": 21.0,
+          "min": 1,
+          "max": 4468,
+          "count": 122090
+        },
+        "nominee": {
+          "mean": 56.7,
+          "median": 20.0,
+          "min": 1,
+          "max": 4653,
+          "count": 75379
+        },
+        "org_head": {
+          "mean": 84.0,
+          "median": 17.0,
+          "min": 1,
+          "max": 19249,
+          "count": 220339
+        },
+        "other": {
+          "mean": 73.8,
+          "median": 20.0,
+          "min": 1,
+          "max": 13134,
+          "count": 26461
+        },
+        "other_official": {
+          "mean": 86.5,
+          "median": 22.0,
+          "min": 1,
+          "max": 18901,
+          "count": 109130
+        },
+        "police": {
+          "mean": 86.4,
+          "median": 19.0,
+          "min": 1,
+          "max": 9339,
+          "count": 9647
+        },
+        "prime_minister": {
+          "mean": 68.3,
+          "median": 23.0,
+          "min": 1,
+          "max": 10066,
+          "count": 10910
+        },
+        "private_sector": {
+          "mean": 73.2,
+          "median": 18.0,
+          "min": 1,
+          "max": 6489,
+          "count": 2749
+        },
+        "public_corp_head": {
+          "mean": 73.4,
+          "median": 17.0,
+          "min": 1,
+          "max": 30607,
+          "count": 506367
+        },
+        "research_head": {
+          "mean": 85.7,
+          "median": 23.0,
+          "min": 1,
+          "max": 8030,
+          "count": 6654
+        },
+        "senior_bureaucrat": {
+          "mean": 117.7,
+          "median": 25.0,
+          "min": 1,
+          "max": 26368,
+          "count": 402193
+        },
+        "testifier": {
+          "mean": 392.5,
+          "median": 68.0,
+          "min": 1,
+          "max": 12190,
+          "count": 71664
+        },
+        "vice_minister": {
+          "mean": 79.2,
+          "median": 25.0,
+          "min": 1,
+          "max": 9958,
+          "count": 96235
+        },
+        "witness": {
+          "mean": 54.5,
+          "median": 21.0,
+          "min": 1,
+          "max": 5997,
+          "count": 182555
+        }
+      }
+    },
+    {
+      "phase": "5. Text Quality Deep Dive",
+      "check_id": "text_extreme_length",
+      "severity": "INFO",
+      "title": "99.9th percentile: 4563 chars, max: 30,607 chars, 8,590 texts above 99.9th pct",
+      "detail": null,
+      "data": {
+        "top_10_lengths": [
+          {
+            "meeting_id": "28918",
+            "speech_order": "476",
+            "role": "public_corp_head",
+            "text_len": 30607
+          },
+          {
+            "meeting_id": "29452",
+            "speech_order": "784",
+            "role": "minister",
+            "text_len": 27548
+          },
+          {
+            "meeting_id": "29458",
+            "speech_order": "113",
+            "role": "audit_official",
+            "text_len": 27061
+          },
+          {
+            "meeting_id": "29449",
+            "speech_order": "38",
+            "role": "senior_bureaucrat",
+            "text_len": 26368
+          },
+          {
+            "meeting_id": "29201",
+            "speech_order": "9",
+            "role": "committee_staff",
+            "text_len": 22519
+          },
+          {
+            "meeting_id": "28797",
+            "speech_order": "108",
+            "role": "local_gov_head",
+            "text_len": 22341
+          },
+          {
+            "meeting_id": "31675",
+            "speech_order": "37",
+            "role": "committee_staff",
+            "text_len": 22040
+          },
+          {
+            "meeting_id": "34414",
+            "speech_order": "46",
+            "role": "committee_staff",
+            "text_len": 20883
+          },
+          {
+            "meeting_id": "30770",
+            "speech_order": "46",
+            "role": "senior_bureaucrat",
+            "text_len": 20388
+          },
+          {
+            "meeting_id": "34141",
+            "speech_order": "325",
+            "role": "local_gov_head",
+            "text_len": 20284
+          }
+        ]
+      }
+    },
+    {
+      "phase": "5. Text Quality Deep Dive",
+      "check_id": "text_short_analysis",
+      "severity": "INFO",
+      "title": "1,467,751 texts under 10 chars",
+      "detail": null,
+      "data": {
+        "top_30_short_texts": {
+          "예.": 551268,
+          "예, 그렇습니다.": 154382,
+          "그렇습니다.": 83310,
+          "예, 알겠습니다.": 52969,
+          "이상입니다.": 41333,
+          "알겠습니다.": 38588,
+          "예, 맞습니다.": 27182,
+          "……": 16535,
+          "감사합니다.": 16424,
+          "맞습니다.": 10914,
+          "예?": 8583,
+          "마치겠습니다.": 7166,
+          "그렇지요?": 6674,
+          "아닙니다.": 6613,
+          "예, 있습니다.": 6592,
+          "수고하셨습니다.": 6579,
+          "잘 알겠습니다.": 6471,
+          "없습니다.": 6161,
+          "위원장님!": 6115,
+          "고맙습니다.": 4968,
+          "알고 있습니다.": 4442,
+          "예, 감사합니다.": 4437,
+          "그렇지요.": 4348,
+          "예, 동의합니다.": 4235,
+          "그렇지 않습니다.": 4064,
+          "죄송합니다.": 3826,
+          "그렇습니까?": 2894,
+          "있습니다.": 2400,
+          "그래요?": 1884,
+          "예, 봤습니다.": 1879
+        },
+        "by_role": {
+          "agency_head": 116418,
+          "assembly_official": 2141,
+          "audit_official": 6472,
+          "broadcasting": 795,
+          "chair": 80323,
+          "committee_staff": 1733,
+          "constitutional_court": 4348,
+          "cooperative_head": 5194,
+          "cultural_institution_head": 2588,
+          "election_official": 7648,
+          "expert_witness": 14834,
+          "financial_regulator": 5935,
+          "independent_official": 80674,
+          "legislator": 282417,
+          "local_gov_head": 24669,
+          "mid_bureaucrat": 6933,
+          "military": 14004,
+          "minister": 234310,
+          "minister_acting": 3206,
+          "minister_nominee": 37068,
+          "nominee": 24050,
+          "org_head": 78345,
+          "other": 8063,
+          "other_official": 32094,
+          "police": 3024,
+          "prime_minister": 2899,
+          "private_sector": 920,
+          "public_corp_head": 178600,
+          "research_head": 1987,
+          "senior_bureaucrat": 111105,
+          "testifier": 14541,
+          "vice_minister": 26642,
+          "witness": 53771
+        }
+      }
+    },
+    {
+      "phase": "5. Text Quality Deep Dive",
+      "check_id": "text_intra_meeting_dups",
+      "severity": "WARN",
+      "title": "2,323 meetings have duplicate texts (>30 chars)",
+      "detail": null,
+      "data": [
+        {
+          "meeting_id": "050035",
+          "n_dup_texts": 1,
+          "examples": [
+            "강은미 위원님 수고하셨습니다. 다음은 양이원영 위원님 질의하시겠습니다."
+          ]
+        },
+        {
+          "meeting_id": "050044",
+          "n_dup_texts": 1,
+          "examples": [
+            "양경숙 위원님 수고하셨습니다. 이어서 양향자 위원님 질의하시겠습니다."
+          ]
+        },
+        {
+          "meeting_id": "050061",
+          "n_dup_texts": 3,
+          "examples": [
+            "임호선 위원님 수고하셨습니다. 다음은 더불어민주당의 김민석 위원님 질의해 주십시오.",
+            "이형석 위원님 수고하셨습니다. 다음은 미래통합당의 최춘식 위원님 질의해 주십시오.",
+            "박재호 위원님 수고하셨습니다. 다음은 미래통합당의 박완수 위원님 질의해 주십시오."
+          ]
+        },
+        {
+          "meeting_id": "050062",
+          "n_dup_texts": 1,
+          "examples": [
+            "수고하셨습니다. 다음은 황보승희 위원님 질의하시겠습니다."
+          ]
+        },
+        {
+          "meeting_id": "050069",
+          "n_dup_texts": 1,
+          "examples": [
+            "육상훈련 도중에 앞길을 가로막는다는 이유로 뒤통수를 한 대 가격했습니다."
+          ]
+        },
+        {
+          "meeting_id": "050080",
+          "n_dup_texts": 1,
+          "examples": [
+            "강득구 위원님 수고하셨습니다. 다음은 김병욱 위원님 질의해 주십시오."
+          ]
+        },
+        {
+          "meeting_id": "050083",
+          "n_dup_texts": 1,
+          "examples": [
+            "수고하셨습니다. 다음은 양금희 위원님 질의해 주시기 바랍니다."
+          ]
+        },
+        {
+          "meeting_id": "050088",
+          "n_dup_texts": 2,
+          "examples": [
+            "수고하셨습니다. 다음은 황보승희 위원님 질의하시겠습니다."
+          ]
+        },
+        {
+          "meeting_id": "050089",
+          "n_dup_texts": 2,
+          "examples": [
+            "수고하셨습니다. 이어서 강원 속초시 인제․고성․양양군 출신 이양수 위원님 질의해 주시기 바랍니다.",
+            "김승남 위원님 수고하셨습니다. 이어서 경기 여주시양평군 출신 김선교 위원님 질의해 주시기 바랍니다."
+          ]
+        },
+        {
+          "meeting_id": "050090",
+          "n_dup_texts": 1,
+          "examples": [
+            "수고하셨습니다. 조응천 간사님, 질의해 주시기 바랍니다."
+          ]
+        }
+      ]
+    },
+    {
+      "phase": "5. Text Quality Deep Dive",
+      "check_id": "text_concat_artifacts",
+      "severity": "WARN",
+      "title": "Double spaces: 2,212,107 (25.73%), Leading spaces: 0 (0.00%)",
+      "detail": null
+    },
+    {
+      "phase": "5. Text Quality Deep Dive",
+      "check_id": "text_language_check",
+      "severity": "OK",
+      "title": "All sampled texts contain substantial Korean content",
+      "detail": null
+    },
+    {
+      "phase": "6. Committee Harmonization Deep Check",
+      "check_id": "committee_full_mapping",
+      "severity": "INFO",
+      "title": "94 unique (raw, key) pairs across 20 keys",
+      "detail": null,
+      "data": {
+        "land_transport": {
+          "건설교통위원회": 167381,
+          "건설교통위원회-제1반": 1525,
+          "건설교통위원회-제2반": 1835,
+          "국토교통위원회": 307131,
+          "국토교통위원회-제1반": 8094,
+          "국토교통위원회-제2반": 7284,
+          "국토해양위원회": 150685
+        },
+        "science_ict": {
+          "과학기술정보방송통신위원회": 247616,
+          "과학기술정보방송통신위원회-제2반": 1518,
+          "과학기술정보통신위원회": 128311,
+          "미래창조과학방송통신위원회": 122852
+        },
+        "education_science": {
+          "교육과학기술위원회": 136746,
+          "교육과학기술위원회-제1반": 16642,
+          "교육과학기술위원회-제2반": 16935
+        },
+        "education_culture": {
+          "교육문화체육관광위원회": 196663,
+          "교육문화체육관광위원회-제1반": 9512,
+          "교육문화체육관광위원회-제2반": 7866
+        },
+        "education": {
+          "교육위원회": 209540,
+          "교육위원회-제1반": 19094,
+          "교육위원회-제2반": 19205
+        },
+        "defense": {
+          "국방위원회": 436997,
+          "국방위원회-제1반": 274,
+          "국방위원회-제2반": 9
+        },
+        "assembly_operations": {
+          "국회운영위원회": 213696
+        },
+        "finance": {
+          "기획재정위원회": 376414,
+          "기획재정위원회-제1반": 14303,
+          "기획재정위원회-제2반": 10335,
+          "재정경제위원회": 187955,
+          "재정경제위원회-제1반": 1717,
+          "재정경제위원회-제2반": 1269,
+          "재정경제위원회-제3반": 617
+        },
+        "agriculture": {
+          "농림수산식품위원회": 139489,
+          "농림축산식품해양수산위원회": 316349,
+          "농림해양수산위원회": 138273,
+          "농림해양수산위원회-제1반": 1300,
+          "농림해양수산위원회-제2반": 1556
+        },
+        "culture": {
+          "문화관광위원회": 197101,
+          "문화관광위원회-제1반": 1177,
+          "문화관광위원회-제2반": 668,
+          "문화체육관광위원회": 110495
+        },
+        "culture_media": {
+          "문화체육관광방송통신위원회": 188891
+        },
+        "judiciary": {
+          "법제사법위원회": 846752,
+          "법제사법위원회-제1반": 4698,
+          "법제사법위원회-제2반": 4633
+        },
+        "health_welfare": {
+          "보건복지가족위원회": 40996,
+          "보건복지위원회": 498467
+        },
+        "industry": {
+          "산업자원위원회": 141429,
+          "산업통상자원위원회": 126567,
+          "산업통상자원중소벤처기업위원회": 189307,
+          "지식경제위원회": 155420,
+          "지식경제위원회-제1반": 531,
+          "지식경제위원회-제2반": 631,
+          "지식경제위원회-제3반": 157
+        },
+        "public_admin": {
+          "안전행정위원회": 116784,
+          "안전행정위원회-제1반": 10759,
+          "안전행정위원회-제2반": 9373,
+          "행정안전위원회": 336182,
+          "행정안전위원회-제1반": 29842,
+          "행정안전위원회-제2반": 25135,
+          "행정자치위원회": 145965,
+          "행정자치위원회-제1반": 12443,
+          "행정자치위원회-제2반": 15664
+        },
+        "gender_family": {
+          "여성가족위원회": 81889,
+          "여성위원회": 18198
+        },
+        "foreign_affairs": {
+          "외교통상통일위원회": 109066,
+          "외교통상통일위원회-구주반": 6937,
+          "외교통상통일위원회-남미반": 816,
+          "외교통상통일위원회-미주1반": 772,
+          "외교통상통일위원회-미주2반": 751,
+          "외교통상통일위원회-미주반": 8109,
+          "외교통상통일위원회-아주반": 4938,
+          "외교통상통일위원회-아프리카․중동반": 4947,
+          "외교통일위원회": 157741,
+          "외교통일위원회-구주A반": 957,
+          "외교통일위원회-구주B반": 858,
+          "외교통일위원회-구주반": 10191,
+          "외교통일위원회-미구주반": 833,
+          "외교통일위원회-미주반": 22309,
+          "외교통일위원회-아주반": 14453,
+          "외교통일위원회-아중동반": 749,
+          "외교통일위원회-아프리카․중동반": 4343,
+          "통일외교통상위원회": 98737,
+          "통일외교통상위원회-구주․중동반": 1495,
+          "통일외교통상위원회-구주반": 7137,
+          "통일외교통상위원회-미주반": 8114,
+          "통일외교통상위원회-아주반": 6420,
+          "통일외교통상위원회-아태주반": 659,
+          "통일외교통상위원회-아프리카․중동반": 1559,
+          "통일외교통상위원회-중동반": 890
+        },
+        "political_affairs": {
+          "정무위원회": 610188,
+          "정무위원회-동경반": 913,
+          "정무위원회-북경반": 747
+        },
+        "intelligence": {
+          "정보위원회": 14933
+        },
+        "environment_labor": {
+          "환경노동위원회": 569474
+        }
+      }
+    },
+    {
+      "phase": "6. Committee Harmonization Deep Check",
+      "check_id": "committee_by_term",
+      "severity": "INFO",
+      "title": "Committee presence by term",
+      "detail": null,
+      "data": {
+        "16": {
+          "n_committees": 17,
+          "committees": [
+            "agriculture",
+            "assembly_operations",
+            "culture",
+            "defense",
+            "education",
+            "environment_labor",
+            "finance",
+            "foreign_affairs",
+            "gender_family",
+            "health_welfare",
+            "industry",
+            "intelligence",
+            "judiciary",
+            "land_transport",
+            "political_affairs",
+            "public_admin",
+            "science_ict"
+          ]
+        },
+        "17": {
+          "n_committees": 17,
+          "committees": [
+            "agriculture",
+            "assembly_operations",
+            "culture",
+            "defense",
+            "education",
+            "environment_labor",
+            "finance",
+            "foreign_affairs",
+            "gender_family",
+            "health_welfare",
+            "industry",
+            "intelligence",
+            "judiciary",
+            "land_transport",
+            "political_affairs",
+            "public_admin",
+            "science_ict"
+          ]
+        },
+        "18": {
+          "n_committees": 16,
+          "committees": [
+            "agriculture",
+            "assembly_operations",
+            "culture_media",
+            "defense",
+            "education_science",
+            "environment_labor",
+            "finance",
+            "foreign_affairs",
+            "gender_family",
+            "health_welfare",
+            "industry",
+            "intelligence",
+            "judiciary",
+            "land_transport",
+            "political_affairs",
+            "public_admin"
+          ]
+        },
+        "19": {
+          "n_committees": 18,
+          "committees": [
+            "agriculture",
+            "assembly_operations",
+            "culture_media",
+            "defense",
+            "education_culture",
+            "education_science",
+            "environment_labor",
+            "finance",
+            "foreign_affairs",
+            "gender_family",
+            "health_welfare",
+            "industry",
+            "intelligence",
+            "judiciary",
+            "land_transport",
+            "political_affairs",
+            "public_admin",
+            "science_ict"
+          ]
+        },
+        "20": {
+          "n_committees": 18,
+          "committees": [
+            "agriculture",
+            "assembly_operations",
+            "culture",
+            "defense",
+            "education",
+            "education_culture",
+            "environment_labor",
+            "finance",
+            "foreign_affairs",
+            "gender_family",
+            "health_welfare",
+            "industry",
+            "intelligence",
+            "judiciary",
+            "land_transport",
+            "political_affairs",
+            "public_admin",
+            "science_ict"
+          ]
+        },
+        "21": {
+          "n_committees": 17,
+          "committees": [
+            "agriculture",
+            "assembly_operations",
+            "culture",
+            "defense",
+            "education",
+            "environment_labor",
+            "finance",
+            "foreign_affairs",
+            "gender_family",
+            "health_welfare",
+            "industry",
+            "intelligence",
+            "judiciary",
+            "land_transport",
+            "political_affairs",
+            "public_admin",
+            "science_ict"
+          ]
+        },
+        "22": {
+          "n_committees": 17,
+          "committees": [
+            "agriculture",
+            "assembly_operations",
+            "culture",
+            "defense",
+            "education",
+            "environment_labor",
+            "finance",
+            "foreign_affairs",
+            "gender_family",
+            "health_welfare",
+            "industry",
+            "intelligence",
+            "judiciary",
+            "land_transport",
+            "political_affairs",
+            "public_admin",
+            "science_ict"
+          ]
+        }
+      }
+    },
+    {
+      "phase": "6. Committee Harmonization Deep Check",
+      "check_id": "committee_term_range",
+      "severity": "WARN",
+      "title": "1 committees appear in unexpected terms",
+      "detail": null,
+      "data": [
+        {
+          "committee_key": "education_culture",
+          "expected_terms": [
+            20,
+            21,
+            22
+          ],
+          "actual_terms": [
+            19,
+            20
+          ],
+          "unexpected": [
+            19
+          ]
+        }
+      ]
+    },
+    {
+      "phase": "6. Committee Harmonization Deep Check",
+      "check_id": "subcommittee_mapping",
+      "severity": "INFO",
+      "title": "0 subcommittee speeches mapped to 0 keys",
+      "detail": null,
+      "data": {}
+    },
+    {
+      "phase": "6. Committee Harmonization Deep Check",
+      "check_id": "committee_hearing_type_cross",
+      "severity": "INFO",
+      "title": "Committee x hearing_type meeting counts",
+      "detail": null,
+      "data": {
+        "agriculture": {
+          "국정감사": 314,
+          "상임위원회": 677
+        },
+        "assembly_operations": {
+          "국정감사": 84,
+          "상임위원회": 433
+        },
+        "culture": {
+          "국정감사": 178,
+          "상임위원회": 374
+        },
+        "culture_media": {
+          "국정감사": 57,
+          "상임위원회": 149
+        },
+        "defense": {
+          "국정감사": 280,
+          "상임위원회": 534
+        },
+        "education": {
+          "국정감사": 211,
+          "상임위원회": 312
+        },
+        "education_culture": {
+          "국정감사": 76,
+          "상임위원회": 137
+        },
+        "education_science": {
+          "국정감사": 109,
+          "상임위원회": 142
+        },
+        "environment_labor": {
+          "국정감사": 293,
+          "상임위원회": 646
+        },
+        "finance": {
+          "국정감사": 402,
+          "상임위원회": 667
+        },
+        "foreign_affairs": {
+          "국정감사": 492,
+          "상임위원회": 610
+        },
+        "gender_family": {
+          "국정감사": 24,
+          "상임위원회": 281
+        },
+        "health_welfare": {
+          "국정감사": 258,
+          "상임위원회": 576
+        },
+        "industry": {
+          "국정감사": 309,
+          "상임위원회": 662
+        },
+        "intelligence": {
+          "국정감사": 0,
+          "상임위원회": 49
+        },
+        "judiciary": {
+          "국정감사": 382,
+          "상임위원회": 1030
+        },
+        "land_transport": {
+          "국정감사": 287,
+          "상임위원회": 561
+        },
+        "political_affairs": {
+          "국정감사": 272,
+          "상임위원회": 624
+        },
+        "public_admin": {
+          "국정감사": 552,
+          "상임위원회": 721
+        },
+        "science_ict": {
+          "국정감사": 225,
+          "상임위원회": 489
+        }
+      }
+    },
+    {
+      "phase": "7. Dyad Formation Exhaustive Check",
+      "check_id": "dyad_formation_full_check",
+      "severity": "OK",
+      "title": "ALL 14,479 meetings pass dyad formation check",
+      "detail": null
+    },
+    {
+      "phase": "7. Dyad Formation Exhaustive Check",
+      "check_id": "self_pairing_analysis",
+      "severity": "WARN",
+      "title": "604 self-pairings: 0 truly same speaker, 604 different speakers (homonyms)",
+      "detail": null,
+      "data": [
+        {
+          "meeting_id": "30057",
+          "name": "김영환",
+          "witness_role": "minister",
+          "leg_speaker_raw": "김영환 위원",
+          "witness_speaker_raw": "과학기술부장관 김영환"
+        },
+        {
+          "meeting_id": "30143",
+          "name": "이승철",
+          "witness_role": "minister",
+          "leg_speaker_raw": "이승철 위원",
+          "witness_speaker_raw": "환경부장관 이승철"
+        },
+        {
+          "meeting_id": "30143",
+          "name": "이승철",
+          "witness_role": "minister",
+          "leg_speaker_raw": "이승철 위원",
+          "witness_speaker_raw": "환경부장관 이승철"
+        },
+        {
+          "meeting_id": "31175",
+          "name": "홍문종",
+          "witness_role": "minister",
+          "leg_speaker_raw": "홍문종 위원",
+          "witness_speaker_raw": "환경부장관 홍문종"
+        },
+        {
+          "meeting_id": "31175",
+          "name": "홍문종",
+          "witness_role": "minister",
+          "leg_speaker_raw": "홍문종 위원",
+          "witness_speaker_raw": "환경부장관 홍문종"
+        },
+        {
+          "meeting_id": "31487",
+          "name": "김홍신",
+          "witness_role": "minister",
+          "leg_speaker_raw": "김홍신 위원",
+          "witness_speaker_raw": "보건복지부장관 김홍신"
+        },
+        {
+          "meeting_id": "31487",
+          "name": "김홍신",
+          "witness_role": "minister",
+          "leg_speaker_raw": "김홍신 위원",
+          "witness_speaker_raw": "보건복지부장관 김홍신"
+        },
+        {
+          "meeting_id": "33959",
+          "name": "안상수",
+          "witness_role": "local_gov_head",
+          "leg_speaker_raw": "안상수 위원",
+          "witness_speaker_raw": "인천광역시장 안상수"
+        },
+        {
+          "meeting_id": "33959",
+          "name": "안상수",
+          "witness_role": "local_gov_head",
+          "leg_speaker_raw": "안상수 위원",
+          "witness_speaker_raw": "인천광역시장 안상수"
+        },
+        {
+          "meeting_id": "33959",
+          "name": "안상수",
+          "witness_role": "local_gov_head",
+          "leg_speaker_raw": "안상수 위원",
+          "witness_speaker_raw": "인천광역시장 안상수"
+        },
+        {
+          "meeting_id": "33959",
+          "name": "안상수",
+          "witness_role": "local_gov_head",
+          "leg_speaker_raw": "안상수 위원",
+          "witness_speaker_raw": "인천광역시장 안상수"
+        },
+        {
+          "meeting_id": "33959",
+          "name": "안상수",
+          "witness_role": "local_gov_head",
+          "leg_speaker_raw": "안상수 위원",
+          "witness_speaker_raw": "인천광역시장 안상수"
+        },
+        {
+          "meeting_id": "33959",
+          "name": "안상수",
+          "witness_role": "local_gov_head",
+          "leg_speaker_raw": "안상수 위원",
+          "witness_speaker_raw": "인천광역시장 안상수"
+        },
+        {
+          "meeting_id": "33959",
+          "name": "안상수",
+          "witness_role": "local_gov_head",
+          "leg_speaker_raw": "안상수 위원",
+          "witness_speaker_raw": "인천광역시장 안상수"
+        },
+        {
+          "meeting_id": "33959",
+          "name": "안상수",
+          "witness_role": "local_gov_head",
+          "leg_speaker_raw": "안상수 위원",
+          "witness_speaker_raw": "인천광역시장 안상수"
+        },
+        {
+          "meeting_id": "33959",
+          "name": "안상수",
+          "witness_role": "local_gov_head",
+          "leg_speaker_raw": "안상수 위원",
+          "witness_speaker_raw": "인천광역시장 안상수"
+        },
+        {
+          "meeting_id": "33959",
+          "name": "안상수",
+          "witness_role": "local_gov_head",
+          "leg_speaker_raw": "안상수 위원",
+          "witness_speaker_raw": "인천광역시장 안상수"
+        },
+        {
+          "meeting_id": "33959",
+          "name": "안상수",
+          "witness_role": "local_gov_head",
+          "leg_speaker_raw": "안상수 위원",
+          "witness_speaker_raw": "인천광역시장 안상수"
+        },
+        {
+          "meeting_id": "33959",
+          "name": "안상수",
+          "witness_role": "local_gov_head",
+          "leg_speaker_raw": "안상수 위원",
+          "witness_speaker_raw": "인천광역시장 안상수"
+        },
+        {
+          "meeting_id": "33959",
+          "name": "안상수",
+          "witness_role": "local_gov_head",
+          "leg_speaker_raw": "안상수 위원",
+          "witness_speaker_raw": "인천광역시장 안상수"
+        }
+      ]
+    },
+    {
+      "phase": "7. Dyad Formation Exhaustive Check",
+      "check_id": "dyad_direction_balance_per_meeting",
+      "severity": "OK",
+      "title": "No meetings with extreme direction imbalance (>10 dyads)",
+      "detail": null
+    },
+    {
+      "phase": "7. Dyad Formation Exhaustive Check",
+      "check_id": "dyad_orphan_meetings",
+      "severity": "OK",
+      "title": "All dyad meeting_ids have corresponding speeches",
+      "detail": null
+    },
+    {
+      "phase": "7. Dyad Formation Exhaustive Check",
+      "check_id": "dyad_vs_speech_role_distribution",
+      "severity": "INFO",
+      "title": "Witness role: dyad count vs speech count",
+      "detail": null,
+      "data": {
+        "agency_head": {
+          "dyad_count": 690698,
+          "speech_count": 346804,
+          "ratio": 1.992
+        },
+        "assembly_official": {
+          "dyad_count": 12048,
+          "speech_count": 6064,
+          "ratio": 1.987
+        },
+        "audit_official": {
+          "dyad_count": 50216,
+          "speech_count": 25184,
+          "ratio": 1.994
+        },
+        "broadcasting": {
+          "dyad_count": 5865,
+          "speech_count": 2971,
+          "ratio": 1.974
+        },
+        "constitutional_court": {
+          "dyad_count": 27479,
+          "speech_count": 13771,
+          "ratio": 1.995
+        },
+        "cooperative_head": {
+          "dyad_count": 30229,
+          "speech_count": 15285,
+          "ratio": 1.978
+        },
+        "cultural_institution_head": {
+          "dyad_count": 14325,
+          "speech_count": 7191,
+          "ratio": 1.992
+        },
+        "election_official": {
+          "dyad_count": 49424,
+          "speech_count": 24787,
+          "ratio": 1.994
+        },
+        "expert_witness": {
+          "dyad_count": 96996,
+          "speech_count": 48880,
+          "ratio": 1.984
+        },
+        "financial_regulator": {
+          "dyad_count": 42256,
+          "speech_count": 21360,
+          "ratio": 1.978
+        },
+        "independent_official": {
+          "dyad_count": 531224,
+          "speech_count": 267569,
+          "ratio": 1.985
+        },
+        "local_gov_head": {
+          "dyad_count": 159865,
+          "speech_count": 80218,
+          "ratio": 1.993
+        },
+        "mid_bureaucrat": {
+          "dyad_count": 44530,
+          "speech_count": 22642,
+          "ratio": 1.967
+        },
+        "military": {
+          "dyad_count": 84547,
+          "speech_count": 42522,
+          "ratio": 1.988
+        },
+        "minister": {
+          "dyad_count": 1720073,
+          "speech_count": 863826,
+          "ratio": 1.991
+        },
+        "minister_acting": {
+          "dyad_count": 21100,
+          "speech_count": 10567,
+          "ratio": 1.997
+        },
+        "minister_nominee": {
+          "dyad_count": 244140,
+          "speech_count": 122090,
+          "ratio": 2.0
+        },
+        "nominee": {
+          "dyad_count": 150637,
+          "speech_count": 75379,
+          "ratio": 1.998
+        },
+        "org_head": {
+          "dyad_count": 438037,
+          "speech_count": 220339,
+          "ratio": 1.988
+        },
+        "other_official": {
+          "dyad_count": 215502,
+          "speech_count": 109130,
+          "ratio": 1.975
+        },
+        "police": {
+          "dyad_count": 19125,
+          "speech_count": 9647,
+          "ratio": 1.982
+        },
+        "prime_minister": {
+          "dyad_count": 21708,
+          "speech_count": 10910,
+          "ratio": 1.99
+        },
+        "private_sector": {
+          "dyad_count": 5434,
+          "speech_count": 2749,
+          "ratio": 1.977
+        },
+        "public_corp_head": {
+          "dyad_count": 1008699,
+          "speech_count": 506367,
+          "ratio": 1.992
+        },
+        "research_head": {
+          "dyad_count": 13194,
+          "speech_count": 6654,
+          "ratio": 1.983
+        },
+        "senior_bureaucrat": {
+          "dyad_count": 795520,
+          "speech_count": 402193,
+          "ratio": 1.978
+        },
+        "testifier": {
+          "dyad_count": 139418,
+          "speech_count": 71664,
+          "ratio": 1.945
+        },
+        "vice_minister": {
+          "dyad_count": 190646,
+          "speech_count": 96235,
+          "ratio": 1.981
+        },
+        "witness": {
+          "dyad_count": 363014,
+          "speech_count": 182555,
+          "ratio": 1.989
+        }
+      }
+    },
+    {
+      "phase": "8. Extra Columns Validation (party, gender, seniority, etc.)",
+      "check_id": "extra_cols_present",
+      "severity": "INFO",
+      "title": "Extra columns found: ['session', 'sub_session', 'name_clean', 'party', 'ruling_status', 'seniority', 'gender', 'naas_cd']",
+      "detail": null
+    },
+    {
+      "phase": "8. Extra Columns Validation (party, gender, seniority, etc.)",
+      "check_id": "gender_values",
+      "severity": "INFO",
+      "title": "Gender value distribution",
+      "detail": null,
+      "data": {
+        "남": 4154759,
+        "None": 3666919,
+        "여": 775500
+      }
+    },
+    {
+      "phase": "8. Extra Columns Validation (party, gender, seniority, etc.)",
+      "check_id": "gender_consistency",
+      "severity": "ISSUE",
+      "title": "1 member_ids have inconsistent gender",
+      "detail": null,
+      "data": {
+        "7407": [
+          "남",
+          "여"
+        ]
+      }
+    },
+    {
+      "phase": "8. Extra Columns Validation (party, gender, seniority, etc.)",
+      "check_id": "party_values",
+      "severity": "INFO",
+      "title": "Top 30 party values (for legislator speeches)",
+      "detail": null,
+      "data": {
+        "한나라당": 1082259,
+        "더불어민주당": 888771,
+        "새누리당": 712260,
+        "민주통합당": 483549,
+        "열린우리당": 365474,
+        "통합민주당": 286780,
+        "미래통합당": 202370,
+        "새천년민주당": 177030,
+        "무소속": 133824,
+        "국민의당": 108539,
+        "국민의힘": 75055,
+        "자유선진당": 64007,
+        "민주노동당": 51614,
+        "더불어시민당": 38916,
+        "미래한국당": 38909,
+        "통합진보당": 34978,
+        "자유민주연합": 34567,
+        "친박연대": 28086,
+        "정의당": 26554,
+        "민주당": 22296,
+        "창조한국당": 10321,
+        "더불어민주연합": 10006,
+        "None": 9989,
+        "국민의미래": 9584,
+        "열린민주당": 9327,
+        "조국혁신당": 8377,
+        "새정치민주연합": 7152,
+        "자유한국당": 3513,
+        "시대전환": 2955,
+        "기본소득당": 2360
+      }
+    },
+    {
+      "phase": "8. Extra Columns Validation (party, gender, seniority, etc.)",
+      "check_id": "party_leg_only",
+      "severity": "OK",
+      "title": "Party is only filled for legislator/chair roles",
+      "detail": null
+    },
+    {
+      "phase": "8. Extra Columns Validation (party, gender, seniority, etc.)",
+      "check_id": "ruling_status_values",
+      "severity": "INFO",
+      "title": "Ruling status distribution",
+      "detail": null,
+      "data": {
+        "None": 3666919,
+        "opposition": 2626094,
+        "ruling": 2170341,
+        "independent": 133824
+      }
+    },
+    {
+      "phase": "8. Extra Columns Validation (party, gender, seniority, etc.)",
+      "check_id": "seniority_range",
+      "severity": "OK",
+      "title": "Seniority range valid: {'min': 1.0, 'max': 9.0, 'mean': 1.89, 'null_pct': 0.2}",
+      "detail": null,
+      "data": {
+        "min": 1.0,
+        "max": 9.0,
+        "mean": 1.89,
+        "null_pct": 0.2
+      }
+    },
+    {
+      "phase": "8. Extra Columns Validation (party, gender, seniority, etc.)",
+      "check_id": "session_per_term",
+      "severity": "INFO",
+      "title": "Session range per term",
+      "detail": null,
+      "data": {
+        "16": {
+          "min": "2000",
+          "max": "제246회",
+          "n_unique": 38
+        },
+        "17": {
+          "min": "2004",
+          "max": "제273회",
+          "n_unique": 30
+        },
+        "18": {
+          "min": "2008",
+          "max": "제307회",
+          "n_unique": 35
+        },
+        "19": {
+          "min": "2012",
+          "max": "제342회",
+          "n_unique": 37
+        },
+        "20": {
+          "min": "2016",
+          "max": "제378회",
+          "n_unique": 38
+        },
+        "21": {
+          "min": "제379회",
+          "max": "제414회",
+          "n_unique": 36
+        },
+        "22": {
+          "min": "제415회",
+          "max": "제420회",
+          "n_unique": 6
+        }
+      }
+    },
+    {
+      "phase": "8. Extra Columns Validation (party, gender, seniority, etc.)",
+      "check_id": "naas_cd_consistency",
+      "severity": "WARN",
+      "title": "4 member_ids have multiple naas_cd values",
+      "detail": null,
+      "data": {
+        "6182": [
+          "FJ03481D",
+          "KA04352K"
+        ],
+        "7407": [
+          "0W194007",
+          "E6S73230"
+        ],
+        "806": [
+          "DTG4846A",
+          "ZC87486D"
+        ],
+        "878": [
+          "9UW75767",
+          "BQS2021C"
+        ]
+      }
+    },
+    {
+      "phase": "9. Dyad Text Alignment Verification",
+      "check_id": "dyad_text_alignment",
+      "severity": "OK",
+      "title": "2455/2455 sampled dyad texts align perfectly",
+      "detail": null
+    },
+    {
+      "phase": "10. Statistical Sanity Checks",
+      "check_id": "benford_meeting_id",
+      "severity": "INFO",
+      "title": "Benford's law check on meeting_id first digits",
+      "detail": "Meeting IDs are assigned sequentially, so deviations are expected",
+      "data": {
+        "1": {
+          "observed": 0.0,
+          "expected": 0.301,
+          "diff": -0.301
+        },
+        "2": {
+          "observed": 0.0456,
+          "expected": 0.1761,
+          "diff": -0.1305
+        },
+        "3": {
+          "observed": 0.3363,
+          "expected": 0.1249,
+          "diff": 0.2113
+        },
+        "4": {
+          "observed": 0.424,
+          "expected": 0.0969,
+          "diff": 0.3271
+        },
+        "5": {
+          "observed": 0.0001,
+          "expected": 0.0792,
+          "diff": -0.0791
+        },
+        "6": {
+          "observed": 0.0,
+          "expected": 0.0669,
+          "diff": -0.0669
+        },
+        "7": {
+          "observed": 0.0,
+          "expected": 0.058,
+          "diff": -0.058
+        },
+        "8": {
+          "observed": 0.0,
+          "expected": 0.0512,
+          "diff": -0.0512
+        },
+        "9": {
+          "observed": 0.0,
+          "expected": 0.0458,
+          "diff": -0.0458
+        }
+      }
+    },
+    {
+      "phase": "10. Statistical Sanity Checks",
+      "check_id": "speeches_per_legislator",
+      "severity": "INFO",
+      "title": "Speeches per legislator: median=2382, max=25704",
+      "detail": null,
+      "data": {
+        "n_legislators": 1465,
+        "min": 1,
+        "q1": 1210,
+        "median": 2382,
+        "q3": 4284,
+        "max": 25704,
+        "mean": 3371.7,
+        "top_10": {
+          "7548": 25704,
+          "2401": 24233,
+          "6297": 22992,
+          "3302": 21828,
+          "3731": 20558,
+          "7498": 19786,
+          "6510": 19399,
+          "148": 19193,
+          "3745": 18807,
+          "6247": 18547
+        }
+      }
+    },
+    {
+      "phase": "10. Statistical Sanity Checks",
+      "check_id": "meetings_per_term_check",
+      "severity": "INFO",
+      "title": "Meetings per term",
+      "detail": null,
+      "data": {
+        "16": 2492,
+        "17": 2819,
+        "18": 2433,
+        "19": 2289,
+        "20": 1974,
+        "21": 1966,
+        "22": 506
+      }
+    },
+    {
+      "phase": "10. Statistical Sanity Checks",
+      "check_id": "term22_completeness",
+      "severity": "INFO",
+      "title": "22nd Assembly: 426,902 speeches, 506 meetings",
+      "detail": "22nd Assembly started 2024-05-30. Check if coverage matches expectation."
+    },
+    {
+      "phase": "10. Statistical Sanity Checks",
+      "check_id": "intelligence_committee",
+      "severity": "INFO",
+      "title": "Intelligence committee: 14,933 speeches, 49 meetings",
+      "detail": "정보위원회 is typically smaller due to classified proceedings"
+    },
+    {
+      "phase": "10. Statistical Sanity Checks",
+      "check_id": "audit_ratio_per_term",
+      "severity": "INFO",
+      "title": "국정감사 ratio per term",
+      "detail": null,
+      "data": {
+        "16": 0.5477,
+        "17": 0.5197,
+        "18": 0.5293,
+        "19": 0.5545,
+        "20": 0.5932,
+        "21": 0.5781,
+        "22": 0.5405
+      }
+    }
+  ]
+}

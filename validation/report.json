@@ -1,0 +1,466 @@
+{
+  "summary": {
+    "total": 49,
+    "pass": 39,
+    "fail": 3,
+    "warn": 7
+  },
+  "checks": [
+    {
+      "name": "speech_row_count",
+      "status": "PASS",
+      "message": "8,691,525 rows"
+    },
+    {
+      "name": "speech_schema_required",
+      "status": "PASS",
+      "message": "All 14 required columns present"
+    },
+    {
+      "name": "speech_schema_extra",
+      "status": "WARN",
+      "message": "8 extra columns: ['gender', 'naas_cd', 'name_clean', 'party', 'ruling_status', 'seniority', 'session', 'sub_session']"
+    },
+    {
+      "name": "speech_terms_complete",
+      "status": "PASS",
+      "message": "All 7 terms present (16-22)"
+    },
+    {
+      "name": "speech_term_distribution",
+      "status": "PASS",
+      "message": "Per-term counts available",
+      "details": {
+        "16": 880309,
+        "17": 1406340,
+        "18": 1592670,
+        "19": 1656426,
+        "20": 1478534,
+        "21": 1249641,
+        "22": 427605
+      }
+    },
+    {
+      "name": "speech_hearing_types",
+      "status": "PASS",
+      "message": "Both hearing types present"
+    },
+    {
+      "name": "speech_hearing_distribution",
+      "status": "PASS",
+      "message": "Standing: 3,894,903, Audit: 4,796,622"
+    },
+    {
+      "name": "speech_roles_valid",
+      "status": "PASS",
+      "message": "All 33 roles are known categories"
+    },
+    {
+      "name": "speech_role_balance",
+      "status": "PASS",
+      "message": "Legislators: 4,986,965 (57.4%), Non-legislators: 3,704,560 (42.6%)"
+    },
+    {
+      "name": "speech_committees_valid",
+      "status": "PASS",
+      "message": "All 20 committee keys are valid"
+    },
+    {
+      "name": "speech_committees_other",
+      "status": "PASS",
+      "message": "Only 0 (0.0%) mapped to 'other'"
+    },
+    {
+      "name": "speech_memberid_role_mismatch",
+      "status": "FAIL",
+      "message": "9,213 rows have member_id but non-legislator role",
+      "details": [
+        {
+          "speaker": "소위원장 설송웅",
+          "member_id": "2915",
+          "role": "independent_official"
+        },
+        {
+          "speaker": "소위원장 설송웅",
+          "member_id": "2915",
+          "role": "independent_official"
+        },
+        {
+          "speaker": "소위원장 윤한도",
+          "member_id": "3984",
+          "role": "independent_official"
+        },
+        {
+          "speaker": "소위원장 윤한도",
+          "member_id": "3984",
+          "role": "independent_official"
+        },
+        {
+          "speaker": "소위원장 윤한도",
+          "member_id": "3984",
+          "role": "independent_official"
+        },
+        {
+          "speaker": "소위원장 윤한도",
+          "member_id": "3984",
+          "role": "independent_official"
+        },
+        {
+          "speaker": "소위원장 윤한도",
+          "member_id": "3984",
+          "role": "independent_official"
+        },
+        {
+          "speaker": "소위원장 윤한도",
+          "member_id": "3984",
+          "role": "independent_official"
+        },
+        {
+          "speaker": "소위원장 윤한도",
+          "member_id": "3984",
+          "role": "independent_official"
+        },
+        {
+          "speaker": "소위원장 윤한도",
+          "member_id": "3984",
+          "role": "independent_official"
+        }
+      ]
+    },
+    {
+      "name": "speech_leg_without_memberid",
+      "status": "PASS",
+      "message": "803 legislators (0.0%) without member_id (title-based classification)"
+    },
+    {
+      "name": "speech_date_parsing",
+      "status": "WARN",
+      "message": "Only 0.0% of sampled dates parse correctly",
+      "details": {
+        "unparsed_examples": [
+          "2014년7월9일(수)",
+          "2017년10월24일(화)",
+          "2014년10월14일(화)",
+          "2023년10월24일(화)",
+          "2006年10月23日(月)",
+          "2009年10月29日(木)",
+          "2018년11월6일(화)",
+          "2024년10월21일(월)",
+          "2006年4月18日(火)",
+          "2003年10月7日(火)"
+        ]
+      }
+    },
+    {
+      "name": "speech_empty_text",
+      "status": "PASS",
+      "message": "1 (0.00%) speeches with empty text"
+    },
+    {
+      "name": "speech_short_text",
+      "status": "WARN",
+      "message": "1,484,877 (17.1%) speeches under 10 characters"
+    },
+    {
+      "name": "speech_duplicates",
+      "status": "FAIL",
+      "message": "188,694 (2.17%) duplicate (meeting_id, speech_order) pairs"
+    },
+    {
+      "name": "speech_order_continuity",
+      "status": "PASS",
+      "message": "2/500 sampled meetings (0.4%) have speech_order gaps"
+    },
+    {
+      "name": "speech_empty_person_name",
+      "status": "PASS",
+      "message": "25 (0.00%) speeches with empty person_name"
+    },
+    {
+      "name": "dyad_row_count",
+      "status": "PASS",
+      "message": "6,710,420 rows"
+    },
+    {
+      "name": "dyad_schema_required",
+      "status": "PASS",
+      "message": "All 16 required columns present"
+    },
+    {
+      "name": "dyad_directions",
+      "status": "PASS",
+      "message": "Both 'question' and 'answer' present"
+    },
+    {
+      "name": "dyad_direction_balance",
+      "status": "PASS",
+      "message": "Question: 3,355,616, Answer: 3,354,804 (balance: 100.0%)"
+    },
+    {
+      "name": "dyad_witness_not_legislator",
+      "status": "PASS",
+      "message": "No dyads have legislator/chair as witness role"
+    },
+    {
+      "name": "dyad_witness_roles_valid",
+      "status": "PASS",
+      "message": "All 29 witness roles are valid non-legislator roles"
+    },
+    {
+      "name": "dyad_witness_role_distribution",
+      "status": "PASS",
+      "message": "Top 10 witness roles",
+      "details": {
+        "minister": 1722041,
+        "public_corp_head": 1004792,
+        "senior_bureaucrat": 790113,
+        "agency_head": 686370,
+        "org_head": 439462,
+        "witness": 360956,
+        "minister_nominee": 244202,
+        "other_official": 217941,
+        "vice_minister": 191719,
+        "local_gov_head": 157725
+      }
+    },
+    {
+      "name": "dyad_terms_complete",
+      "status": "PASS",
+      "message": "All 7 terms present"
+    },
+    {
+      "name": "dyad_empty_leg_speech",
+      "status": "PASS",
+      "message": "0 (0.00%) dyads with empty legislator speech"
+    },
+    {
+      "name": "dyad_empty_witness_speech",
+      "status": "PASS",
+      "message": "1 (0.00%) dyads with empty witness speech"
+    },
+    {
+      "name": "dyad_empty_leg_name",
+      "status": "WARN",
+      "message": "12 dyads with empty legislator name"
+    },
+    {
+      "name": "dyad_empty_witness_name",
+      "status": "WARN",
+      "message": "14 dyads with empty witness name"
+    },
+    {
+      "name": "dyad_self_pairing",
+      "status": "WARN",
+      "message": "605 dyads where legislator == witness name",
+      "details": [
+        {
+          "meeting_id": "30057",
+          "leg_name": "김영환",
+          "witness_name": "김영환",
+          "witness_role": "minister"
+        },
+        {
+          "meeting_id": "31487",
+          "leg_name": "김홍신",
+          "witness_name": "김홍신",
+          "witness_role": "minister"
+        },
+        {
+          "meeting_id": "31487",
+          "leg_name": "김홍신",
+          "witness_name": "김홍신",
+          "witness_role": "minister"
+        },
+        {
+          "meeting_id": "30143",
+          "leg_name": "이승철",
+          "witness_name": "이승철",
+          "witness_role": "minister"
+        },
+        {
+          "meeting_id": "30143",
+          "leg_name": "이승철",
+          "witness_name": "이승철",
+          "witness_role": "minister"
+        }
+      ]
+    },
+    {
+      "name": "dyad_committees_valid",
+      "status": "PASS",
+      "message": "All 20 committee keys valid"
+    },
+    {
+      "name": "dyad_term_distribution",
+      "status": "PASS",
+      "message": "Per-term counts",
+      "details": {
+        "16": 688678,
+        "17": 1104355,
+        "18": 1270075,
+        "19": 1319482,
+        "20": 1162778,
+        "21": 878721,
+        "22": 286331
+      }
+    },
+    {
+      "name": "classify_chair_keyword",
+      "status": "PASS",
+      "message": "All 816,108 chairs have '위원장' in speaker field"
+    },
+    {
+      "name": "classify_minister_keyword",
+      "status": "PASS",
+      "message": "All 876,029 ministers have '장관' in speaker field"
+    },
+    {
+      "name": "classify_gov_chair_leak",
+      "status": "PASS",
+      "message": "No government chairs misclassified as legislative chairs"
+    },
+    {
+      "name": "classify_staff_count",
+      "status": "PASS",
+      "message": "14,953 committee_staff speeches (excluded from dyads)"
+    },
+    {
+      "name": "classify_unclassified",
+      "status": "PASS",
+      "message": "other: 27,140, unknown: 0 (0.3% unclassified)"
+    },
+    {
+      "name": "classify_unclassified_top20",
+      "status": "WARN",
+      "message": "Top 20 unclassified speakers (for manual review)",
+      "details": {
+        "국립국악고등학교서무부 김기강": 510,
+        "국민연금공단기금이사 홍완선": 373,
+        "국립대학법인서울대학교의과대학교수 이윤성": 278,
+        "방송위원회상임위원 강동순": 252,
+        "국민연금공단기금이사 김선정": 243,
+        "국가교육위원회상임위원 정대화": 231,
+        "한국농촌공사농지규모화팀 김영심": 208,
+        "육군사관학교장 권영호": 189,
+        "국민연금관리공단기금이사 김선영": 185,
+        "국민연금관리공단기금이사 조국준": 181,
+        "국립영상간행물제작소장 고석만": 179,
+        "국민건강보험공단업무상임이사 강암구": 168,
+        "공군사관학교장 이영만": 162,
+        "환경관리공단전무이사 김덕치": 162,
+        "양형위원회상임위원 김광태": 157,
+        "신용보증기금전무이사 손용문": 153,
+        "방송위원회상임위원 성유보": 150,
+        "예금보험공사전무이사 이형택": 146,
+        "국립생물자원관장 박종욱": 144,
+        "경주시청트라이애슬론선수단감독 김규봉": 140
+      }
+    },
+    {
+      "name": "committee_raw_count",
+      "status": "PASS",
+      "message": "94 unique raw committee names"
+    },
+    {
+      "name": "committee_unmapped",
+      "status": "PASS",
+      "message": "All raw committee names mapped to valid keys"
+    },
+    {
+      "name": "committee_key_distribution",
+      "status": "PASS",
+      "message": "20 committee keys",
+      "details": {
+        "judiciary": 856574,
+        "public_admin": 702637,
+        "land_transport": 644664,
+        "industry": 616395,
+        "political_affairs": 611849,
+        "agriculture": 597054,
+        "finance": 594006,
+        "environment_labor": 569538,
+        "health_welfare": 539660,
+        "science_ict": 500642,
+        "foreign_affairs": 474446,
+        "defense": 437284,
+        "culture": 310228,
+        "education_culture": 299259,
+        "education": 247839,
+        "assembly_operations": 215198,
+        "culture_media": 188891,
+        "education_science": 170323,
+        "gender_family": 100105,
+        "intelligence": 14933
+      }
+    },
+    {
+      "name": "committee_meeting_consistency",
+      "status": "PASS",
+      "message": "Each meeting has exactly one committee key"
+    },
+    {
+      "name": "cross_dyad_lt_speech",
+      "status": "PASS",
+      "message": "Dyads (6,710,420) < Speeches (8,691,525), ratio: 77.2%"
+    },
+    {
+      "name": "cross_dyad_meetings_in_speeches",
+      "status": "PASS",
+      "message": "All 12,613 dyad meeting_ids exist in speeches"
+    },
+    {
+      "name": "cross_term_ratios",
+      "status": "PASS",
+      "message": "Dyad/speech ratio per term"
+    },
+    {
+      "name": "cross_dyad_formation_spot_check",
+      "status": "FAIL",
+      "message": "70/100 meetings have dyad count mismatch",
+      "details": [
+        {
+          "meeting_id": "49782",
+          "expected": 201,
+          "actual": 220,
+          "speeches": 252
+        },
+        {
+          "meeting_id": "45637",
+          "expected": 369,
+          "actual": 400,
+          "speeches": 428
+        },
+        {
+          "meeting_id": "31819",
+          "expected": 231,
+          "actual": 252,
+          "speeches": 295
+        },
+        {
+          "meeting_id": "31512",
+          "expected": 475,
+          "actual": 514,
+          "speeches": 584
+        },
+        {
+          "meeting_id": "46751",
+          "expected": 384,
+          "actual": 422,
+          "speeches": 498
+        }
+      ]
+    },
+    {
+      "name": "cross_hearing_type_distribution",
+      "status": "PASS",
+      "message": "Speech: {'국정감사': 0.551873462942349, '상임위원회': 0.448126537057651}, Dyad: {'국정감사': 0.5780238792802835, '상임위원회': 0.4219761207197165}"
+    }
+  ],
+  "metadata": {
+    "timestamp": "2026-03-16T18:37:42.464501",
+    "speech_file": "/Volumes/kyusik-ssd/kyusik-research/projects/committee-witnesses-korea/data/processed/all_speeches_16_22_v2.parquet",
+    "dyad_file": "/Volumes/kyusik-ssd/kyusik-research/projects/committee-witnesses-korea/data/processed/dyads_16_22.parquet",
+    "speech_rows": 8691525,
+    "dyad_rows": 6710420
+  }
+}
