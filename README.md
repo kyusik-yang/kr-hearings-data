@@ -117,9 +117,14 @@ Data files are available under [GitHub Releases](https://github.com/kyusik-yang/
 
 **Excluded from dyads**: `committee_staff`, `other`, `unknown`
 
+## Documentation
+
+- [docs/CODEBOOK.md](docs/CODEBOOK.md) - Full codebook with column definitions, role taxonomy, committee mapping, and value distributions
+- [docs/PIPELINE.md](docs/PIPELINE.md) - Data pipeline documentation (XLSX parsing through v5 integrity fixes)
+
 ## Validation
 
-52 automated checks, 0 failures. See [docs/PIPELINE.md](docs/PIPELINE.md) for the full data pipeline documentation and [validation/](validation/) for the test suite.
+52 automated checks, 0 failures. See [validation/](validation/) for the test suite.
 
 ### Known limitations
 
