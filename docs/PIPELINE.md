@@ -153,29 +153,50 @@ For each meeting (sorted by speech_order):
 
 v2 processing introduced 94,347 duplicate rows (primarily in 20th Assembly, from XLSX files being processed twice). Duplicates are identified by `(meeting_id, speech_order)` uniqueness and removed by keeping the first occurrence.
 
+## Stage 6: v4 Cleanup
+
+1. **person_title extraction**: Acting/deputy titles (대리, 직무대행, 반장, etc.) extracted from `person_name` into a separate `person_title` column.
+2. **person_name canonicalization**: For legislators with `member_id`, the shortest non-empty name variant is used as canonical (removes "의원" suffix, "대리" prefix, etc.).
+3. **`other` role reclassification**: ~17,800 speeches reclassified from `other` to proper roles using pattern matching on the speaker field (e.g., 사관학교장 -> military, 이사 -> org_head).
+4. **Text normalization**: Double spaces collapsed to single space.
+5. **Date normalization**: All dates converted to `YYYY-MM-DD` format (was mixed Korean/Japanese formats with day-of-week suffixes).
+
+## Stage 7: v5 Data Integrity
+
+1. **member_id null fix**: `"nan"` and `""` strings converted to proper null/NA values.
+2. **person_title decontamination**: 87 rows with affiliation prefixes incorrectly extracted as titles (e.g., "국방부획득정책관") moved back to `affiliation_raw`.
+3. **Empty person_name fix**: 18 of 25 empty names parsed from speaker field (remaining 7 have no personal name in the source).
+4. **Homonymous member_id disambiguation**: 4 `member_id` values (7407, 6182, 806, 878) each represent two different legislators with the same name across different Assembly terms. A new `member_uid` column disambiguates using `naas_cd` (National Assembly unique code). Format: `{member_id}_{A|B}`.
+5. **minister 직무대리 reclassification**: 2,357 rows where "장관직무대리" (acting minister) was classified as `minister` reclassified to `minister_acting`.
+6. **Additional `other` reclassification**: 2,382 more speeches reclassified using expanded pattern rules (금융통화위원 -> financial_regulator, 소방서 -> police, etc.).
+7. **Non-legislator person_name cleanup**: 63,447 rows where affiliation prefixes had leaked into `person_name` (e.g., "용인소방서이동119안전센터 서헌식" -> name="서헌식", affiliation="용인소방서이동119안전센터").
+8. **Gender/party metadata consistency**: Fixed inconsistent metadata for homonymous member_id groups.
+9. **Dyad rebuild**: Dyads rebuilt from corrected speeches.
+
 ## Validation
 
-The dataset passes 50 automated checks (43 PASS, 7 WARN, 0 FAIL). See `validation/validate_dataset.py` for the full test suite.
+The dataset passes 52 automated checks (46 PASS, 6 WARN, 0 FAIL). See `validation/validate_dataset.py` for the full test suite.
 
-### Key metrics (v3)
+### Key metrics (v5)
 
 | Metric | Value |
 |--------|-------|
 | Total speeches | 8,597,178 |
-| Total dyads | 7,185,949 |
-| Dyad/speech ratio | 83.6% |
+| Total dyads | 7,225,737 |
+| Dyad/speech ratio | 84.0% |
 | Terms covered | 16-22 (2000-2024) |
 | Hearing types | Standing committee + National audit |
 | Committees | 20 keys (0% unmapped) |
 | Empty text | 1 speech (0.00%) |
 | Duplicates | 0 (cleaned) |
-| Role classification rate | 99.7% (0.3% `other`) |
+| Role classification rate | 99.9% (0.07% `other`) |
 | member_id consistency | 100% |
 | Dyad spot-check | 100/100 meetings pass |
+| Date format | 100% YYYY-MM-DD |
 
 ### Known limitations
 
 - **Short speeches** (17.1% under 10 chars): Procedural statements like "예", "동의합니다", "이상입니다". These are valid speech acts in parliamentary proceedings.
-- **Self-pairing** (604 dyads): Rare cases where the same person name appears on both sides, typically from inconsistent speaker field formatting.
-- **Empty names** (26 rows): Edge cases in speaker field parsing.
-- **Date format**: Contains day-of-week suffixes (e.g., `2014년7월9일(수)`). Parse by stripping parenthetical suffixes.
+- **Self-pairing** (604 dyads): Same person name on both sides, confirmed as different people (homonyms). e.g., legislator 김영환 and minister 김영환 are different people.
+- **Empty witness names** (14 dyads): Cases where the speaker field contains only a title without a personal name (e.g., "여성가족부 장관").
+- **Homonymous member_ids** (4 IDs): Source data assigns identical `member_id` to different legislators with the same name across terms. Use `member_uid` for disambiguation.

@@ -803,8 +803,8 @@ def main():
     parser.add_argument(
         "--data-dir",
         type=str,
-        default="/Volumes/kyusik-ssd/kyusik-research/projects/committee-witnesses-korea/data/processed",
-        help="Path to processed data directory",
+        default=str(Path(__file__).resolve().parent.parent / "data"),
+        help="Path to data directory",
     )
     parser.add_argument(
         "--report",
@@ -815,13 +815,13 @@ def main():
     parser.add_argument(
         "--speeches-file",
         type=str,
-        default="all_speeches_16_22_v2.parquet",
+        default="all_speeches_16_22_v5.parquet",
         help="Speech parquet filename",
     )
     parser.add_argument(
         "--dyads-file",
         type=str,
-        default="dyads_16_22.parquet",
+        default="dyads_16_22_v5.parquet",
         help="Dyad parquet filename",
     )
     args = parser.parse_args()
