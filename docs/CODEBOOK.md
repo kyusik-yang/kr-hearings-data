@@ -1,17 +1,27 @@
 # Codebook
 
-Korean National Assembly Committee Hearings Dataset, v5.
+Korean National Assembly Committee Hearings Dataset, v7.
 
 ## Overview
 
 | | Speeches | Dyads |
 |---|---|---|
-| Rows | 8,597,178 | 7,225,737 |
+| Rows | 8,740,779 | 7,225,737 (v6) |
 | Columns | 24 | 17 |
-| Period | 2000-06-19 to 2024-12-31 | same |
+| Period | 2000-06-19 to 2025-07-21 | 2000-06-19 to 2024-12-31 |
 | Assembly terms | 16th - 22nd | same |
-| File | `all_speeches_16_22_v5.parquet` | `dyads_16_22_v5.parquet` |
+| File | `all_speeches_16_22_v7.parquet` | `dyads_16_22_v6.parquet` |
 | Compression | zstd | zstd |
+
+### What changed in v6/v7
+
+v6 added 42 인사청문특별위원회 (confirmation hearing special committee) meetings (32,253 speeches) scraped from HTML transcripts. v7 added 228 more meetings (111,348 speeches) parsed from official PDF transcripts downloaded via the VCONFDETAIL Open API. Legislator metadata for v7 gap-fill speeches was enriched using mp_metadata (party match rate: 99.9% for legislators). Hanja names from 16th-17th Assembly PDFs were converted using the National Assembly member API (966 entries) and the assemblykor R package.
+
+| hearing_type | Meetings | Speeches | Source |
+|-------------|----------|----------|--------|
+| 상임위원회 | 9,674 | 3,847,765 | v5 XLSX parsing |
+| 국정감사 | 4,805 | 4,749,413 | v5 XLSX parsing |
+| 인사청문특별위원회 | 270 | 143,601 | v6 HTML + v7 PDF |
 
 ## 1. Speeches dataset
 
@@ -25,11 +35,11 @@ One row = one speech act by one speaker within a committee meeting. A speech act
 
 | Column | Type | Null | Unique | Description |
 |--------|------|------|--------|-------------|
-| `meeting_id` | str | 0 | 14,479 | Unique meeting identifier from the source system. Stable across versions. |
+| `meeting_id` | str | 0 | 14,749 | Unique meeting identifier. For v5/v6 data, from the source XLSX system. For v7 gap-fill (인사청문특별위원회), equals the VCONFDETAIL CONF_ID. Stable across versions. |
 | `term` | int64 | 0 | 7 | Assembly term number. Values: 16, 17, 18, 19, 20, 21, 22. |
 | `committee` | str | 0 | 94 | Original committee name as recorded in the source XLSX. Reflects historical reorganizations. |
 | `committee_key` | str | 0 | 20 | Harmonized committee key. Maps 94 raw names to 20 stable categories. See Section 3. |
-| `hearing_type` | str | 0 | 2 | `상임위원회` (standing committee) or `국정감사` (national audit). |
+| `hearing_type` | str | 0 | 3 | `상임위원회` (standing committee), `국정감사` (national audit), or `인사청문특별위원회` (confirmation hearing special committee, added in v6/v7). |
 | `session` | str | 0 | 220 | Parliamentary session number (e.g., `제212회`). |
 | `sub_session` | str | 0 | 496 | Sub-session number (e.g., `제1차`). |
 | `date` | str | 0 | 3,397 | Meeting date in `YYYY-MM-DD` format. |
@@ -135,11 +145,11 @@ These columns are populated only for rows where `role` is `legislator` or `chair
 |------|-------|-------------|
 | `committee_staff` | 14,891 | Committee professional staff (`전문위원`). Reads procedural reports. |
 | `other` | 6,310 | Unclassified speakers (0.07%). Titles do not match any pattern. |
-| `unknown` | 0 | (Not present in v5.) |
+| `unknown` | 683 | Speakers whose titles do not match any classification pattern. Present in v7 gap-fill data (0.5% of 인사청문특별위원회 speeches). |
 
 ## 3. Committee key mapping
 
-94 raw committee names are harmonized to 20 keys. Subcommittee names (e.g., `행정안전위원회-제1반`) are mapped to their parent committee.
+94+ raw committee names are harmonized to 21 keys. Subcommittee names (e.g., `행정안전위원회-제1반`) are mapped to their parent committee.
 
 | Key | Raw committee names | Terms active |
 |-----|---------------------|--------------|
@@ -164,7 +174,11 @@ These columns are populated only for rows where `role` is `legislator` or `chair
 | `public_admin` | 행정자치위원회, 안전행정위원회, 행정안전위원회 | 16-22 |
 | `science_ict` | 과학기술정보통신위원회, 미래창조과학방송통신위원회, 과학기술정보방송통신위원회 | 16-17, 19-22 |
 
+| `confirmation_special` | 국무총리후보자(...)에관한인사청문특별위원회, 대법관(...)임명동의에관한인사청문특별위원회, etc. | 16-22 |
+
 Committee reorganizations follow the Government Organization Act (정부조직법) amendments. Committees that were merged (e.g., `education` + `science_ict` = `education_science` in terms 18-19) appear as separate keys to preserve the structural distinction.
+
+The `confirmation_special` key covers all 인사청문특별위원회 (confirmation hearing special committees). Each special committee has a unique raw name containing the nominee's name and position (e.g., `국무총리후보자(한덕수)에관한인사청문특별위원회`). Added in v6/v7.
 
 ## 4. Person title values
 
@@ -244,29 +258,29 @@ For each meeting (sorted by speech_order):
 | question | 3,612,874 | 50.0% |
 | answer | 3,612,863 | 50.0% |
 
-## 7. Term date ranges
+## 7. Term date ranges (v7)
 
 | Term | Assembly | Start | End | Speeches | Meetings |
 |------|----------|-------|-----|----------|----------|
-| 16 | 16th | 2000-06-19 | 2004-05-19 | 880,309 | 2,412 |
-| 17 | 17th | 2004-07-06 | 2008-05-21 | 1,406,339 | 2,819 |
-| 18 | 18th | 2008-08-27 | 2012-05-02 | 1,592,670 | 2,433 |
-| 19 | 19th | 2012-07-10 | 2016-05-17 | 1,656,426 | 2,289 |
-| 20 | 20th | 2016-06-15 | 2020-05-20 | 1,393,316 | 1,974 |
-| 21 | 21st | 2020-06-16 | 2024-05-21 | 1,241,216 | 1,966 |
-| 22 | 22nd | 2024-06-11 | 2024-12-31 | 426,902 | 506 |
+| 16 | 16th | 2000-06-01 | 2004-05-19 | 886,856 | 2,454 |
+| 17 | 17th | 2004-06-11 | 2008-05-21 | 1,425,872 | 2,882 |
+| 18 | 18th | 2008-07-10 | 2012-05-02 | 1,605,171 | 2,473 |
+| 19 | 19th | 2012-07-04 | 2016-05-17 | 1,688,232 | 2,340 |
+| 20 | 20th | 2016-06-15 | 2020-05-20 | 1,416,568 | 1,997 |
+| 21 | 21st | 2020-06-16 | 2024-05-21 | 1,276,182 | 2,000 |
+| 22 | 22nd | 2024-06-11 | 2025-07-21 | 441,632 | 522 |
 
-## 8. Hearing type distribution
+## 8. Hearing type distribution (v7)
 
-| Term | 국정감사 (audit) | 상임위원회 (standing) | Audit share |
-|------|-----------------|---------------------|-------------|
-| 16 | 482,159 | 398,150 | 54.8% |
-| 17 | 730,926 | 675,413 | 52.0% |
-| 18 | 842,934 | 749,736 | 52.9% |
-| 19 | 918,472 | 737,954 | 55.4% |
-| 20 | 826,584 | 566,732 | 59.3% |
-| 21 | 717,579 | 523,637 | 57.8% |
-| 22 | 230,759 | 196,143 | 54.1% |
+| Term | 국정감사 (audit) | 상임위원회 (standing) | 인사청문특별위원회 | Confirmation share |
+|------|-----------------|---------------------|------------------|-------------------|
+| 16 | 482,159 | 398,150 | 6,547 | 0.7% |
+| 17 | 730,926 | 675,413 | 19,533 | 1.4% |
+| 18 | 842,934 | 749,736 | 12,501 | 0.8% |
+| 19 | 918,472 | 737,954 | 31,806 | 1.9% |
+| 20 | 826,584 | 566,732 | 23,252 | 1.6% |
+| 21 | 717,579 | 523,637 | 34,966 | 2.7% |
+| 22 | 230,759 | 196,143 | 14,730 | 3.3% |
 
 ## 9. Legislator metadata
 

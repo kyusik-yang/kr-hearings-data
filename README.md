@@ -1,13 +1,14 @@
 # kr-hearings-data
 
-Speech-level dataset from Korean National Assembly committee proceedings (16th-22nd Assembly, 2000-2024).
+Speech-level dataset from Korean National Assembly committee proceedings (16th-22nd Assembly, 2000-2025).
 
 ## Data
 
-- **8.6M speeches** classified into 33 speaker roles
+- **8.7M speeches** classified into 33 speaker roles
 - **7.2M legislator-witness dyads** (consecutive Q&A pairs)
 - **20 committees** harmonized across 94 raw names and 7 legislative terms
-- **2 hearing types**: standing committee (상임위원회) and national audit (국정감사)
+- **3 hearing types**: standing committee (상임위원회), national audit (국정감사), and confirmation hearing special committee (인사청문특별위원회)
+- **270 confirmation hearing meetings** with 143,601 speeches (국무총리, 대법관, 감사원장 등)
 
 ## Quick start
 
@@ -47,8 +48,9 @@ Data files are available under [GitHub Releases](https://github.com/kyusik-yang/
 
 | File | Rows | Description |
 |------|------|-------------|
-| `speeches_v5.parquet` | 8,597,178 | All speeches with speaker classification |
-| `dyads_v5.parquet` | 7,225,737 | Legislator - non-legislator speech pairs |
+| `speeches_v7.parquet` | 8,740,779 | All speeches with speaker classification |
+| `dyads_v6.parquet` | 7,225,737+ | Legislator - non-legislator speech pairs |
+| `speeches_v5.parquet` | 8,597,178 | Legacy (standing committees + national audit only) |
 
 ## Columns
 
@@ -60,7 +62,7 @@ Data files are available under [GitHub Releases](https://github.com/kyusik-yang/
 | `term` | int | Assembly term (16-22) |
 | `committee` | str | Original committee name |
 | `committee_key` | str | Harmonized committee key (20 categories) |
-| `hearing_type` | str | `상임위원회` or `국정감사` |
+| `hearing_type` | str | `상임위원회`, `국정감사`, or `인사청문특별위원회` |
 | `session` | str | Session number (e.g., `제212회`) |
 | `sub_session` | str | Sub-session number (e.g., `제1차`) |
 | `date` | str | Meeting date (YYYY-MM-DD) |
@@ -89,7 +91,7 @@ Data files are available under [GitHub Releases](https://github.com/kyusik-yang/
 | `term` | int | Assembly term |
 | `committee` | str | Original committee name |
 | `committee_key` | str | Harmonized committee key |
-| `hearing_type` | str | `상임위원회` or `국정감사` |
+| `hearing_type` | str | `상임위원회`, `국정감사`, or `인사청문특별위원회` |
 | `date` | str | Meeting date (YYYY-MM-DD) |
 | `agenda` | str | Agenda item |
 | `leg_name` | str | Legislator name |
@@ -138,13 +140,15 @@ Data files are available under [GitHub Releases](https://github.com/kyusik-yang/
 
 | Version | Speeches | Dyads | Changes |
 |---------|----------|-------|---------|
+| v7 | 8,740,779 | - | +228 인사청문특별위원회 meetings from PDF parsing (111K speeches). Hanja name conversion, mp_metadata enrichment (99.9% legislator party coverage) |
+| v6 | 8,629,431 | 7,225,737+ | +42 인사청문특별위원회 meetings from HTML scraping (32K speeches). New hearing_type value: `인사청문특별위원회` |
 | v5 | 8,597,178 | 7,225,737 | member_id null fix, person_title cleanup, member_uid disambiguation, minister 직무대리 reclassification, additional 'other' reclassification, non-legislator person_name cleanup |
 | v4 | 8,597,178 | 7,221,024 | person_title extraction, person_name cleanup, 'other' reclassification, text normalization, date normalization |
 | v3 | 8,597,178 | 7,185,949 | Speaker classification fix (소위원장), deduplication, dyad rebuild |
 
 ## Source
 
-Raw data: National Assembly proceeding XLSX datasets (의안정보시스템).
+Raw data: National Assembly proceeding XLSX datasets (의안정보시스템) and PDF transcripts from 국회회의록시스템 (likms.assembly.go.kr).
 
 ## Author
 
