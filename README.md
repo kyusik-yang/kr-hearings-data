@@ -4,11 +4,11 @@ Speech-level dataset from Korean National Assembly committee proceedings (16th-2
 
 ## Data
 
-- **8.7M speeches** classified into 33 speaker roles
+- **9.9M speeches** classified into 33 speaker roles
 - **7.2M legislator-witness dyads** (consecutive Q&A pairs)
-- **20 committees** harmonized across 94 raw names and 7 legislative terms
-- **3 hearing types**: standing committee (상임위원회), national audit (국정감사), and confirmation hearing special committee (인사청문특별위원회)
-- **270 confirmation hearing meetings** with 143,601 speeches (국무총리, 대법관, 감사원장 등)
+- **20+ committees** harmonized across 94+ raw names and 7 legislative terms
+- **6 hearing types**: standing committee (상임위원회), national audit (국정감사), confirmation hearing (인사청문특별위원회), parliamentary investigation (국정조사), budget committee (예산결산특별위원회), plenary session (국회본회의)
+- **16,830 meetings** covering all major National Assembly proceedings (16th-22nd Assembly)
 
 ## Quick start
 
@@ -48,9 +48,9 @@ Data files are available under [GitHub Releases](https://github.com/kyusik-yang/
 
 | File | Rows | Description |
 |------|------|-------------|
-| `speeches_v7.parquet` | 8,740,779 | All speeches with speaker classification |
+| `speeches_v8.parquet` | 9,906,444 | All speeches: 6 hearing types, 16,830 meetings |
+| `speeches_v7.parquet` | 8,740,779 | Standing + audit + confirmation special |
 | `dyads_v6.parquet` | 7,225,737+ | Legislator - non-legislator speech pairs |
-| `speeches_v5.parquet` | 8,597,178 | Legacy (standing committees + national audit only) |
 
 ## Columns
 
@@ -140,6 +140,7 @@ Data files are available under [GitHub Releases](https://github.com/kyusik-yang/
 
 | Version | Speeches | Dyads | Changes |
 |---------|----------|-------|---------|
+| v8 | 9,906,444 | - | +국정조사 191건, 예산결산특별위원회 832건, 국회본회의 1,058건 (1.17M speeches). Hybrid XML viewer + PDF parsing |
 | v7 | 8,740,779 | - | +228 인사청문특별위원회 meetings from PDF parsing (111K speeches). Hanja name conversion, mp_metadata enrichment (99.9% legislator party coverage) |
 | v6 | 8,629,431 | 7,225,737+ | +42 인사청문특별위원회 meetings from HTML scraping (32K speeches). New hearing_type value: `인사청문특별위원회` |
 | v5 | 8,597,178 | 7,225,737 | member_id null fix, person_title cleanup, member_uid disambiguation, minister 직무대리 reclassification, additional 'other' reclassification, non-legislator person_name cleanup |
@@ -148,7 +149,7 @@ Data files are available under [GitHub Releases](https://github.com/kyusik-yang/
 
 ## Source
 
-Raw data: National Assembly proceeding XLSX datasets (의안정보시스템) and PDF transcripts from 국회회의록시스템 (likms.assembly.go.kr).
+Raw data: National Assembly proceeding XLSX datasets (의안정보시스템), PDF transcripts, and structured HTML from 국회회의록시스템 (record.assembly.go.kr, likms.assembly.go.kr).
 
 ## Author
 
