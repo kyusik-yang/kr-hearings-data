@@ -1,16 +1,16 @@
 # Codebook
 
-Korean National Assembly Hearings Dataset, v8.
+Korean National Assembly Hearings Dataset, v9.
 
 ## Overview
 
 | | Speeches | Dyads |
 |---|---|---|
-| Rows | 9,906,444 | 7,894,147 |
-| Columns | 24 | 17 |
+| Rows | 9,906,444 | 7,429,413 |
+| Columns | 28 | 25 |
 | Period | 2000-06-01 to 2025-07-21 | 2000-06-01 to 2025-07-21 |
 | Assembly terms | 16th - 22nd | same |
-| File | `all_speeches_16_22_v8.parquet` | `dyads_16_22_v8.parquet` |
+| File | `all_speeches_16_22_v9.parquet` | `dyads_16_22_v9.parquet` |
 | Compression | zstd | zstd |
 
 ### What changed in v6/v7/v8
@@ -18,6 +18,17 @@ Korean National Assembly Hearings Dataset, v8.
 v6 added 42 인사청문특별위원회 (confirmation hearing special committee) meetings (32,253 speeches) scraped from HTML transcripts. v7 added 228 more meetings (111,348 speeches) parsed from official PDF transcripts downloaded via the VCONFDETAIL Open API. Legislator metadata for v7 gap-fill speeches was enriched using mp_metadata (party match rate: 99.9% for legislators). Hanja names from 16th-17th Assembly PDFs were converted using the National Assembly member API (966 entries) and the assemblykor R package.
 
 v8 added three new hearing types: 국정조사 (parliamentary investigation, 191 meetings), 예산결산특별위원회 (budget special committee, 832 meetings), and 국회본회의 (plenary session, 1,058 meetings), totaling 2,081 new meetings and 1,165,665 speeches. Source data was collected via hybrid XML viewer + PDF parsing from the National Assembly record system.
+
+### What changed in v9
+
+v9 enriches v8 with minister panel metadata from `minister-data/data/minister_panel_comprehensive.csv` (296 ministerial appointments, 2000-2025). Changes:
+
+1. **`ministry_normalized`**: Standardized ministry/agency name derived from `affiliation_raw`. Covers 89.8% of government official speeches. Handles historical name changes, typos, and 부총리겸 prefixes.
+2. **`dual_office`**: Whether the minister simultaneously held a National Assembly seat (True/False). Linked from minister panel for 95.1% of minister speeches.
+3. **`admin`**: Presidential administration name (김대중 through 이재명). 100% coverage for minister speeches via panel matching (93.7%) and date-range inference (6.3%).
+4. **`admin_ideology`**: Progressive or Conservative.
+5. **`ruling_status` cleanup**: 264,646 empty-string values for legislators converted to null.
+6. **Dyad rebuild**: Full dyad rebuild from v9 speeches. Dyads now include legislator metadata (`leg_party`, `leg_ruling_status`, `leg_seniority`, `leg_gender`) and minister metadata (`witness_ministry_normalized`, `witness_dual_office`, `witness_admin`, `witness_admin_ideology`). Covers all 6 hearing types.
 
 | hearing_type | Meetings | Speeches | Source |
 |-------------|----------|----------|--------|
@@ -81,6 +92,17 @@ These columns are populated only for rows where `role` is `legislator` or `chair
 | `seniority` | float64 | 3,666,919 | 9 | Number of terms served (1.0 - 9.0). |
 | `gender` | str | 3,666,919 | 2 | `남` (male) or `여` (female). |
 | `naas_cd` | str | 3,666,919 | 1,300 | National Assembly unique code. Distinct per individual legislator (unlike `member_id`). |
+
+#### Minister panel metadata (v9, populated for minister/minister_acting/minister_nominee roles)
+
+Linked from `minister-data/data/minister_panel_comprehensive.csv` by matching person name, normalized ministry, and date range.
+
+| Column | Type | Null | Description |
+|--------|------|------|-------------|
+| `ministry_normalized` | str | 8,138,742 | Standardized ministry/agency name. For ministers, maps to panel canonical names (42 ministries). For other govt roles, best-effort normalization. |
+| `dual_office` | bool | 8,933,455 | Whether the minister simultaneously held a National Assembly seat. Only populated for panel-linked ministers (95.1% of minister speeches). |
+| `admin` | str | 8,868,434 | Presidential administration: 김대중, 노무현, 이명박, 박근혜, 문재인, 윤석열, or 이재명. 100% coverage for ministers. |
+| `admin_ideology` | str | 8,868,434 | `Progressive` (김대중, 노무현, 문재인, 이재명) or `Conservative` (이명박, 박근혜, 윤석열). |
 
 ## 2. Speaker roles
 
@@ -239,32 +261,57 @@ For each meeting (sorted by speech_order):
 
 ### 6.3 Column definitions
 
+#### Meeting columns
+
 | Column | Type | Null | Description |
 |--------|------|------|-------------|
 | `meeting_id` | str | 0 | Meeting identifier (same as speeches). |
-| `term` | int64 | 0 | Assembly term. |
+| `term` | float64 | 0 | Assembly term. |
 | `committee` | str | 0 | Original committee name. |
 | `committee_key` | str | 0 | Harmonized committee key. |
-| `hearing_type` | str | 0 | Standing committee or national audit. |
+| `hearing_type` | str | 0 | One of 6 hearing types. |
 | `date` | str | 0 | Meeting date (YYYY-MM-DD). |
 | `agenda` | str | varies | Agenda item. |
+
+#### Legislator columns (v9: enriched with metadata)
+
+| Column | Type | Null | Description |
+|--------|------|------|-------------|
 | `leg_name` | str | 0 | Legislator person name. |
 | `leg_speaker_raw` | str | 0 | Legislator raw speaker field. |
-| `leg_member_uid` | str | varies | Legislator disambiguated ID. |
+| `leg_member_uid` | str | 4,546 | Legislator disambiguated ID. |
+| `leg_party` | str | 4,439 | Legislator party at time of speech. 99.9% coverage. |
+| `leg_ruling_status` | str | 218,055 | `ruling`, `opposition`, or `independent`. 97.1% coverage. |
+| `leg_seniority` | float64 | 218,055 | Terms served (1.0 - 9.0). |
+| `leg_gender` | str | 4,439 | `남` or `여`. |
+
+#### Witness columns (v9: enriched with minister panel metadata)
+
+| Column | Type | Null | Description |
+|--------|------|------|-------------|
 | `witness_name` | str | 14 empty | Non-legislator person name. |
 | `witness_speaker_raw` | str | 0 | Non-legislator raw speaker field. |
 | `witness_role` | str | 0 | Non-legislator classified role. 29 categories. |
-| `witness_affiliation` | str | varies | Non-legislator affiliation. |
+| `witness_affiliation` | str | varies | Non-legislator raw affiliation. |
+| `witness_ministry_normalized` | str | 4,172,755 | Standardized ministry/agency name. |
+| `witness_dual_office` | bool | 5,631,039 | Whether minister held NA seat simultaneously. |
+| `witness_admin` | str | 5,510,618 | Presidential administration name. |
+| `witness_admin_ideology` | str | 5,510,618 | `Progressive` or `Conservative`. |
+
+#### Speech content
+
+| Column | Type | Null | Description |
+|--------|------|------|-------------|
 | `direction` | str | 0 | `question` (legislator spoke first) or `answer` (witness spoke first). |
 | `leg_speech` | str | 0 | Legislator speech text. |
 | `witness_speech` | str | 2 empty | Non-legislator speech text. |
 
-### 6.4 Direction balance
+### 6.4 Direction balance (v9)
 
 | Direction | Count | Share |
 |-----------|-------|-------|
-| question | 3,612,874 | 50.0% |
-| answer | 3,612,863 | 50.0% |
+| question | 3,717,272 | 50.0% |
+| answer | 3,712,141 | 50.0% |
 
 ## 7. Term date ranges (v8)
 
@@ -315,9 +362,11 @@ For each meeting (sorted by speech_order):
 
 | Status | Speeches |
 |--------|----------|
-| ruling | 2,167,328 |
-| opposition | 2,629,107 |
-| independent | 133,824 |
+| ruling | 2,427,062 |
+| opposition | 2,916,482 |
+| independent | 160,858 |
+
+Note: In v9, 264,646 empty-string values (data artifacts from pre-v8 ingestion) were cleaned to null. The null count for ruling_status is 275,535 legislator speeches.
 
 ### 9.4 Gender
 

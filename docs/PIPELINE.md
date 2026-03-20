@@ -173,25 +173,39 @@ v2 processing introduced 94,347 duplicate rows (primarily in 20th Assembly, from
 8. **Gender/party metadata consistency**: Fixed inconsistent metadata for homonymous member_id groups.
 9. **Dyad rebuild**: Dyads rebuilt from corrected speeches.
 
+## Stage 8: v9 Minister Panel Enrichment
+
+Enriches v8 speeches with metadata from the hand-coded minister panel dataset (`minister-data/data/minister_panel_comprehensive.csv`, 296 ministerial appointments 2000-2025).
+
+1. **Ministry normalization**: `affiliation_raw` is cleaned to a standardized ministry name. Handles 부총리겸 prefixes, title+name stripping, 제1/제2 suffixes, OCR typos, historical name changes (여성부->여성가족부, 보건복지가족부->보건복지부), and regional agency prefixes.
+2. **Minister panel linkage**: For each minister/minister_acting/minister_nominee speech, match to panel by (person_name, normalized ministry, date within appointment range). 93.7% linked directly; 6.3% inferred admin from date ranges.
+3. **Columns added**: `ministry_normalized`, `dual_office`, `admin`, `admin_ideology`.
+4. **ruling_status cleanup**: 264,646 empty-string values converted to null.
+5. **Dyad rebuild**: Full rebuild from v9 speeches with enriched columns on both sides.
+
+Script: `validation/build_v9.py`
+
 ## Validation
 
 The dataset passes 52 automated checks (46 PASS, 6 WARN, 0 FAIL). See `validation/validate_dataset.py` for the full test suite.
 
-### Key metrics (v5)
+### Key metrics (v9)
 
 | Metric | Value |
 |--------|-------|
-| Total speeches | 8,597,178 |
-| Total dyads | 7,225,737 |
-| Dyad/speech ratio | 84.0% |
-| Terms covered | 16-22 (2000-2024) |
-| Hearing types | Standing committee + National audit |
-| Committees | 20 keys (0% unmapped) |
+| Total speeches | 9,906,444 |
+| Total dyads | 7,429,413 |
+| Dyad/speech ratio | 75.0% |
+| Terms covered | 16-22 (2000-2025) |
+| Hearing types | 6 (상임위원회, 국정감사, 인사청문, 예결, 본회의, 국정조사) |
+| Committees | 24 keys (0% unmapped) |
 | Empty text | 1 speech (0.00%) |
 | Duplicates | 0 (cleaned) |
 | Role classification rate | 99.9% (0.07% `other`) |
-| member_id consistency | 100% |
-| Dyad spot-check | 100/100 meetings pass |
+| Minister panel linkage | 93.7% direct + 6.3% date inference |
+| Dyads with leg_party | 99.9% |
+| Dyads with leg_ruling_status | 97.1% |
+| Minister dyads with dual_office | 93.7% |
 | Date format | 100% YYYY-MM-DD |
 
 ### Known limitations
@@ -200,3 +214,4 @@ The dataset passes 52 automated checks (46 PASS, 6 WARN, 0 FAIL). See `validatio
 - **Self-pairing** (604 dyads): Same person name on both sides, confirmed as different people (homonyms). e.g., legislator 김영환 and minister 김영환 are different people.
 - **Empty witness names** (14 dyads): Cases where the speaker field contains only a title without a personal name (e.g., "여성가족부 장관").
 - **Homonymous member_ids** (4 IDs): Source data assigns identical `member_id` to different legislators with the same name across terms. Use `member_uid` for disambiguation.
+- **16th Assembly minister panel gap**: Minister panel has only 2 entries for 김대중 admin (2000-2003). 41,684 16th Assembly minister speeches lack panel-linked dual_office (admin inferred from date).
