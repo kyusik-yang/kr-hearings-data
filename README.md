@@ -5,7 +5,7 @@ Speech-level dataset from Korean National Assembly committee proceedings (16th-2
 ## Data
 
 - **9.9M speeches** classified into 33 speaker roles
-- **7.9M legislator-witness dyads** (consecutive Q&A pairs)
+- **7.4M legislator-witness dyads** (consecutive Q&A pairs)
 - **20+ committees** harmonized across 94+ raw names and 7 legislative terms
 - **6 hearing types**: standing committee (상임위원회), national audit (국정감사), confirmation hearing (인사청문특별위원회), parliamentary investigation (국정조사), budget committee (예산결산특별위원회), plenary session (국회본회의)
 - **16,830 meetings** covering all major National Assembly proceedings (16th-22nd Assembly)
@@ -46,12 +46,11 @@ kr-hearings export --term 20 --hearing-type 국정감사 --format csv -o output.
 
 Data files are available under [GitHub Releases](https://github.com/kyusik-yang/kr-hearings-data/releases).
 
-| File | Rows | Description |
-|------|------|-------------|
-| `speeches_v8.parquet` | 9,906,444 | All speeches: 6 hearing types, 16,830 meetings |
-| `speeches_v7.parquet` | 8,740,779 | Standing + audit + confirmation special |
-| `dyads_v8.parquet` | 7,894,147 | Legislator - non-legislator speech pairs (all 6 hearing types) |
-| `dyads_v6.parquet` | 7,225,737 | Legacy: standing + audit + confirmation only |
+| File | Rows | Columns | Description |
+|------|------|---------|-------------|
+| `all_speeches_16_22_v9.parquet` | 9,906,444 | 28 | All speeches + minister panel metadata |
+| `dyads_16_22_v9.parquet` | 7,429,413 | 25 | Dyads with legislator + minister metadata |
+| `all_speeches_16_22_v8.parquet` | 9,906,444 | 24 | Previous version (no minister metadata) |
 
 ## Columns
 
@@ -83,6 +82,10 @@ Data files are available under [GitHub Releases](https://github.com/kyusik-yang/
 | `seniority` | float | Number of terms served (legislators only) |
 | `gender` | str | Gender (legislators only) |
 | `naas_cd` | str | National Assembly unique code (legislators only) |
+| `ministry_normalized` | str | Standardized ministry/agency name (v9, govt officials only) |
+| `dual_office` | bool | Minister simultaneously held NA seat (v9, ministers only) |
+| `admin` | str | Presidential administration name (v9, ministers only) |
+| `admin_ideology` | str | Progressive or Conservative (v9, ministers only) |
 
 ### dyads
 
@@ -98,10 +101,18 @@ Data files are available under [GitHub Releases](https://github.com/kyusik-yang/
 | `leg_name` | str | Legislator name |
 | `leg_speaker_raw` | str | Legislator raw speaker field |
 | `leg_member_uid` | str | Legislator disambiguated ID |
+| `leg_party` | str | Legislator party (v9, 99.9% coverage) |
+| `leg_ruling_status` | str | Ruling/opposition/independent (v9, 97.1%) |
+| `leg_seniority` | float | Terms served (v9) |
+| `leg_gender` | str | Gender (v9) |
 | `witness_name` | str | Non-legislator name |
 | `witness_speaker_raw` | str | Non-legislator raw speaker field |
 | `witness_role` | str | Non-legislator classified role |
-| `witness_affiliation` | str | Non-legislator affiliation |
+| `witness_affiliation` | str | Non-legislator raw affiliation |
+| `witness_ministry_normalized` | str | Standardized ministry name (v9) |
+| `witness_dual_office` | bool | Minister held NA seat simultaneously (v9) |
+| `witness_admin` | str | Presidential administration (v9) |
+| `witness_admin_ideology` | str | Progressive or Conservative (v9) |
 | `direction` | str | `question` (legislator first) or `answer` (witness first) |
 | `leg_speech` | str | Legislator speech text |
 | `witness_speech` | str | Non-legislator speech text |
@@ -142,6 +153,7 @@ Data files are available under [GitHub Releases](https://github.com/kyusik-yang/
 
 | Version | Speeches | Dyads | Changes |
 |---------|----------|-------|---------|
+| v9 | 9,906,444 | 7,429,413 | Minister panel enrichment (dual_office, admin, admin_ideology). Legislator metadata in dyads (party, ruling_status). ruling_status cleanup. Full dyad rebuild across 6 hearing types |
 | v8 | 9,906,444 | 7,894,147 | +국정조사 191건, 예산결산특별위원회 832건, 국회본회의 1,058건 (1.17M speeches). Hybrid XML viewer + PDF parsing. Dyads rebuilt for all 6 hearing types |
 | v7 | 8,740,779 | - | +228 인사청문특별위원회 meetings from PDF parsing (111K speeches). Hanja name conversion, mp_metadata enrichment (99.9% legislator party coverage) |
 | v6 | 8,629,431 | 7,225,737 | +42 인사청문특별위원회 meetings from HTML scraping (32K speeches). New hearing_type value: `인사청문특별위원회` |
