@@ -1,27 +1,32 @@
 # Codebook
 
-Korean National Assembly Committee Hearings Dataset, v7.
+Korean National Assembly Hearings Dataset, v8.
 
 ## Overview
 
 | | Speeches | Dyads |
 |---|---|---|
-| Rows | 8,740,779 | 7,225,737 (v6) |
+| Rows | 9,906,444 | 7,894,147 |
 | Columns | 24 | 17 |
-| Period | 2000-06-19 to 2025-07-21 | 2000-06-19 to 2024-12-31 |
+| Period | 2000-06-01 to 2025-07-21 | 2000-06-01 to 2025-07-21 |
 | Assembly terms | 16th - 22nd | same |
-| File | `all_speeches_16_22_v7.parquet` | `dyads_16_22_v6.parquet` |
+| File | `all_speeches_16_22_v8.parquet` | `dyads_16_22_v8.parquet` |
 | Compression | zstd | zstd |
 
-### What changed in v6/v7
+### What changed in v6/v7/v8
 
 v6 added 42 인사청문특별위원회 (confirmation hearing special committee) meetings (32,253 speeches) scraped from HTML transcripts. v7 added 228 more meetings (111,348 speeches) parsed from official PDF transcripts downloaded via the VCONFDETAIL Open API. Legislator metadata for v7 gap-fill speeches was enriched using mp_metadata (party match rate: 99.9% for legislators). Hanja names from 16th-17th Assembly PDFs were converted using the National Assembly member API (966 entries) and the assemblykor R package.
+
+v8 added three new hearing types: 국정조사 (parliamentary investigation, 191 meetings), 예산결산특별위원회 (budget special committee, 832 meetings), and 국회본회의 (plenary session, 1,058 meetings), totaling 2,081 new meetings and 1,165,665 speeches. Source data was collected via hybrid XML viewer + PDF parsing from the National Assembly record system.
 
 | hearing_type | Meetings | Speeches | Source |
 |-------------|----------|----------|--------|
 | 상임위원회 | 9,674 | 3,847,765 | v5 XLSX parsing |
 | 국정감사 | 4,805 | 4,749,413 | v5 XLSX parsing |
 | 인사청문특별위원회 | 270 | 143,601 | v6 HTML + v7 PDF |
+| 예산결산특별위원회 | 832 | 647,589 | v8 XML viewer + PDF |
+| 국회본회의 | 1,058 | 396,609 | v8 XML viewer + PDF |
+| 국정조사 | 191 | 121,467 | v8 XML viewer + PDF |
 
 ## 1. Speeches dataset
 
@@ -39,7 +44,7 @@ One row = one speech act by one speaker within a committee meeting. A speech act
 | `term` | int64 | 0 | 7 | Assembly term number. Values: 16, 17, 18, 19, 20, 21, 22. |
 | `committee` | str | 0 | 94 | Original committee name as recorded in the source XLSX. Reflects historical reorganizations. |
 | `committee_key` | str | 0 | 20 | Harmonized committee key. Maps 94 raw names to 20 stable categories. See Section 3. |
-| `hearing_type` | str | 0 | 3 | `상임위원회` (standing committee), `국정감사` (national audit), or `인사청문특별위원회` (confirmation hearing special committee, added in v6/v7). |
+| `hearing_type` | str | 0 | 6 | `상임위원회` (standing committee), `국정감사` (national audit), `인사청문특별위원회` (confirmation hearing, v6/v7), `예산결산특별위원회` (budget special committee, v8), `국회본회의` (plenary session, v8), or `국정조사` (parliamentary investigation, v8). |
 | `session` | str | 0 | 220 | Parliamentary session number (e.g., `제212회`). |
 | `sub_session` | str | 0 | 496 | Sub-session number (e.g., `제1차`). |
 | `date` | str | 0 | 3,397 | Meeting date in `YYYY-MM-DD` format. |
@@ -175,10 +180,13 @@ These columns are populated only for rows where `role` is `legislator` or `chair
 | `science_ict` | 과학기술정보통신위원회, 미래창조과학방송통신위원회, 과학기술정보방송통신위원회 | 16-17, 19-22 |
 
 | `confirmation_special` | 국무총리후보자(...)에관한인사청문특별위원회, 대법관(...)임명동의에관한인사청문특별위원회, etc. | 16-22 |
+| `budget_special` | 예산결산특별위원회 | 16-22 |
+| `investigation` | 국정조사특별위원회 and variants | 16-22 |
+| `plenary` | 국회본회의, 국회(임시회/정기회)본회의 | 16-22 |
 
 Committee reorganizations follow the Government Organization Act (정부조직법) amendments. Committees that were merged (e.g., `education` + `science_ict` = `education_science` in terms 18-19) appear as separate keys to preserve the structural distinction.
 
-The `confirmation_special` key covers all 인사청문특별위원회 (confirmation hearing special committees). Each special committee has a unique raw name containing the nominee's name and position (e.g., `국무총리후보자(한덕수)에관한인사청문특별위원회`). Added in v6/v7.
+The `confirmation_special` key covers all 인사청문특별위원회 (confirmation hearing special committees). Each special committee has a unique raw name containing the nominee's name and position (e.g., `국무총리후보자(한덕수)에관한인사청문특별위원회`). Added in v6/v7. The `budget_special`, `investigation`, and `plenary` keys were added in v8.
 
 ## 4. Person title values
 
@@ -258,29 +266,29 @@ For each meeting (sorted by speech_order):
 | question | 3,612,874 | 50.0% |
 | answer | 3,612,863 | 50.0% |
 
-## 7. Term date ranges (v7)
+## 7. Term date ranges (v8)
 
 | Term | Assembly | Start | End | Speeches | Meetings |
 |------|----------|-------|-----|----------|----------|
-| 16 | 16th | 2000-06-01 | 2004-05-19 | 886,856 | 2,454 |
-| 17 | 17th | 2004-06-11 | 2008-05-21 | 1,425,872 | 2,882 |
-| 18 | 18th | 2008-07-10 | 2012-05-02 | 1,605,171 | 2,473 |
-| 19 | 19th | 2012-07-04 | 2016-05-17 | 1,688,232 | 2,340 |
-| 20 | 20th | 2016-06-15 | 2020-05-20 | 1,416,568 | 1,997 |
-| 21 | 21st | 2020-06-16 | 2024-05-21 | 1,276,182 | 2,000 |
-| 22 | 22nd | 2024-06-11 | 2025-07-21 | 441,632 | 522 |
+| 16 | 16th | 2000-06-01 | 2004-05-19 | 1,003,739 | 2,816 |
+| 17 | 17th | 2004-06-05 | 2008-05-23 | 1,581,747 | 3,244 |
+| 18 | 18th | 2008-07-10 | 2012-05-02 | 1,884,315 | 2,839 |
+| 19 | 19th | 2012-07-02 | 2016-05-19 | 1,888,749 | 2,708 |
+| 20 | 20th | 2016-06-09 | 2020-05-20 | 1,612,100 | 2,334 |
+| 21 | 21st | 2020-06-05 | 2024-05-28 | 1,455,862 | 2,315 |
+| 22 | 22nd | 2024-06-10 | 2025-07-21 | 479,666 | 573 |
 
-## 8. Hearing type distribution (v7)
+## 8. Hearing type distribution (v8)
 
-| Term | 국정감사 (audit) | 상임위원회 (standing) | 인사청문특별위원회 | Confirmation share |
-|------|-----------------|---------------------|------------------|-------------------|
-| 16 | 482,159 | 398,150 | 6,547 | 0.7% |
-| 17 | 730,926 | 675,413 | 19,533 | 1.4% |
-| 18 | 842,934 | 749,736 | 12,501 | 0.8% |
-| 19 | 918,472 | 737,954 | 31,806 | 1.9% |
-| 20 | 826,584 | 566,732 | 23,252 | 1.6% |
-| 21 | 717,579 | 523,637 | 34,966 | 2.7% |
-| 22 | 230,759 | 196,143 | 14,730 | 3.3% |
+| Term | 국정감사 | 상임위원회 | 인사청문특별위원회 | 예산결산특별위원회 | 국회본회의 | 국정조사 |
+|------|---------|----------|------------------|------------------|----------|---------|
+| 16 | 482,159 | 398,150 | 6,547 | 40,980 | 64,234 | 11,669 |
+| 17 | 730,926 | 675,413 | 19,533 | 102,592 | 44,110 | 9,173 |
+| 18 | 842,934 | 749,736 | 12,501 | 155,875 | 90,914 | 32,355 |
+| 19 | 918,472 | 737,954 | 31,806 | 60,963 | 91,992 | 47,562 |
+| 20 | 826,584 | 566,732 | 23,252 | 134,266 | 47,592 | 13,674 |
+| 21 | 717,579 | 523,637 | 34,966 | 124,175 | 49,037 | 6,468 |
+| 22 | 230,759 | 196,143 | 14,730 | 28,738 | 8,730 | 566 |
 
 ## 9. Legislator metadata
 

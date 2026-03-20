@@ -70,7 +70,7 @@ DYAD_REQUIRED_COLS = [
 
 # ── Valid values ──
 VALID_TERMS = {16, 17, 18, 19, 20, 21, 22}
-VALID_HEARING_TYPES = {"상임위원회", "국정감사"}
+VALID_HEARING_TYPES = {"상임위원회", "국정감사", "인사청문특별위원회", "예산결산특별위원회", "국회본회의", "국정조사"}
 VALID_DIRECTIONS = {"question", "answer"}
 
 LEGISLATOR_ROLES = {"legislator", "chair"}
@@ -134,6 +134,10 @@ VALID_COMMITTEE_KEYS = {
     "culture",
     "culture_media",
     "other",
+    "confirmation_special",
+    "budget_special",
+    "investigation",
+    "plenary",
 }
 
 # ── Term date ranges (approximate) ──
@@ -228,16 +232,16 @@ def validate_speeches(speeches, result):
     # 3. Hearing types
     ht = set(speeches["hearing_type"].dropna().unique())
     if ht == VALID_HEARING_TYPES:
-        result.add("speech_hearing_types", "PASS", f"Both hearing types present")
+        result.add("speech_hearing_types", "PASS", f"All {len(ht)} hearing types present")
+    elif ht.issubset(VALID_HEARING_TYPES):
+        result.add("speech_hearing_types", "WARN", f"Subset of hearing types found: {sorted(ht)}")
     else:
-        result.add("speech_hearing_types", "WARN", f"Hearing types found: {ht}")
+        unknown_ht = ht - VALID_HEARING_TYPES
+        result.add("speech_hearing_types", "WARN", f"Unknown hearing types: {sorted(unknown_ht)}")
 
     ht_counts = speeches["hearing_type"].value_counts().to_dict()
-    result.add(
-        "speech_hearing_distribution",
-        "PASS",
-        f"Standing: {ht_counts.get('상임위원회', 0):,}, Audit: {ht_counts.get('국정감사', 0):,}",
-    )
+    ht_summary = ", ".join(f"{k}: {v:,}" for k, v in sorted(ht_counts.items()))
+    result.add("speech_hearing_distribution", "PASS", ht_summary)
 
     # 4. Speaker roles
     roles = set(speeches["role"].dropna().unique())
