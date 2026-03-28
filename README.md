@@ -1,5 +1,8 @@
 # kr-hearings-data
 
+[![PyPI](https://img.shields.io/pypi/v/kr-hearings-data)](https://pypi.org/project/kr-hearings-data/)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+
 Speech-level dataset from Korean National Assembly committee proceedings (16th-22nd Assembly, 2000-2025).
 
 ## Data
@@ -19,20 +22,25 @@ pip install kr-hearings-data
 ```python
 import kr_hearings_data as kh
 
-# Load speeches
+# Load speeches (auto-downloads ~1.1 GB on first call)
 speeches = kh.load_speeches()
 
-# Load dyads
+# Load dyads (auto-downloads ~1.0 GB on first call)
 dyads = kh.load_dyads()
 
 # Filter by term and hearing type
 audit_20 = kh.load_dyads(term=20, hearing_type="국정감사")
+
+# Select specific columns for faster loading
+names = kh.load_speeches(columns=["person_name", "role", "term"])
 ```
+
+Data is downloaded from [GitHub Releases](https://github.com/kyusik-yang/kr-hearings-data/releases) and cached locally at `~/.cache/kr-hearings-data/`. Subsequent calls load from cache instantly.
 
 ### CLI
 
 ```bash
-# Download data
+# Download both datasets to local cache
 kr-hearings download
 
 # Summary statistics
@@ -40,7 +48,16 @@ kr-hearings info
 
 # Export filtered subset
 kr-hearings export --term 20 --hearing-type 국정감사 --format csv -o output.csv
+
+# Export dyads
+kr-hearings export --dataset dyads --term 21 --format parquet -o dyads_21.parquet
 ```
+
+### Configuration
+
+| Environment variable | Default | Description |
+|---------------------|---------|-------------|
+| `KR_HEARINGS_CACHE` | `~/.cache/kr-hearings-data` | Local cache directory |
 
 ## Files
 
@@ -50,7 +67,6 @@ Data files are available under [GitHub Releases](https://github.com/kyusik-yang/
 |------|------|---------|-------------|
 | `all_speeches_16_22_v9.parquet` | 9,906,444 | 28 | All speeches + minister panel metadata |
 | `dyads_16_22_v9.parquet` | 7,429,413 | 25 | Dyads with legislator + minister metadata |
-| `all_speeches_16_22_v8.parquet` | 9,906,444 | 24 | Previous version (no minister metadata) |
 
 ## Columns
 

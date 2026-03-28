@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kr-hearings-data"
+version = "0.1.0"
+description = "Speech-level dataset from Korean National Assembly committee proceedings (16th-22nd Assembly)"
+readme = "README.md"
+license = "CC-BY-4.0"
+authors = [{ name = "Kyusik Yang", email = "kyusik.yang@nyu.edu" }]
+requires-python = ">=3.9"
+dependencies = [
+    "pandas>=1.5",
+    "pyarrow>=10.0",
+    "tqdm>=4.60",
+    "requests>=2.28",
+]
+
+[project.scripts]
+kr-hearings = "kr_hearings_data._cli:main"
+
+[tool.setuptools.packages.find]
+include = ["kr_hearings_data*"]
+
+[project.urls]
+Homepage = "https://github.com/kyusik-yang/kr-hearings-data"
+Releases = "https://github.com/kyusik-yang/kr-hearings-data/releases"
