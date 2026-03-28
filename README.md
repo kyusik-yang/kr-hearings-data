@@ -13,51 +13,224 @@ Speech-level dataset from Korean National Assembly committee proceedings (16th-2
 - **6 hearing types**: standing committee (상임위원회), national audit (국정감사), confirmation hearing (인사청문특별위원회), parliamentary investigation (국정조사), budget committee (예산결산특별위원회), plenary session (국회본회의)
 - **16,830 meetings** covering all major National Assembly proceedings (16th-22nd Assembly)
 
-## Quick start
+## Installation
+
+Requires Python 3.9+.
 
 ```bash
 pip install kr-hearings-data
 ```
 
+Dependencies: `pandas`, `pyarrow`, `requests`, `tqdm`.
+
+For development:
+
+```bash
+git clone https://github.com/kyusik-yang/kr-hearings-data.git
+cd kr-hearings-data
+pip install -e .
+```
+
+## Quick start
+
 ```python
 import kr_hearings_data as kh
 
-# Load speeches (auto-downloads ~1.1 GB on first call)
+# Load full speeches dataset
+# First call downloads ~1.1 GB from GitHub Releases and caches locally.
+# Subsequent calls load from cache.
 speeches = kh.load_speeches()
 
-# Load dyads (auto-downloads ~1.0 GB on first call)
+# Load full dyads dataset (~1.0 GB on first call)
 dyads = kh.load_dyads()
-
-# Filter by term and hearing type
-audit_20 = kh.load_dyads(term=20, hearing_type="국정감사")
-
-# Select specific columns for faster loading
-names = kh.load_speeches(columns=["person_name", "role", "term"])
 ```
 
-Data is downloaded from [GitHub Releases](https://github.com/kyusik-yang/kr-hearings-data/releases) and cached locally at `~/.cache/kr-hearings-data/`. Subsequent calls load from cache instantly.
+## Python API
 
-### CLI
+All loader functions are keyword-only (except `version` in `download` and `info`).
+
+### `load_speeches(*, version, term, hearing_type, columns) -> pd.DataFrame`
+
+Load the speeches dataset. Downloads from GitHub Releases on first call; cached afterwards.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `version` | `str` | `"v9"` | Data version tag matching a GitHub Release (e.g., `"v9"`, `"v8"`) |
+| `term` | `int \| None` | `None` | Filter by Assembly term (16-22). Applied at the Parquet row-group level for speed. |
+| `hearing_type` | `str \| None` | `None` | Filter by hearing type. One of `상임위원회`, `국정감사`, `인사청문특별위원회`, `예산결산특별위원회`, `국회본회의`, `국정조사`. |
+| `columns` | `list[str] \| None` | `None` | Read only these columns. Reduces memory and speeds up loading. |
+
+Returns a `pandas.DataFrame`.
+
+```python
+# All 20th-term national audit speeches, metadata columns only
+audit_20 = kh.load_speeches(
+    term=20,
+    hearing_type="국정감사",
+    columns=["meeting_id", "date", "person_name", "role", "party"],
+)
+```
+
+### `load_dyads(*, version, term, hearing_type, columns) -> pd.DataFrame`
+
+Load the dyads dataset. Same parameters as `load_speeches`.
+
+```python
+# 21st-term standing committee dyads
+dyads_21 = kh.load_dyads(term=21, hearing_type="상임위원회")
+```
+
+### `download(version="v9") -> dict[str, Path]`
+
+Download both datasets to the local cache without loading them into memory. Returns a dict mapping `"speeches"` and `"dyads"` to their cached file paths.
+
+```python
+paths = kh.download()
+# {'speeches': PosixPath('~/.cache/kr-hearings-data/v9/all_speeches_16_22_v9.parquet'),
+#  'dyads':    PosixPath('~/.cache/kr-hearings-data/v9/dyads_16_22_v9.parquet')}
+```
+
+### `info(version="v9") -> None`
+
+Print summary statistics (row counts by term and hearing type) for cached datasets. If data is not yet downloaded, prompts to run `download()` first.
+
+```python
+kh.info()
+```
+
+## CLI
+
+The `kr-hearings` command is installed alongside the package.
+
+### Global option
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--version` | `v9` | Data version tag (e.g., `v9`, `v8`) |
+
+### `kr-hearings download`
+
+Download both datasets to local cache.
 
 ```bash
-# Download both datasets to local cache
 kr-hearings download
+kr-hearings download --version v8   # download an older version
+```
 
-# Summary statistics
+### `kr-hearings info`
+
+Print summary statistics for cached datasets.
+
+```bash
 kr-hearings info
+```
 
-# Export filtered subset
-kr-hearings export --term 20 --hearing-type 국정감사 --format csv -o output.csv
+### `kr-hearings export`
 
-# Export dyads
+Export a filtered subset to CSV or Parquet.
+
+| Flag | Values | Default | Description |
+|------|--------|---------|-------------|
+| `--dataset` | `speeches`, `dyads` | `speeches` | Which dataset to export |
+| `--term` | integer | all | Filter by Assembly term |
+| `--hearing-type` | string | all | Filter by hearing type |
+| `--format` | `csv`, `parquet` | `csv` | Output format |
+| `-o`, `--output` | path | (required) | Output file path |
+
+```bash
+# Export 20th-term national audit speeches to CSV
+kr-hearings export --term 20 --hearing-type 국정감사 -o audit_20.csv
+
+# Export 21st-term dyads to Parquet
 kr-hearings export --dataset dyads --term 21 --format parquet -o dyads_21.parquet
 ```
 
-### Configuration
+## Cache
+
+Data is downloaded from [GitHub Releases](https://github.com/kyusik-yang/kr-hearings-data/releases) and stored in a local cache directory with the following structure:
+
+```
+~/.cache/kr-hearings-data/
+  v9/
+    all_speeches_16_22_v9.parquet   (1.1 GB)
+    dyads_16_22_v9.parquet          (1.0 GB)
+```
+
+Multiple versions can coexist in the cache (each under its own subdirectory).
 
 | Environment variable | Default | Description |
 |---------------------|---------|-------------|
-| `KR_HEARINGS_CACHE` | `~/.cache/kr-hearings-data` | Local cache directory |
+| `KR_HEARINGS_CACHE` | `~/.cache/kr-hearings-data` | Override the cache directory |
+
+To clear the cache, delete the directory:
+
+```bash
+rm -rf ~/.cache/kr-hearings-data
+```
+
+## Usage examples
+
+### Memory-efficient loading
+
+The full speeches dataset is ~1.1 GB on disk and expands in memory. Use `columns` to load only what you need:
+
+```python
+# ~28 columns -> 3 columns: much faster and lighter
+meta = kh.load_speeches(columns=["term", "role", "hearing_type"])
+```
+
+Combining `columns` with `term` or `hearing_type` filters further reduces memory by skipping irrelevant Parquet row groups at read time:
+
+```python
+# Only 20th-term committee speeches, 3 columns
+subset = kh.load_speeches(
+    term=20,
+    hearing_type="상임위원회",
+    columns=["person_name", "party", "speech_text"],
+)
+```
+
+### Speeches by speaker role
+
+```python
+speeches = kh.load_speeches(columns=["role"])
+print(speeches["role"].value_counts())
+```
+
+### Party-level analysis in national audit dyads
+
+```python
+dyads = kh.load_dyads(
+    hearing_type="국정감사",
+    columns=["term", "leg_party", "leg_ruling_status", "witness_role"],
+)
+
+# Ruling vs. opposition interactions with ministers
+ministers = dyads[dyads["witness_role"] == "minister"]
+print(ministers.groupby(["term", "leg_ruling_status"]).size().unstack(fill_value=0))
+```
+
+### Minister dual-office analysis (v9)
+
+```python
+speeches = kh.load_speeches(
+    columns=["role", "dual_office", "admin", "admin_ideology"],
+)
+ministers = speeches[speeches["role"] == "minister"]
+
+# Ministers who simultaneously held an NA seat
+dual = ministers[ministers["dual_office"] == True]
+print(f"Dual-office minister speeches: {len(dual):,}")
+print(dual["admin"].value_counts())
+```
+
+### Loading an older version
+
+```python
+speeches_v8 = kh.load_speeches(version="v8")
+```
+
+The v8 file is downloaded and cached independently of v9.
 
 ## Files
 
