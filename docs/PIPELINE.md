@@ -208,7 +208,7 @@ build/release/
   validation_report.json  docs_numbers.json  MANIFEST.json
 ```
 
-`package_release.py` writes the release assets into `build/assets/`. It copies each table that is not split by term to `<table>_<version>.parquet`, merges the parts of each term into `turns_tNN_<version>.parquet` and `dyads_tNN_<version>.parquet`, checks the row counts against `MANIFEST.json`, copies `MANIFEST.json` and `validation_report.json` as `MANIFEST_v10.1.json` and `validation_report_v10.1.json`, and writes `SHA256SUMS`. `duplicate_turns`, `duplicate_dyads` and `docs_numbers.json` are not packaged.
+`package_release.py` writes the release assets into `build/assets/`. It copies each table that is not split by term to `<table>_<version>.parquet`, merges the parts of each term into `turns_tNN_<version>.parquet` and `dyads_tNN_<version>.parquet`, checks the row counts against `MANIFEST.json`, copies `MANIFEST.json` and `validation_report.json` as `MANIFEST_v10.2.json` and `validation_report_v10.2.json`, and writes `SHA256SUMS`. `duplicate_turns`, `duplicate_dyads` and `docs_numbers.json` are not packaged.
 
 Bookkeeping stays outside the release folder, in `build/_state/` (state, logs, run records, stage statistics, `crosswalk_stats.json`, `duplicates.json`), `build/_superseded/<run_id>/` (replaced outputs, never deleted) and `build/.staging/`.
 
@@ -221,7 +221,7 @@ Bookkeeping stays outside the release folder, in `build/_state/` (state, logs, r
 - **Randomness.** Every seeded sample uses the seed 8374.
 - **Resources.** Each duckdb connection is limited to 8 GB and 4 threads. A stage process whose resident memory exceeds 20 GB is stopped and nothing is published.
 - **Environment.** The release build ran on Python 3.12.9.
-- **Tests.** On 2026-09-28 the pipeline test suite passed with 1,251 tests.
+- **Tests.** On 2026-09-28 the pipeline test suite passed with 1,254 tests.
 - **Open API key.** The legislator reference tables and the party timeline need an Open API key. The key is read at run time from the environment variable `ASSEMBLY_API_KEY`, or from the file named by `ASSEMBLY_API_KEY_FILE`, and is never written to logs, outputs or this repository.
 - **Third-party table.** The Hanja reading table `hanja_table_0.15.1.yml` is the file `hanja/table.yml` of the PyPI package hanja 0.15.1. `roles.py`, `legislators.py` and `government.py` read it locally for Hanja readings. Its license has not been verified, so it is not redistributed with the release or this repository. A rebuild needs a local copy at `v10/raw/third_party/hanja_table_0.15.1.yml`, taken from the wheel that `pip download hanja==0.15.1 --no-deps` fetches.
 - **Raw files.** The raw viewer pages and HWP files are not redistributed. `meetings.raw_sha1` records the SHA-1 of the file each meeting was built from, and `crawl.py` downloads the files again. A file whose SHA-1 differs from `raw_sha1` is not the file the release was built from, and `coverage_source_sample` compares the two for the files it re-reads.

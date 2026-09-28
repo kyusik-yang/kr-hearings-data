@@ -1,6 +1,6 @@
 """Download, cache, and load kr-hearings-data parquet files.
 
-v10.1 (default) and v10 are published as one asset per table, with turns and dyads split by Assembly term:
+v10.2 (default), v10.1 and v10 are published as one asset per table, with turns and dyads split by Assembly term:
     meetings_{v}.parquet, turns_t{16..22}_{v}.parquet, dyads_t{16..22}_{v}.parquet, and side tables
     (agenda, agenda_header, events, footer, attendance, rollcall, rollcall_groups,
     crosswalk_meetings, crosswalk_turns, duplicate_meetings).
@@ -16,7 +16,7 @@ import pandas as pd
 import requests
 from tqdm import tqdm
 
-LATEST_VERSION = "v10.1"
+LATEST_VERSION = "v10.2"
 REPO = "kyusik-yang/kr-hearings-data"
 RELEASE_URL = f"https://github.com/{REPO}/releases/download"
 TERMS = tuple(range(16, 23))

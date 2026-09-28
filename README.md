@@ -72,25 +72,25 @@ By source, 21,877 meetings (12,300,354 turns) come from viewer XML and 4,387 mee
 
 ## Release files
 
-The files of the current release are the assets of the GitHub release `v10.1`. The release `v10` keeps the files of the first v10 build, which differ only in the links of 4,193 prime-minister nominee turns ([docs/CHANGELOG.md](docs/CHANGELOG.md#v101-2026-09-28)). All tables are Apache Parquet files. Turns and dyads are split by term (`tNN` = term NN, 16 to 22).
+The files of the current release are the assets of the GitHub release `v10.2`. The earlier releases `v10` and `v10.1` stay available, and [docs/CHANGELOG.md](docs/CHANGELOG.md#v102-2026-09-28) lists what changed between them. All tables are Apache Parquet files. Turns and dyads are split by term (`tNN` = term NN, 16 to 22).
 
 | Asset | Rows | One row per |
 |---|---|---|
-| `meetings_v10.1.parquet` | 26,264 | meeting of the universe |
-| `turns_t16_v10.1.parquet` to `turns_t22_v10.1.parquet` | 15,114,183 | merged speaker turn, ordered by `conf_num`, `turn_seq` |
-| `dyads_t16_v10.1.parquet` to `dyads_t22_v10.1.parquet` | 11,279,607 | pair of numerically adjacent legislator and non-legislator turns |
-| `agenda_v10.1.parquet` | 377,889 | agenda anchor printed in the body of the minutes |
-| `agenda_header_v10.1.parquet` | 508,708 | agenda item listed in the header of the minutes |
-| `events_v10.1.parquet` | 162,504 | time marker, stage line or other body line that is not a speaker turn |
-| `footer_v10.1.parquet` | 5,301,479 | line or name of the appendix (attendance lists, attached documents) |
-| `attendance_v10.1.parquet` | 1,395,805 | person listed in an attendance section |
-| `rollcall_v10.1.parquet` | 3,402,605 | name in a recorded vote |
-| `rollcall_groups_v10.1.parquet` | 51,593 | vote group (찬성, 반대, 기권, 투표) of a recorded vote |
-| `crosswalk_meetings_v10.1.parquet` | 26,872 | v9 meeting, plus one row per v10 meeting that no v9 meeting carries |
-| `crosswalk_turns_v10.1.parquet` | 8,603,114 | link between a v9 speech row and a v10 turn |
-| `duplicate_meetings_v10.1.parquet` | 5 | pair of meetings flagged by the duplicate-content checks |
-| `validation_report_v10.1.json` | | validation check with status, counts and example rows |
-| `MANIFEST_v10.1.json` | | build file with rows, columns, bytes and SHA-256, plus the code version, parameters and snapshot hashes of the build |
+| `meetings_v10.2.parquet` | 26,264 | meeting of the universe |
+| `turns_t16_v10.2.parquet` to `turns_t22_v10.2.parquet` | 15,114,183 | merged speaker turn, ordered by `conf_num`, `turn_seq` |
+| `dyads_t16_v10.2.parquet` to `dyads_t22_v10.2.parquet` | 11,279,607 | pair of numerically adjacent legislator and non-legislator turns |
+| `agenda_v10.2.parquet` | 377,889 | agenda anchor printed in the body of the minutes |
+| `agenda_header_v10.2.parquet` | 508,708 | agenda item listed in the header of the minutes |
+| `events_v10.2.parquet` | 162,504 | time marker, stage line or other body line that is not a speaker turn |
+| `footer_v10.2.parquet` | 5,301,479 | line or name of the appendix (attendance lists, attached documents) |
+| `attendance_v10.2.parquet` | 1,395,805 | person listed in an attendance section |
+| `rollcall_v10.2.parquet` | 3,402,605 | name in a recorded vote |
+| `rollcall_groups_v10.2.parquet` | 51,593 | vote group (찬성, 반대, 기권, 투표) of a recorded vote |
+| `crosswalk_meetings_v10.2.parquet` | 26,872 | v9 meeting, plus one row per v10 meeting that no v9 meeting carries |
+| `crosswalk_turns_v10.2.parquet` | 8,603,114 | link between a v9 speech row and a v10 turn |
+| `duplicate_meetings_v10.2.parquet` | 5 | pair of meetings flagged by the duplicate-content checks |
+| `validation_report_v10.2.json` | | validation check with status, counts and example rows |
+| `MANIFEST_v10.2.json` | | build file with rows, columns, bytes and SHA-256, plus the code version, parameters and snapshot hashes of the build |
 | `SHA256SUMS` | | SHA-256 of every asset |
 
 The turns files are the largest assets, followed by the dyads files. The 1,415 turns and 890 dyads of the 2 meetings set aside as identical copies of other meetings are not among the assets ([docs/CODEBOOK.md](docs/CODEBOOK.md#12-duplicate-meetings)).
@@ -100,7 +100,7 @@ Keys:
 - `conf_num` (int64) is the viewer id (CONFER_NUM) and the key of every table.
 - `turn_seq` (int32) is the 1-based position of a turn within a meeting. Turns join on (`conf_num`, `turn_seq`). Dyads carry both positions (`leg_turn_seq`, `wit_turn_seq`).
 - `conf_id` (string) is the Open API CONF_ID, verbatim with its leading zero or `N` prefix. Never cast it to an integer.
-- `v9_meeting_id` (string) is the v9 meeting id of the same meeting. Use `crosswalk_meetings_v10.1.parquet` for any v9 join (see [docs/MIGRATION_v9_to_v10.md](docs/MIGRATION_v9_to_v10.md)).
+- `v9_meeting_id` (string) is the v9 meeting id of the same meeting. Use `crosswalk_meetings_v10.2.parquet` for any v9 join (see [docs/MIGRATION_v9_to_v10.md](docs/MIGRATION_v9_to_v10.md)).
 
 Every column is described in [docs/CODEBOOK.md](docs/CODEBOOK.md).
 
@@ -108,7 +108,7 @@ Every column is described in [docs/CODEBOOK.md](docs/CODEBOOK.md).
 
 ### Python package
 
-Version 0.2.1 of the `kr_hearings_data` package reads v10.1 by default, and `version="v10"` reads the first v10 build. Install it from PyPI:
+Version 0.2.2 of the `kr_hearings_data` package reads v10.2 by default, and `version="v10.1"` or `version="v10"` reads an earlier release. Install it from PyPI:
 
 ```bash
 pip install kr-hearings-data
@@ -154,8 +154,8 @@ con.execute("SET memory_limit = '8GB'")
 leg = con.sql("""
     SELECT t.conf_num, t.turn_seq, t.speech_date, t.speaker_name, t.naas_cd,
            t.party, t.ruling_status, t.text, m.hearing_type, m.committee_key
-    FROM read_parquet('kr-hearings-v10/turns_t21_v10.1.parquet') t
-    JOIN read_parquet('kr-hearings-v10/meetings_v10.1.parquet') m USING (conf_num)
+    FROM read_parquet('kr-hearings-v10/turns_t21_v10.2.parquet') t
+    JOIN read_parquet('kr-hearings-v10/meetings_v10.2.parquet') m USING (conf_num)
     WHERE t.role_group = 'legislator'
 """).df()
 ```
@@ -163,9 +163,9 @@ leg = con.sql("""
 ```python
 import pandas as pd
 
-meetings = pd.read_parquet("kr-hearings-v10/meetings_v10.1.parquet")
+meetings = pd.read_parquet("kr-hearings-v10/meetings_v10.2.parquet")
 turns_20 = pd.read_parquet(
-    "kr-hearings-v10/turns_t20_v10.1.parquet",
+    "kr-hearings-v10/turns_t20_v10.2.parquet",
     columns=["conf_num", "turn_seq", "role", "role_group", "speaker_name", "text"],
 )
 ```
@@ -175,10 +175,10 @@ Dyads hold keys, flags and a core set of attributes. Join any other turn attribu
 ```python
 dyads = con.sql("""
     SELECT d.*, lt.party_lineage AS leg_party_lineage, wt.affiliation_raw AS wit_affiliation_raw
-    FROM read_parquet('kr-hearings-v10/dyads_t21_v10.1.parquet') d
-    JOIN read_parquet('kr-hearings-v10/turns_t21_v10.1.parquet') lt
+    FROM read_parquet('kr-hearings-v10/dyads_t21_v10.2.parquet') d
+    JOIN read_parquet('kr-hearings-v10/turns_t21_v10.2.parquet') lt
       ON lt.conf_num = d.conf_num AND lt.turn_seq = d.leg_turn_seq
-    JOIN read_parquet('kr-hearings-v10/turns_t21_v10.1.parquet') wt
+    JOIN read_parquet('kr-hearings-v10/turns_t21_v10.2.parquet') wt
       ON wt.conf_num = d.conf_num AND wt.turn_seq = d.wit_turn_seq
     WHERE NOT d.leg_is_procedural
 """).df()
@@ -221,7 +221,7 @@ Any result computed from the v9 dyads, or from the v8 and v9 rows of 국정조�
 
 ## Validation
 
-`validate.py` runs 47 checks on the release tables and blocks a release when a check fails. The release validation gives 44 PASS, 0 FAIL and 3 WARN. The checks cover schemas and value domains, unique keys, contiguous turn order, text accounting against the raw sources, an independent recomputation of the dyads and of their attributes, duplicate meeting content, identifier namespaces, role groups, legislator link and party coverage, ruling status and presidency state against the president calendar, the integrity of the agenda, footer and crosswalk tables, and the absence of local paths in release files. The three warnings report 21 turns whose `text_raw` is null (`turns_text`), 2 turns printed after a meeting-end marker (`turns_after_end_marker`) and turns dated the day before the meeting date or by an appended record (`dates_meeting`). [docs/PIPELINE.md](docs/PIPELINE.md#9-validate) lists every check. `validation_report_v10.1.json` gives each check's status, counts and example rows.
+`validate.py` runs 47 checks on the release tables and blocks a release when a check fails. The release validation gives 44 PASS, 0 FAIL and 3 WARN. The checks cover schemas and value domains, unique keys, contiguous turn order, text accounting against the raw sources, an independent recomputation of the dyads and of their attributes, duplicate meeting content, identifier namespaces, role groups, legislator link and party coverage, ruling status and presidency state against the president calendar, the integrity of the agenda, footer and crosswalk tables, and the absence of local paths in release files. The three warnings report 21 turns whose `text_raw` is null (`turns_text`), 2 turns printed after a meeting-end marker (`turns_after_end_marker`) and turns dated the day before the meeting date or by an appended record (`dates_meeting`). [docs/PIPELINE.md](docs/PIPELINE.md#9-validate) lists every check. `validation_report_v10.2.json` gives each check's status, counts and example rows.
 
 ## Known limitations
 

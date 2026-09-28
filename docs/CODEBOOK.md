@@ -30,19 +30,19 @@
 
 | Table | File | Primary key | Rows |
 |---|---|---|---|
-| meetings | `meetings_v10.1.parquet` | `conf_num` | 26,264 |
-| turns | `turns_tNN_v10.1.parquet` | (`conf_num`, `turn_seq`) | 15,114,183 |
-| dyads | `dyads_tNN_v10.1.parquet` | (`conf_num`, `leg_turn_seq`, `wit_turn_seq`) | 11,279,607 |
-| agenda | `agenda_v10.1.parquet` | (`conf_num`, `ordinal`) | 377,889 |
-| agenda_header | `agenda_header_v10.1.parquet` | (`conf_num`, `item_seq`) | 508,708 |
-| events | `events_v10.1.parquet` | (`conf_num`, `event_seq`) | 162,504 |
-| footer | `footer_v10.1.parquet` | (`conf_num`, `row_seq`) | 5,301,479 |
-| attendance | `attendance_v10.1.parquet` | (`conf_num`, `row_seq`) | 1,395,805 |
-| rollcall | `rollcall_v10.1.parquet` | (`conf_num`, `vote_seq`, `vote_group`, `name_seq`) | 3,402,605 |
-| rollcall_groups | `rollcall_groups_v10.1.parquet` | (`conf_num`, `vote_seq`, `vote_group`) | 51,593 |
-| crosswalk_meetings | `crosswalk_meetings_v10.1.parquet` | `v9_meeting_id` for v9 rows, `conf_num` for `v10_only` rows | 26,872 |
-| crosswalk_turns | `crosswalk_turns_v10.1.parquet` | none (a v9 row can link to two turns and the reverse) | 8,603,114 |
-| duplicate_meetings | `duplicate_meetings_v10.1.parquet` | (`a`, `b`) | 5 |
+| meetings | `meetings_v10.2.parquet` | `conf_num` | 26,264 |
+| turns | `turns_tNN_v10.2.parquet` | (`conf_num`, `turn_seq`) | 15,114,183 |
+| dyads | `dyads_tNN_v10.2.parquet` | (`conf_num`, `leg_turn_seq`, `wit_turn_seq`) | 11,279,607 |
+| agenda | `agenda_v10.2.parquet` | (`conf_num`, `ordinal`) | 377,889 |
+| agenda_header | `agenda_header_v10.2.parquet` | (`conf_num`, `item_seq`) | 508,708 |
+| events | `events_v10.2.parquet` | (`conf_num`, `event_seq`) | 162,504 |
+| footer | `footer_v10.2.parquet` | (`conf_num`, `row_seq`) | 5,301,479 |
+| attendance | `attendance_v10.2.parquet` | (`conf_num`, `row_seq`) | 1,395,805 |
+| rollcall | `rollcall_v10.2.parquet` | (`conf_num`, `vote_seq`, `vote_group`, `name_seq`) | 3,402,605 |
+| rollcall_groups | `rollcall_groups_v10.2.parquet` | (`conf_num`, `vote_seq`, `vote_group`) | 51,593 |
+| crosswalk_meetings | `crosswalk_meetings_v10.2.parquet` | `v9_meeting_id` for v9 rows, `conf_num` for `v10_only` rows | 26,872 |
+| crosswalk_turns | `crosswalk_turns_v10.2.parquet` | none (a v9 row can link to two turns and the reverse) | 8,603,114 |
+| duplicate_meetings | `duplicate_meetings_v10.2.parquet` | (`a`, `b`) | 5 |
 | duplicate_turns | not a release asset (`duplicate_turns/tNN/part-*.parquet` in the build folder) | (`conf_num`, `turn_seq`) | 1,415 |
 | duplicate_dyads | not a release asset (`duplicate_dyads/tNN/dyads.parquet` in the build folder) | as dyads | 890 |
 
@@ -86,7 +86,7 @@ One row per meeting of the meeting universe. The universe is the Open API list o
 | `api_comm_name` | string | the Open API gives no committee name | Open API COMM_NAME (or `v_CMIT_NM`) as returned. |
 | `committee_key` | string | never | Harmonized committee key (section 9.3). |
 | `committee_key_rule` | string | never | Rule that set `committee_key`. One of `legacy_map`, `legacy_hearing_type`, `v10_hearing_type`, `v10_new_standing`. |
-| `audit_team` | string | not a 국정감사 team sitting | 국정감사 team (반) such as `제1반` or `미주반`. 145 meetings. |
+| `audit_team` | string | not a 국정감사 team sitting, or a 17th-Assembly team sitting | 국정감사 team (반) such as `제1반` or `미주반`, as printed. It comes from the Open API subcommittee field (16th Assembly), the running header of the HWP file (18th) or the viewer header (19th to 22nd). The 17th-Assembly minutes do not print the team. 873 meetings. |
 | `doc_label` | string | not a 국정조사 record labelled as such | The document label that the Open API puts in the subcommittee slot of some 국정조사 meetings (`…국정조사조사록`). It is not a subcommittee. 59 meetings. |
 | `is_confirmation_hearing` | bool | never | True when the meeting is a confirmation hearing (section 9.4). 778 meetings. |
 | `confirmation_rule` | string | `is_confirmation_hearing` is false | Rule that set the flag. `special_committee`, `source_agenda_text`, or both joined by `;`. |
@@ -266,7 +266,7 @@ A turn is linked to a legislator (NAAS_CD, the Assembly's person code) when its 
 | `id_candidates` | int16 | never | Number of candidate persons considered. |
 | `id_note` | string | no note | Free-text note on the decision, for example why a non-legislator title was not linked. |
 | `id_label_repair` | bool | never | The name was taken from the position or label because the name slot held a title. Links made this way are at most `medium`. |
-| `id_memid_status` | string | no viewer member id | What happened to the viewer member id. `used`, `not_used_nonlegislator`, `not_used_name`, `not_in_crosswalk`. |
+| `id_memid_status` | string | no viewer member id | What happened to the viewer member id. `used`, `not_used_nonlegislator`, `not_used_name`, `not_in_crosswalk`, `corrected` (the viewer member id names the other member of a same-name pair, and a listed correction backed by the minutes replaces it). |
 | `leg_name_hangul` | string | not linked | Name in Hangul from the Assembly member record. |
 | `leg_name_hanja` | string | not linked, or no Hanja name recorded | Name in Hanja from the member record. |
 | `gender` | string | not linked | `남` or `여`. |
@@ -283,11 +283,11 @@ A turn is linked to a legislator (NAAS_CD, the Assembly's person code) when its 
 | `leg_record_mem_id` | string | no record member-term id (16th to 18th Assembly) | Member-term id of the record system for the linked member. |
 | `leg_date_basis` | string | never | Date used for seat and committee checks. `speech_date`. |
 
-`id_method` values that link a person are `mem_id`, `mem_id_pos_name_swapped`, `mem_id_seat_override`, `mem_id_not_seated`, `mem_id_term_mismatch`, `mem_id_name_mismatch`, `name_term`, `name_term_dueum`, `hanja_term`, `hanja_term_variant`, `hanja_term_surname_variant`, `hanja_term_hangul_wildcard`, `hanja_reading_name`, `hanja_term_partial`, `homonym_seat_dates`, `homonym_area`, `homonym_marker_elect_type`, `homonym_marker_district`, `homonym_marker_party`, `homonym_committee`, `homonym_meeting_complement`, `name_fuzzy_committee`, `nonleg_dual_office`, `nonleg_sitting_member_panel_note` and `nonleg_former_member_panel`. Other values leave `naas_cd` null. They are `unlinked:label_confidence_low` (the parser rates the label `low`, so no person is linked), `nonleg_not_member`, `nonleg_name_collision`, `nonleg_former_unverified`, `nonleg_future_member`, `nonleg_former_ambiguous`, `nonleg_former_implausible_age`, `unresolved_no_member_in_term`, `unresolved_ambiguous` and `unresolved_no_name`.
+`id_method` values that link a person are `mem_id`, `mem_id_pos_name_swapped`, `mem_id_seat_override`, `mem_id_not_seated`, `mem_id_term_mismatch`, `mem_id_name_mismatch`, `name_term`, `name_term_dueum`, `hanja_term`, `hanja_term_variant`, `hanja_term_surname_variant`, `hanja_term_hangul_wildcard`, `hanja_reading_name`, `hanja_term_partial`, `homonym_seat_dates`, `homonym_area`, `homonym_marker_elect_type`, `homonym_marker_district`, `homonym_marker_party`, `homonym_committee`, `homonym_meeting_complement`, `name_fuzzy_committee`, `nonleg_dual_office`, `nonleg_sitting_member_panel_note`, `nonleg_former_member_panel` and `mem_id_corrected`. Other values leave `naas_cd` null. They are `unlinked:label_confidence_low` (the parser rates the label `low`, so no person is linked), `nonleg_not_member`, `nonleg_name_collision`, `nonleg_former_unverified`, `nonleg_future_member`, `nonleg_former_ambiguous`, `nonleg_former_implausible_age`, `unresolved_no_member_in_term`, `unresolved_ambiguous` and `unresolved_no_name`.
 
 Resolution order, first match wins:
 
-1. The viewer member id through the record member-term crosswalk (19th to 22nd Assembly), when the printed name is the record name or one character from it. If that member is not seated on the speech date and exactly one member of the same name is, that member is taken (`mem_id_seat_override`).
+1. The viewer member id through the record member-term crosswalk (19th to 22nd Assembly), when the printed name is the record name or one character from it. If that member is not seated on the speech date and exactly one member of the same name is, that member is taken (`mem_id_seat_override`). A viewer member id that the minutes show to name the other member of a same-name pair is replaced by a listed correction (`mem_id_corrected`, one turn in v10.2).
 2. A unique Hangul name among the members of the term, then the 두음법칙 spelling of the surname (`name_term_dueum`).
 3. A unique Hanja name among the members of the term, then a one-character variant, a surname variant, API Hanja names containing Hangul, the Hangul reading of the Hanja, and a dropped first character (low).
 4. Members of the same name within a term are separated by seat dates on the speech date, the printed area, printed markers (`(비)`, district, party initial checked against the party lineage), committee membership on the speech date, and the complement of a marked label in the same meeting.
@@ -768,7 +768,7 @@ Meeting pairs flagged by the three duplicate checks (whole-meeting text, long tu
 | `near_identical` | Same number of turns, and at least 0.9 of them with equal normalized text. | Both kept, flagged in `overlap_with` and `overlap_kinds`. | 2 |
 | `partial` | Any other flagged pair. | Both kept, flagged in `overlap_with` and `overlap_kinds`. | 1 |
 
-The copy kept from an identical group is the one with the fewest mismatches between its printed date, sitting and committee and its Open API row, then the most matches, then the lower `conf_num`. 2 meetings are marked `duplicate_of` and 6 meetings carry an overlap flag. `duplicate_meetings_v10.1.parquet` records every pair with its evidence.
+The copy kept from an identical group is the one with the fewest mismatches between its printed date, sitting and committee and its Open API row, then the most matches, then the lower `conf_num`. 2 meetings are marked `duplicate_of` and 6 meetings carry an overlap flag. `duplicate_meetings_v10.2.parquet` records every pair with its evidence.
 
 In the release the whole-meeting text check found 2 identical pairs (35218 and 35291, 32740 and 32864). 32864 and 35218 are the removed copies. The near-duplicate checks also flagged 31578 and 31793 and 34499 and 34513, and 43313 and 43536 overlap partly. These are kept and flagged. The pair 42004 and 42009 found in the 2026-09-26 build is gone. The viewer XML of 42009 carried the minutes of 42004, so 42009 is now built from its HWP record (source_reason `override:xml_wrong_meeting`).
 

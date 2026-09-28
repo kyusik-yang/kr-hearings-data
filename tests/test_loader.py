@@ -31,7 +31,7 @@ def test_asset_names(kh):
     assert kh._asset_name("turns", "v10", 21) == "turns_t21_v10.parquet"
     assert kh._asset_name("meetings", "v10") == "meetings_v10.parquet"
     assert kh._asset_name("dyads", "v10.1", 16) == "dyads_t16_v10.1.parquet"
-    assert kh.LATEST_VERSION == "v10.1"
+    assert kh.LATEST_VERSION == "v10.2"
     with pytest.raises(ValueError, match="no longer distributed"):
         kh._asset_name("speeches", "v9")
     with pytest.raises(ValueError):

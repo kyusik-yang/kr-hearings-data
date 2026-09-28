@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kr-hearings-data"
-version = "0.2.1"
+version = "0.2.2"
 description = "Korean National Assembly minutes as meetings, speech turns and legislator-witness dyads (16th-22nd Assembly)"
 readme = "README.md"
 license = "CC-BY-4.0"

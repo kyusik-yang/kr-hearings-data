@@ -2,6 +2,13 @@
 
 v10 is a rebuild from the official minutes, not an update of v9. This file lists every verified defect of the published v9 release (D1 to D12), what v10 does about it and which validation check guards it, followed by the other changes.
 
+## v10.2 (2026-09-28)
+
+- 국정감사 audit teams. `audit_team` was filled for the 16th Assembly only (145 meetings). It is now also read from the running header of the 18th-Assembly HWP files (193 meetings) and from the viewer header of the 19th to 22nd Assembly (535 meetings), 873 meetings in all. The 17th-Assembly minutes do not print the team, so those team sittings stay null. The kna cross-check against the v9 labels found the gap, and every recovered team agrees with the v9 label where one exists.
+- One legislator link corrected. In the 헌법개정및정치개혁특별위원회 meeting of 2018-03-12 (conf_num 42927), turn 67 is printed 김성태 위원 and the viewer's member id names 金聖泰 (BQS2021C). Turn 65, printed 金成泰 위원 (9UW75767), answers the chair's call of "김성태 대표님" with "김성태 대표가 아니고 저는 김성태 헌정특위 위원입니다", and turn 67 is the same member answering the next question. The turn now links to 9UW75767 (`id_method` `mem_id_corrected`, `id_memid_status` `corrected`). The kna cross-check of same-name members found it.
+- Only `meetings.audit_team`, the constructed `title` of the 193 18th-Assembly team sittings (which now ends with the team) and the legislator and party-spell columns of that one turn (its party is unchanged) changed. Every other table, including the dyads, is identical to v10.1.
+- Package 0.2.2 reads v10.2 by default. The v10 and v10.1 files stay available in their releases.
+
 ## v10.1 (2026-09-28)
 
 - Prime-minister nominees of the 16th Assembly are linked to minister-data. The confirmation hearings of four nominees (이한동 in 2000, 장상, 장대환 and 김석수 in 2002), eight meetings in all, print the nominee as 公職候補者, a title that names no office. The office is now read from the name of the hearing committee, and all 4,193 turns link to their nominations (`link_method` `nomination:committee_title`). The 1,969 turns of the two appointed nominees also carry their appointment spell and `dual_office`.
@@ -89,7 +96,7 @@ v10 is a rebuild from the official minutes, not an update of v9. This file lists
 
 **v9.** 112 of the 252 numbers in the v9 README, CODEBOOK and PIPELINE do not match v9. No validation report was ever run on v9, and the existing count-based spot check would have failed it (73 of 100 meetings).
 
-**v10.** Every count in this documentation that describes the release was computed from the release tables by a query and checked against them before publication. `validate.py` also writes the counts it computes to `docs_numbers.json` in the build folder. The validation report is published with the release (`validation_report_v10.1.json`).
+**v10.** Every count in this documentation that describes the release was computed from the release tables by a query and checked against them before publication. `validate.py` also writes the counts it computes to `docs_numbers.json` in the build folder. The validation report is published with the release (`validation_report_v10.2.json`).
 
 ### D12. Coverage
 
@@ -110,7 +117,7 @@ v10 is a rebuild from the official minutes, not an update of v9. This file lists
 
 - The meeting-level tables `meetings`, `agenda`, `agenda_header`, `events`, `footer`, `attendance`, `rollcall` and `rollcall_groups` are new.
 - The crosswalk tables `crosswalk_meetings` and `crosswalk_turns` are new.
-- The release assets are one Parquet file per table, and one file per term for turns and dyads (`turns_t16_v10.1.parquet` to `turns_t22_v10.1.parquet`, `dyads_t16_v10.1.parquet` to `dyads_t22_v10.1.parquet`), with `MANIFEST_v10.1.json`, `validation_report_v10.1.json` and `SHA256SUMS`.
+- The release assets are one Parquet file per table, and one file per term for turns and dyads (`turns_t16_v10.2.parquet` to `turns_t22_v10.2.parquet`, `dyads_t16_v10.2.parquet` to `dyads_t22_v10.2.parquet`), with `MANIFEST_v10.2.json`, `validation_report_v10.2.json` and `SHA256SUMS`.
 - The dyad file is slim (39 columns). Other attributes join from the turns table on both turn positions.
 
 ### Turns

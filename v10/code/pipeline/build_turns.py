@@ -2486,6 +2486,45 @@ def committee_key_for(hearing_type, committee_raw):
 
 
 AUDIT_TEAM_RE = re.compile(r"^(?P<c>.+?)\s*(?:[-(（]\s*(?P<t>[^()（）]*반)\s*[)）]?)$")
+# audit team printed in the viewer header of 국정감사 minutes (19th Assembly on): '2013년도국정감사 제1반'
+AUDIT_VIEWER_TURN_RE = re.compile(r"^\d{4}년도\s*국정감사\s*(?P<t>\S+반)$")
+# running header of 국정감사 HWP files (18th Assembly): '2009년도국감-행정안전제2반(2009년10월21일)'
+AUDIT_RUNNING_HEADER_RE = re.compile(r"국감\s*-\s*(?P<rest>[^()（）|]+)")
+
+
+def audit_team_from_viewer_turn(h_turn):
+    """'2013년도국정감사 제1반' -> '제1반'; None when the viewer header names no team."""
+    m = AUDIT_VIEWER_TURN_RE.match(nows(h_turn)) if isinstance(h_turn, str) else None
+    return m.group("t") if m else None
+
+
+def audit_team_from_running_header(running_header, committee):
+    """Team at the end of a 국정감사 HWP running header, after the committee's short name:
+    ('2009년도국감-외교통상통일미주반', '외교통상통일위원회') -> '미주반'. running_header is a list of header
+    texts (or one text). Falls back to a trailing '제N반'. None when no header names a team."""
+    parts = running_header if isinstance(running_header, (list, tuple)) else [running_header]
+    short = re.sub(r"위원회$", "", nows(committee)) if isinstance(committee, str) else ""
+    for part in parts:
+        m = AUDIT_RUNNING_HEADER_RE.search(part) if isinstance(part, str) else None
+        if not m:
+            continue
+        rest = nows(m.group("rest"))
+        if short and rest.startswith(short) and len(rest) > len(short) and rest.endswith("반"):
+            return rest[len(short):]
+        tail = re.search(r"(제\d+반)$", rest)
+        if tail:
+            return tail.group(1)
+    return None
+
+
+def _running_header(extra_json):
+    """running_header of the HWP adapter's meeting dict kept in headers.extra_json (list), else None."""
+    if not isinstance(extra_json, str) or not extra_json:
+        return None
+    try:
+        return (json.loads(extra_json).get("meeting") or {}).get("running_header")
+    except (ValueError, AttributeError):
+        return None
 # second COMM_NAME token / v_SB_CMIT_NM of 국정조사 rows is a document label, not a subcommittee
 # ('한빛은행국정조사조사록', '국정조사록')
 DOC_LABEL_RE = re.compile(r"조사록$")
@@ -2632,6 +2671,9 @@ def build_meetings(cfg, universe, crosswalk, con):
             am = AUDIT_TEAM_RE.match(h_comm)
             if am and am.group("t"):
                 audit_team = am.group("t")
+        if cls == "국정감사" and audit_team is None and h is not None:
+            audit_team = audit_team_from_viewer_turn(_s(h.get("h_turn"))) or \
+                audit_team_from_running_header(_running_header(h.get("extra_json")), committee_raw)
         is_agenda_adj = bool(subcommittee and AGENDA_ADJ_RE.search(subcommittee))
         api_sub_flag = bool(in_u and _b(u["is_subcommittee_name"]))
         is_sub = api_sub_flag or (bool(subcommittee) and not is_agenda_adj)

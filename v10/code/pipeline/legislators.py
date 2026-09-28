@@ -12,7 +12,7 @@ Columns added by enrich (contract): naas_cd, leg_name_hangul, leg_name_hanja, ge
 district, elect_type, seniority, id_method, id_confidence. Extra columns: id_candidates (int),
 id_note, leg_side (bool), leg_side_basis, leg_title_class, leg_is_term_member, leg_seated_on_date,
 leg_stint, leg_record_mem_id, id_label_repair, id_memid_status (what happened to a supplied viewer
-mem_id: used / not_used_nonlegislator / not_used_name / not_in_crosswalk), leg_date_basis
+mem_id: used / not_used_nonlegislator / not_used_name / not_in_crosswalk / corrected, see MEM_ID_CORRECTIONS), leg_date_basis
 (speech_date / meeting_date: the date used for seat and committee checks).
 
 Resolution order (first rule that yields exactly one person wins):
@@ -102,7 +102,32 @@ LINKING_METHODS = (
     "homonym_seat_dates",
     "homonym_area", "homonym_marker_elect_type", "homonym_marker_district", "homonym_marker_party",
     "homonym_committee", "homonym_meeting_complement", "name_fuzzy_committee",
-    "nonleg_dual_office", "nonleg_sitting_member_panel_note", "nonleg_former_member_panel")
+    "nonleg_dual_office", "nonleg_sitting_member_panel_note", "nonleg_former_member_panel", "mem_id_corrected")
+
+# Corrections of a viewer mem_id that names the other member of a same-name pair, each backed by the minutes:
+# (conf_num, printed label, naas_cd given by the viewer mem_id) -> naas_cd of the speaker. id_method
+# 'mem_id_corrected', id_memid_status 'corrected'.
+MEM_ID_CORRECTIONS = {
+    # 20th 헌법개정및정치개혁특별위원회, 2018-03-12. The chair calls on "김성태 대표님", and turn 65 (金成泰 위원) answers
+    # "김성태 대표가 아니고 저는 김성태 헌정특위 위원입니다". Turn 67 (김성태 위원) is the same member answering 김경협,
+    # but the viewer mem_id names BQS2021C (金聖泰). Found by the kna cross-check of 2026-09-28.
+    (42927, "김성태 위원", "BQS2021C"): "9UW75767",
+}
+
+
+def _apply_mem_id_correction(conf_num, label, res: dict) -> dict:
+    """res with MEM_ID_CORRECTIONS applied (unchanged when no correction matches). conf_num may arrive as the
+    string key of enrich ('42927') or as an integer."""
+    try:
+        key = (int(str(conf_num).strip()), label, res.get("naas_cd"))
+    except (TypeError, ValueError):
+        return res
+    fix = MEM_ID_CORRECTIONS.get(key)
+    if fix is None:
+        return res
+    res.update(note=f"viewer mem_id gave {res['naas_cd']}; corrected from the minutes", naas_cd=fix,
+               method="mem_id_corrected", confidence="high", memid_status="corrected")
+    return res
 
 # initial-sound law (두음법칙) spellings of the first syllable of a surname
 DUEUM = {"류": "유", "유": "류", "리": "이", "이": "리", "라": "나", "나": "라", "로": "노", "노": "로",
@@ -1452,7 +1477,7 @@ def enrich(turns: pd.DataFrame, meetings: pd.DataFrame, ref=None) -> pd.DataFram
     G = len(uniq)
     arr = {c: np.full(G, None, dtype=object) for c in ADDED_COLUMNS}
     for g, r in enumerate(uniq.itertuples(index=False)):
-        res = r.resobj
+        res = _apply_mem_id_correction(r.conf_num, r.label, r.resobj)
         cd = res["naas_cd"]
         arr["naas_cd"][g], arr["id_method"][g], arr["id_confidence"][g] = cd, res["method"], res["confidence"]
         arr["id_candidates"][g], arr["id_note"][g] = res["n_cand"], res["note"]

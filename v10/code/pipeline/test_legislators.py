@@ -594,3 +594,35 @@ def test_r2_no_link_on_low_confidence_label(ref):
     assert out.loc[keep, "naas_cd"].equals(base.loc[keep, "naas_cd"])
     assert out.attrs["legislators"] == {"rows": 6, "label_confidence_low_rows": 2, "label_confidence_low_links_blocked": 2}
     assert "unlinked:label_confidence_low" not in L.LINKING_METHODS
+
+
+def test_mem_id_correction_for_a_same_name_pair():
+    res = {"naas_cd": "BQS2021C", "method": "mem_id", "confidence": "high", "memid_status": "used", "note": None}
+    out = L._apply_mem_id_correction(42927, "김성태 위원", dict(res))
+    assert (out["naas_cd"], out["method"], out["memid_status"]) == ("9UW75767", "mem_id_corrected", "corrected")
+    assert "BQS2021C" in out["note"] and "mem_id_corrected" in L.LINKING_METHODS
+    assert L._apply_mem_id_correction(42927, "金成泰 위원", dict(res))["naas_cd"] == "BQS2021C"   # other label
+    assert L._apply_mem_id_correction(42928, "김성태 위원", dict(res))["naas_cd"] == "BQS2021C"   # other meeting
+    assert L._apply_mem_id_correction("42927", "김성태 위원", dict(res))["naas_cd"] == "9UW75767"  # enrich string key
+    assert L._apply_mem_id_correction(None, "김성태 위원", dict(res))["naas_cd"] == "BQS2021C"
+
+
+def test_mem_id_correction_through_enrich():
+    ref = L.load_reference()
+    R = ref["resolver"]
+    mem = {code: k for k, (code, term, *_rest) in R.memid.items() if term == 20 and code in ("BQS2021C", "9UW75767")}
+    if set(mem) != {"BQS2021C", "9UW75767"}:
+        pytest.skip("record member-term crosswalk without the two 20th-term 김성태")
+    t = pd.DataFrame({"conf_num": [42927, 42927, 42927], "turn_seq": [65, 67, 99], "term": [20, 20, 20],
+                      "speech_date": ["2018-03-12"] * 3, "speaker_pos": ["위원"] * 3,
+                      "speaker_name": ["金成泰", "김성태", "김성태"],
+                      "speaker_label_raw": ["金成泰 위원", "김성태 위원", "김성태 의원"],
+                      "speaker_mem_id": [mem["9UW75767"], mem["BQS2021C"], mem["BQS2021C"]],
+                      "role_group": ["legislator"] * 3})
+    m = pd.DataFrame({"conf_num": [42927], "term": [20], "date": ["2018-03-12"],
+                      "committee_raw": ["헌법개정및정치개혁특별위원회"], "subcommittee": [None]})
+    out = L.enrich(t, m, ref=ref)
+    assert (out.loc[0, "naas_cd"], out.loc[0, "id_method"]) == ("9UW75767", "mem_id")
+    assert (out.loc[1, "naas_cd"], out.loc[1, "id_method"], out.loc[1, "id_memid_status"]) == \
+        ("9UW75767", "mem_id_corrected", "corrected")
+    assert (out.loc[2, "naas_cd"], out.loc[2, "id_method"]) == ("BQS2021C", "mem_id")   # other label: unchanged

@@ -1224,3 +1224,18 @@ def test_plan_source_override(tmp_path):
 ])
 def test_split_hangul_label(label, expected):
     assert bt.split_hangul_label(label) == expected
+
+
+def test_audit_team_from_viewer_turn_and_running_header():
+    B = bt
+    assert B.audit_team_from_viewer_turn("2013년도국정감사 제1반") == "제1반"
+    assert B.audit_team_from_viewer_turn("2016년도국정감사 아프리카․중동반") == "아프리카․중동반"
+    assert B.audit_team_from_viewer_turn("2013년도국정감사") is None and B.audit_team_from_viewer_turn(None) is None
+    rh = B.audit_team_from_running_header
+    assert rh(["2009년도국감-행정안전제2반"], "행정안전위원회") == "제2반"
+    assert rh(["2010년도국감-외교통상통일미주1반(2010년10월14일)"], "외교통상통일위원회") == "미주1반"
+    assert rh("2010년도국감-외교통상통일아프리카․중동반", "외교통상통일위원회") == "아프리카․중동반"
+    assert rh(["2009년도국감-환경노동"], "환경노동위원회") is None              # no team
+    assert rh(["2010년도국감-기획재정제1반"], None) == "제1반"                  # committee unknown: 제N반 only
+    assert rh(None, "행정안전위원회") is None
+    assert B._running_header('{"meeting": {"running_header": ["x"]}}') == ["x"] and B._running_header(None) is None
