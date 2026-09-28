@@ -1,0 +1,305 @@
+# v10 release build configuration (read by run_all.py).
+#
+# Every open researcher choice of the pipeline components has an entry here with
+# the component's current default. Entries under `switchable` are wired into the pipeline: run_all.py
+# passes them to the module or applies a documented post-step, and passes the matching value to
+# validate.py. Entries under `fixed` are decisions coded inside a component; run_all.py refuses any value
+# other than the listed default (ConfigError), because honouring it needs a code change in that component.
+# Changing a value re-runs the stages that depend on it (the stage fingerprints include the parameters).
+
+paths:                        # relative paths are relative to v10/
+  work_root: interim/pipeline          # build_turns state and per-batch tables (incremental)
+  build_root: build                    # release tables
+  # researcher decision 1 + id-gap scan (2026-09-26): API universe 26,077 + 187 id-gap meetings (source 'gap_scan',
+  # CONF_ID null); 5 unpublished meetings excluded (interim/universe_not_published.csv). Was meeting_universe_api.parquet.
+  universe: interim/meeting_universe_v10.parquet
+  crawl_db: interim/crawl_state.sqlite
+  v9_crosswalk: interim/v9_to_api_crosswalk.parquet
+  calendar: interim/president_calendar.csv
+  lineage: interim/party_lineage.csv
+  # v9 sentence fingerprints (cache written by crosswalk.py v9-fp; built there when missing)
+  v9_fingerprints: interim/pipeline/crosswalk/v9_sentence_fp.parquet
+
+resources:
+  duckdb_memory: 8GB          # per process (memory_limit of every duckdb connection run_all opens or passes)
+  duckdb_threads: 4
+  build_turns_workers: 8      # parse pool (each worker parses one meeting at a time)
+  build_turns_batch_size: 100
+  enrich_chunk_turns: 500000  # max turns per enrichment chunk (meetings are never split)
+  dyads_chunk_turns: 300000   # max turns per dyads.py chunk
+  max_rss_gb: 20              # a stage process whose RSS exceeds this is stopped (the run fails, nothing is published)
+  rss_poll_seconds: 2
+
+sources: [xml, xlsx, hwp]     # build_turns sources (precedence xlsx (2,433 18대 meetings) > xml > hwp)
+
+switchable:
+  dyads:
+    # hwp_parser report: 531 turns come after a meeting-end marker (산회/감사종료) in 7 18대 files. Default:
+    # keep them flagged (turns.after_end_marker, dyads leg_/wit_after_end_marker). true: such turns break
+    # adjacency like role_group 'excluded' (validate recomputes dyads with the same rule).
+    exclude_after_end_marker: false
+
+  duplicates:
+    # researcher decision 7 (run_all.py stage 'duplicates'): a pair found by the duplicate-content checks that is not
+    # identical is 'near_identical' when both meetings have the same number of turns and at least this share of the
+    # turns have equal normalized text (e.g. 31578/31793: 534 of 545; 34499/34513: 1,481 of 1,551), else 'partial'.
+    # Both kinds are kept and flagged (meetings.overlap_with / overlap_kinds; fixed.duplicates).
+    near_identical_min_share: 0.9
+
+  legislators:
+    # legislators report: the typo rule links a Hangul name one jamo away from a member seated that day
+    # on the meeting's committee (id_method 'name_fuzzy_committee', low confidence; 66 HWP + 13 XLSX/XML turns).
+    # keep (default) | drop (post-step: every legislators column of those turns set to null,
+    # id_method 'dropped:name_fuzzy_committee', counted in the manifest).
+    # R2 (2026-09-26): default kept (keep). Also kept: officials who became members later are not linked
+    # (fixed.legislators.future_member_link "no"). Coded, not switchable: a turn whose speaker label the parser
+    # rates label_confidence 'low' is never linked (person columns null, id_method 'unlinked:label_confidence_low').
+    name_fuzzy_committee: keep
+
+  government:
+    # Minister panel (researcher approval 2026-09-28: adopt minister-data v2; rc3 approved, released as
+    # v2.0.0 the same day with the same linking content). v2 (default):
+    # spells / nominations / acting heads of the snapshot below (government.SpellIndex; link_method spell:*,
+    # nomination:hearing, acting_head:*, unlinked:*). legacy_296: the 296-row
+    # minister-data/data/minister_panel_comprehensive.csv of the minister-data working tree with the legacy
+    # windows below (government.PanelIndex; link_method tenure:*, buffer:*, nominee:*), selectable to
+    # reproduce the release numbers before 2026-09-28. government.py reads panel, minister_release and
+    # spell_buffer_days from this file itself (run_all.py passes only suspended_admin and the legacy windows),
+    # so a run_all.py override of these three keys does not reach government.py.
+    panel: v2
+    # v2 snapshot, relative to v10/ (like paths:); sha256 of every table checked against its MANIFEST.json
+    # when loaded, MANIFEST version must be v2.0.0; a directory outside interim/external/ is refused
+    minister_release: interim/external/minister_data_v2.0.0
+    # v2 date rule: spell_start - B <= speech_date <= (spell_end or the release cutoff 2026-09-24) + B
+    # ('spell:exact' inside [start, end], 'spell:buffer' in the B-day margins; release notes: end = last day
+    # in office). Nominations: a hearing date within 1 day (government.NOMINATION_HEARING_DAYS).
+    spell_buffer_days: 1
+    # government report: admin during impeachment suspensions. president (default: the suspended
+    # president's administration and ideology, presidency_state 'suspended') | acting ('권한대행(NAME)',
+    # null ideology). Passed to government.enrich and to validate (admin_by_date).
+    suspended_admin: president
+    # legacy_296 only (no v2 link_method starts with 'nominee_in_tenure', so 'drop' changes nothing there).
+    # government report: 'nominee_in_tenure' links (confirmation hearing > 60 days after the panel start,
+    # before its end; 8,433 XLSX-era rows). keep (default, distinct link_method label) | drop (post-step:
+    # minister_panel_id, dual_office, gov_link_name set to null, link_method
+    # 'unmatched:nominee_in_tenure_dropped', counted).
+    # R2 (2026-09-26): default kept (keep). Coded, not switchable: no panel link for a turn whose printed
+    # title disagrees with the person's majority title in the meeting (roles.py label_inconsistent_in_meeting;
+    # link_method 'unlinked:label_inconsistent_in_meeting') or whose label is rated label_confidence 'low'
+    # ('unlinked:label_confidence_low'); a title repaired to the meeting majority (label_repaired) is
+    # normalised from the repaired title.
+    nominee_in_tenure: keep
+    # legacy_296 only (v2 uses spell_buffer_days and nomination hearing dates).
+    # government report: panel date windows (government.BUFFER_DAYS, NOMINEE_PRE_DAYS, NOMINEE_POST_DAYS).
+    # 60 buffer days would link 754,973 instead of 742,146 minister rows (report).
+    buffer_days: 7
+    nominee_pre_days: 60
+    nominee_post_days: 60
+
+  crosswalk:
+    # dyads_validate report: with v10_complete=true a v9 transcript found in no built v10 meeting becomes
+    # 'v9_only' instead of keeping the audit-based relation. Default false (crawl still incomplete).
+    v10_complete: false
+
+  validate:
+    mode: release             # release: a missing input or column FAILs; dev: SKIPs
+    # dyads_validate report: duplicate-content pairs block the release until decided. Known pairs:
+    # 32740/32864 and 34499/34513 (18대 XLSX rows), 35218/35291 (HWP), 24668/26493 (16대 XML shingles).
+    # Each entry: [conf_num_a, conf_num_b, reason]. Default: none allowlisted.
+    dup_allowlist: []
+    max_missing: 0            # universe meetings with no build and no confirmed no_xml
+    dup_containment: 0.5
+    dup_long_min_chars: 100
+    dup_long_min_shared: 3
+    dup_max_df: 20
+    dup_shingle_len: 10
+    dup_shingle_min_shared: 5
+    dup_shingle_min_n: 30
+    dup_meeting_min_chars: 1
+    wit_title_max_share: 0.01           # legislator title on the witness side, overall
+    wit_title_max_share_by_type: 0.02   # same, per hearing_type
+    link_thresholds: {16: 0.97, 17: 0.97, 18: 0.97, 19: 0.99, 20: 0.99, 21: 0.99, 22: 0.99}
+    party_thresholds: {16: 0.97, 17: 0.97, 18: 0.97, 19: 0.99, 20: 0.99, 21: 0.99, 22: 0.99}
+    max_linked_party_null: 0
+    speech_date_end_slack_days: 1       # speech_date may exceed the term end by this many days
+    max_meeting_span_days: 10           # speech_date <= meeting date + this
+    coverage_sample_xml: 200
+    coverage_sample_hwp: 20
+    procedural_sample: 0                # 0 = leg_is_procedural recomputed on EVERY dyad (task R3; was a 20,000 sample)
+    # label_how_weak_share: 'weak' = label_confidence 'low' (build_turns.LABEL_CONFIDENCE) plus these label_how
+    # values; WARN (never FAIL) when a source's weak share exceeds label_weak_max_share.
+    label_weak_rules: []
+    label_weak_max_share: 0.001
+
+fixed:
+  # Decisions coded in a component. The value is the component's current behaviour; alternatives are the
+  # options named in its report. Any other value raises ConfigError until the component implements it.
+  party_timeline:
+    # Researcher decision 6 (2026-09-26), implemented by party_timeline.py (R2): in a partyless-president window
+    # the president's most recent party and its lineage successors on the speech date are ruling (e.g.
+    # 열린우리당 -> 대통합민주신당 from 2007-08-20 -> 통합민주당 from 2008-02-17); presidency_state 'partyless',
+    # president_party NULL, president_last_party = the most recent party (lets users recode). presidency_state
+    # values: normal, partyless, suspended (takes precedence over partyless: 2004-03-12..05-14), acting (office
+    # vacant after a removal, with an acting president; there is no 'vacant' value). ruling_status is NULL only in
+    # acting windows and where the member's party is unknown; 무소속 is 'independent'. 노무현's exit from
+    # 열린우리당 is the formal 2007-02-28 (탈당계 submitted; KTV 2007.02.28), not the 2007-02-22 declaration.
+    # run_all.py FIXED_DEFAULTS must carry the same value (owner: run_all.py).
+    partyless_president_ruling:        # 2002-05-06..2003-02-24, 2003-09-29..2004-05-19, 2007-02-28..2008-02-24
+      value: last_president_party      # was "null" (ruling_status NULL, ruling_null_reason 'president_partyless')
+      alternatives: [all_opposition, "null", de_facto_governing_party]
+      validate_param: partyless_rule=last_president_party
+    committee_table_inferences:        # 51 inferences (54 spells) dated by caucus formation / plenary / observation
+      value: accept
+      alternatives: [drop]
+    merger_rename_date:
+      value: earlier_of_lineage_and_notice
+      alternatives: [notice_date, lineage_date]
+    satellite_party_camp:
+      value: main_party_before_merger
+      alternatives: [own_party]
+    speaker_nonpartisan:
+      value: recorded_status_independent
+      alternatives: []
+    individual_exceptions_22:          # 용혜인, 정혜경, 전종덕, 한창민 start party (Wikipedia-sourced text)
+      value: use_lineage_exceptions
+      alternatives: [use_election_party]
+  legislators:
+    nonleg_title_name_uniqueness_link:
+      value: "no"                      # link only on dual office or a panel note naming a served term
+      alternatives: ["yes"]
+    future_member_link:                # officials who became members later (한동훈, 이진숙, 윤상직)
+      value: "no"
+      alternatives: ["yes"]
+    label_repair_confidence_cap:
+      value: medium
+      alternatives: [low, high]
+  government:
+    # panel v2: an acting head is never linked to an appointment spell; it is linked to its
+    # acting_heads.csv row when one covers the date (minister_acting_id, link_method acting_head:pm /
+    # acting_head:lineage; non-PM rows are 'incidental, not exhaustive'). The value stays 'never' because
+    # run_all.py FIXED_DEFAULTS / FIXED_ACCEPTED (updated 2026-09-28).
+    acting_minister_link:
+      value: acting_heads
+      alternatives: [never]
+    ministry_naming:
+      value: name_in_force_at_the_time   # lineage in ministry_family
+      alternatives: [latest_name]
+    panel_coverage_gaps:
+      value: leave_unlinked
+      alternatives: [extend_panel]
+  roles:
+    # Coded in roles.py, not switchable (R2, 2026-09-26):
+    # - label_fused turns (a label joining two speakers' labels around a marker) are role 'other', role_group
+    #   'excluded'; the last label's role is kept in role_rule ('label_fused_excluded[ROLE]>RULE').
+    # - within one meeting, a person (name) printed with a title whose role class differs from the class of
+    #   the person's majority title (legislator and chair are one class) gets label_inconsistent_in_meeting
+    #   (printed role kept; government never links it to a minister panel spell); a tie between titles of
+    #   different classes flags all of them. A title that is a strict prefix of the majority title (not a
+    #   member / presiding title), or one edit from it while unrecognised (role 'other'), is repaired to it
+    #   (label_repaired, role from the majority label, role_rule 'meeting_majority_repair>...'); one edit
+    #   between two recognised titles ('법무부장관' / '법무부차관') is flagged. label_meeting_majority holds
+    #   the majority title.
+    ijangjang_by_institution:          # 이사장: 공단/공사/... public_corp_head, 재단/... org_head
+      value: by_institution_type
+      alternatives: [all_public_corp_head_as_v9]
+    geomsajang:
+      value: agency_head
+      alternatives: [senior_bureaucrat]
+    beobwonjang:
+      value: other_official
+      alternatives: [new_judiciary_role]
+    audit_team_leader_banjang:
+      value: chair
+      alternatives: [legislator]
+    company_marked_titles:
+      value: private_sector
+      alternatives: [ownership_list]
+    independent_commission_staff:      # 국가인권위원회, 금융위원회 staff
+      value: organisation_based
+      alternatives: [rank_based]
+    gisulwonjang:
+      value: org_head
+      alternatives: [research_head]
+    national_arts_directors:
+      value: private_sector
+      alternatives: [cultural_institution_head]
+    witness_counsel:
+      value: witness
+      alternatives: [other]
+    legislator_commission_head:
+      value: printed_title
+      alternatives: [legislator]
+    contains_matching_from_v9:
+      value: keep
+      alternatives: [drop]
+  build_turns:
+    special_committee_key:
+      value: single_special_committee_key
+      alternatives: [one_key_per_committee]
+    agenda_adjustment_committee:
+      value: not_subcommittee_flagged
+      alternatives: [subcommittee]
+    confirmation_hearing_rule:
+      value: special_committee_or_own_agenda_text
+      alternatives: [api_flags]
+    fused_hanja_label_split:
+      value: accept_flagged_rules
+      alternatives: [leave_name_null]
+    orphan_taL_paragraphs_24614:
+      value: events
+      alternatives: [attach_to_previous_turn]
+    sitting_rule:                      # CONTRACT: end marker then (re)opening marker starts a new sitting (xml, xlsx,
+      value: end_then_open_markers     # and hwp when hwp_parser gives no sitting_seq); after_end_marker flags the rest
+      alternatives: [end_marker_starts_segment]   # every end marker followed by turns starts a new sitting_seq
+    label_confidence_table:
+      value: build_turns.LABEL_CONFIDENCE
+      alternatives: []
+  hwp_parser:
+    table_lines_in_text:
+      value: keep_in_text
+      alternatives: [text_raw_only]
+    quoted_transcript_markers:
+      value: keep_inside_quoting_turn
+      alternatives: [split_as_xlsx]
+    label_missing_marker:
+      value: keep_turn_label_missing
+      alternatives: []
+    inner_attendance_vote_lists:
+      value: appendix_inner_events
+      alternatives: []
+  dyads:
+    procedural_regex:
+      value: frozen_round3
+      alternatives: [extended_closing_formulas]
+    chair_utterances:
+      value: keep_with_flags           # researcher decision 2026-09-25
+      alternatives: []
+    release_layout:                    # researcher decision 8 (2026-09-26): ~40 core columns, join turns on
+      value: slim                      # (conf_num, turn_seq); dyads.SLIM_LAYOUT
+      alternatives: []
+  validate:
+    speech_before_meeting_date:        # meetings opening before midnight (e.g. 57212), appended records (30742)
+      value: day_before_and_appended_records_warn
+      alternatives: [not_allowed]
+  crosswalk:
+    partial_label_match:               # label meeting best but containment 0.1-0.5 -> 'same', overlap 'partial'
+      value: same_partial
+      alternatives: [v9_wrong_content]
+    v9_49517_to_41344:                 # 41344 is an id-gap meeting of meeting_universe_v10
+      value: add_meeting
+      alternatives: [not_in_universe]
+  duplicates:                          # researcher decision 7 (2026-09-26), run_all.py stage 'duplicates'
+    identical_text:                    # equal whole-meeting normalized text: the copy whose printed date / sitting /
+      value: keep_copy_matching_api    # committee match its API row is kept, the other gets duplicate_of and its
+      alternatives: []                 # turns / dyads move to duplicate_turns / duplicate_dyads
+    near_identical:                    # same turn count, >= switchable.duplicates.near_identical_min_share equal turns
+      value: keep_flagged              # (31578/31793, 34499/34513): kept, overlap_with / overlap_kinds
+      alternatives: [duplicate_of]
+    partial_overlap:                   # e.g. 43313/43536: kept, overlap_with / overlap_kinds
+      value: keep_flagged
+      alternatives: []
+
+housekeeping:
+  # never acted on by run_all.py; listed so the decisions are in one place
+  delete_build_turns_orphans: false    # interim/pipeline/build_turns/_orphans (superseded batch files)
+  delete_superseded_release_files: false   # build/_superseded/<run_id>/ (replaced release partitions)

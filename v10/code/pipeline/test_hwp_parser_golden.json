@@ -1,0 +1,877 @@
+{
+ "23930": {
+  "status": "ok",
+  "n_turns": 408,
+  "first_labels": [
+   "委員長 鄭均桓",
+   "立法調査官 李啓仁",
+   "委員長 鄭均桓"
+  ],
+  "last_labels": [
+   "女性特別委員長 白京男",
+   "委員長代理 千正培"
+  ],
+  "chars_text_raw": 64765,
+  "chars_text": 64616,
+  "date": "2000-11-28",
+  "committee_raw": "國會運營委員會",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 3,
+  "n_time_markers": 6,
+  "n_footer_sections": 51,
+  "orphan_other": 0,
+  "n_sittings": 1,
+  "n_turns_after_end_marker": 0,
+  "n_weak_labels": 0,
+  "n_name_list_turns": 0,
+  "sittings": [
+   [
+    1,
+    1,
+    "2000-11-28",
+    "cover"
+   ]
+  ],
+  "label_counts": {
+   "事務總長 金炳午": 68,
+   "金武星委員": 33,
+   "金鶴松委員": 33,
+   "委員長代理 千正培": 32,
+   "元喜龍委員": 31,
+   "嚴虎聲委員": 30,
+   "委員長 鄭均桓": 28,
+   "女性特別委員長 白京男": 24,
+   "企劃調整室長 柳忠鉉": 20,
+   "李秉錫委員": 20,
+   "圖書館長 崔文休": 14,
+   "李熙圭委員": 13,
+   "中央人事委員長 金光雄": 12,
+   "議事局長 朱永鎭": 10,
+   "立法次長 姜天求": 8,
+   "元喜龍委員": 5,
+   "企劃調整室長 柳忠鉉": 4,
+   "委員長代理 金武星": 4,
+   "朴昌達委員": 4,
+   "千正培委員": 3,
+   "任鍾晳委員": 2,
+   "姜成求委員": 2,
+   "尹景湜委員": 2,
+   "首席專門委員 鄭浩永": 2,
+   "宋錫贊委員": 1,
+   "立法調査官 李啓仁": 1,
+   "裵奇雲委員": 1,
+   "李性憲委員": 1
+  }
+ },
+ "24530": {
+  "status": "ok",
+  "n_turns": 1224,
+  "first_labels": [
+   "委員長 李 協",
+   "委員長 李 協",
+   "大法官候補者 李揆弘"
+  ],
+  "last_labels": [
+   "大法官候補者 孫智烈",
+   "委員長 李 協"
+  ],
+  "chars_text_raw": 129479,
+  "chars_text": 129352,
+  "date": "2000-07-06",
+  "committee_raw": "人事聽聞特別委員會",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 3,
+  "n_time_markers": 10,
+  "n_footer_sections": 5,
+  "orphan_other": 0,
+  "n_sittings": 1,
+  "n_turns_after_end_marker": 0,
+  "n_weak_labels": 0,
+  "n_name_list_turns": 0,
+  "sittings": [
+   [
+    1,
+    1,
+    "2000-07-06",
+    "cover"
+   ]
+  ],
+  "label_counts": {
+   "大法官候補者 李康國": 200,
+   "大法官候補者 李揆弘": 181,
+   "大法官候補者 孫智烈": 176,
+   "李在五委員": 145,
+   "委員長 李 協": 73,
+   "李良熙委員": 63,
+   "李源性委員": 62,
+   "宋永吉委員": 59,
+   "李柱榮委員": 49,
+   "金容鈞委員": 41,
+   "兪成根委員": 38,
+   "千正培委員": 28,
+   "尹景湜委員": 28,
+   "田溶鶴委員": 25,
+   "黃祐呂委員": 22,
+   "秋美愛委員": 21,
+   "黃祐呂委員": 10,
+   "大法官候補者 李揆洪": 3
+  }
+ },
+ "24831": {
+  "status": "ok",
+  "n_turns": 1448,
+  "first_labels": [
+   "委員長 李允洙",
+   "金文洙 委員",
+   "委員長 李允洙"
+  ],
+  "last_labels": [
+   "全在姬 委員",
+   "委員長 李允洙"
+  ],
+  "chars_text_raw": 137344,
+  "chars_text": 136907,
+  "date": "2001-09-10",
+  "committee_raw": "環境勞動委員會",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 0,
+  "n_time_markers": 8,
+  "n_footer_sections": 6,
+  "orphan_other": 0,
+  "n_sittings": 1,
+  "n_turns_after_end_marker": 0,
+  "n_weak_labels": 0,
+  "n_name_list_turns": 0,
+  "sittings": [
+   [
+    1,
+    1,
+    "2001-09-10",
+    "cover"
+   ]
+  ],
+  "label_counts": {
+   "環境部長官 金明子": 249,
+   "委員長 李允洙": 118,
+   "環境部上下水道局長 南宮垠": 109,
+   "證人 김상종": 96,
+   "吳世勳 委員": 80,
+   "全在姬 委員": 79,
+   "金晟祚 委員": 77,
+   "申溪輪 委員": 74,
+   "金文洙 委員": 73,
+   "金樂冀 委員": 58,
+   "朴赫圭 委員": 55,
+   "鄭宇澤 委員": 50,
+   "證人 신영오": 49,
+   "朴仁相 委員": 48,
+   "李浩雄 委員": 43,
+   "朴洋洙 委員": 26,
+   "環境部企劃管理室長 郭決鎬": 24,
+   "證人 이평우": 21,
+   "證人 김금용": 18,
+   "證人 이환종": 18,
+   "金樂冀 委員": 17,
+   "崔明憲 委員": 16,
+   "金武星 委員": 16,
+   "環境部環境政策局長 李圭用": 15,
+   "中央環境紛爭調停委員長 申昌賢": 5,
+   "證人 이찬희": 5,
+   "參考人 오기출": 2,
+   "國立環境硏究院水質硏究部長 李德吉": 2,
+   "參考人 제진수": 1,
+   "委員長代理 申溪輪": 1,
+   "委員長代理 金樂冀": 1,
+   "環境部大氣保全局長 高允和": 1,
+   "環境部次官 鄭東洙": 1
+  }
+ },
+ "25765": {
+  "status": "ok",
+  "n_turns": 654,
+  "first_labels": [
+   "委員長 鄭均桓",
+   "立法調査官 金漢根",
+   "委員長 鄭均桓"
+  ],
+  "last_labels": [
+   "李柱榮 委員",
+   "委員長代理 李熙圭"
+  ],
+  "chars_text_raw": 75107,
+  "chars_text": 74869,
+  "date": "2002-10-23",
+  "committee_raw": "國會運營委員會",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 6,
+  "n_time_markers": 6,
+  "n_footer_sections": 56,
+  "orphan_other": 0,
+  "n_sittings": 1,
+  "n_turns_after_end_marker": 0,
+  "n_weak_labels": 0,
+  "n_name_list_turns": 0,
+  "sittings": [
+   [
+    1,
+    1,
+    "2002-10-23",
+    "cover"
+   ]
+  ],
+  "label_counts": {
+   "大統領秘書室長 朴智元": 200,
+   "李柱榮 委員": 93,
+   "事務總長 康容植": 61,
+   "李揆澤 委員": 52,
+   "金晟祚 委員": 49,
+   "委員長 鄭均桓": 42,
+   "李承哲 委員": 37,
+   "趙培淑 委員": 19,
+   "李源炯 委員": 13,
+   "大統領秘書室統一秘書官 朴聖勳": 11,
+   "安大崙 委員": 11,
+   "咸承熙 委員": 10,
+   "安泳根 委員": 9,
+   "李熙圭 委員": 8,
+   "大統領秘書室國防秘書官 河正烈": 7,
+   "委員長代理 宋榮珍": 5,
+   "宋榮珍 委員": 5,
+   "權泰望 委員": 5,
+   "林仁培 委員": 3,
+   "圖書館長 金侖兌": 2,
+   "大統領警護室次長 金永臺": 2,
+   "委員長代理 林仁培": 2,
+   "首席專門委員 鄭浩永": 2,
+   "企劃調整室長 玄誠洙": 1,
+   "大統領秘書室國防秘書官 河正烈": 1,
+   "委員長代理 李熙圭": 1,
+   "立法調査官 金漢根": 1,
+   "趙在煥 委員": 1,
+   "鄭長善 委員": 1
+  }
+ },
+ "31869": {
+  "status": "ok",
+  "n_turns": 16,
+  "first_labels": [
+   "사무총장 김태랑",
+   "議長職務代行 趙舜衡",
+   "議長職務代行 趙舜衡"
+  ],
+  "last_labels": [
+   "의장 김형오",
+   "의장 김형오"
+  ],
+  "chars_text_raw": 4432,
+  "chars_text": 4256,
+  "date": "2008-07-10",
+  "committee_raw": "國會本會議",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 7,
+  "n_time_markers": 11,
+  "n_footer_sections": 17,
+  "orphan_other": 0
+ },
+ "31871": {
+  "status": "ok",
+  "n_turns": 7,
+  "first_labels": [
+   "국제국장 김춘순",
+   "의장 김형오",
+   "국제국장 김춘순"
+  ],
+  "last_labels": [
+   "대통령 이명박",
+   "국제국장 김춘순"
+  ],
+  "chars_text_raw": 11136,
+  "chars_text": 10066,
+  "date": "2008-07-11",
+  "committee_raw": "國會本會議",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 0,
+  "n_time_markers": 2,
+  "n_footer_sections": 2,
+  "orphan_other": 0,
+  "n_sittings": 1,
+  "n_turns_after_end_marker": 0,
+  "n_weak_labels": 0,
+  "n_name_list_turns": 0,
+  "sittings": [
+   [
+    1,
+    1,
+    "2008-07-11",
+    "cover"
+   ]
+  ]
+ },
+ "31926": {
+  "status": "ok",
+  "n_turns": 30,
+  "first_labels": [
+   "委員長 金鶴松",
+   "입법조사관 이성기",
+   "委員長 金鶴松"
+  ],
+  "last_labels": [
+   "金武星 委員",
+   "委員長 金鶴松"
+  ],
+  "chars_text_raw": 3025,
+  "chars_text": 2994,
+  "date": "2008-09-01",
+  "committee_raw": "國防委員會",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 2,
+  "n_time_markers": 4,
+  "n_footer_sections": 6,
+  "orphan_other": 0,
+  "v9_meeting_id": "37122",
+  "xlsx_n_rows": 30,
+  "pos_agree_dueum": 1.0,
+  "aligned_agree_dueum": 1.0
+ },
+ "31986": {
+  "status": "ok",
+  "n_turns": 1168,
+  "first_labels": [
+   "위원장 김영선",
+   "위원장 김영선",
+   "공정거래위원장 백용호"
+  ],
+  "last_labels": [
+   "박상돈 위원",
+   "위원장 김영선"
+  ],
+  "chars_text_raw": 98112,
+  "chars_text": 97930,
+  "date": "2008-09-09",
+  "committee_raw": "政務委員會",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 15,
+  "n_time_markers": 7,
+  "n_footer_sections": 3,
+  "orphan_other": 0,
+  "v9_meeting_id": "37184",
+  "xlsx_n_rows": 1168,
+  "pos_agree_dueum": 0.997432,
+  "aligned_agree_dueum": 0.997432
+ },
+ "32196": {
+  "status": "ok",
+  "n_turns": 2108,
+  "first_labels": [
+   "위원장 이낙연",
+   "한국농촌공사사장 홍문표",
+   "위원장 이낙연"
+  ],
+  "last_labels": [
+   "황영철 위원",
+   "위원장 이낙연"
+  ],
+  "chars_text_raw": 124084,
+  "chars_text": 123690,
+  "date": "2008-10-21",
+  "committee_raw": "農林水産食品委員會",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 0,
+  "n_time_markers": 6,
+  "n_footer_sections": 4,
+  "orphan_other": 0,
+  "v9_meeting_id": "37413",
+  "xlsx_n_rows": 2108,
+  "pos_agree_dueum": 1.0,
+  "aligned_agree_dueum": 1.0
+ },
+ "32202": {
+  "status": "ok",
+  "n_turns": 335,
+  "first_labels": [
+   "위원장 홍재형",
+   "위원장 홍재형",
+   "진술인 김성호"
+  ],
+  "last_labels": [
+   "권경석 위원",
+   "위원장 홍재형"
+  ],
+  "chars_text_raw": 67324,
+  "chars_text": 67178,
+  "date": "2008-11-10",
+  "committee_raw": "國家均衡發展및行政中心複合都市對策特別委員會",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 1,
+  "n_time_markers": 2,
+  "n_footer_sections": 4,
+  "orphan_other": 0
+ },
+ "32244": {
+  "status": "ok",
+  "n_turns": 901,
+  "first_labels": [
+   "위원장 김영선",
+   "금융위원회상임위원 이종구",
+   "위원장 김영선"
+  ],
+  "last_labels": [
+   "김동철 위원",
+   "위원장 김영선"
+  ],
+  "chars_text_raw": 94286,
+  "chars_text": 93478,
+  "date": "2008-10-24",
+  "committee_raw": "政務委員會",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 0,
+  "n_time_markers": 6,
+  "n_footer_sections": 5,
+  "orphan_other": 0,
+  "v9_meeting_id": "37465",
+  "xlsx_n_rows": 901,
+  "pos_agree_dueum": 0.976693,
+  "aligned_agree_dueum": 0.976693
+ },
+ "32530": {
+  "status": "ok",
+  "n_turns": 1553,
+  "first_labels": [
+   "위원장 김영선",
+   "한국자산관리공사사장 이철휘",
+   "위원장 김영선"
+  ],
+  "last_labels": [
+   "조경태 위원",
+   "위원장 김영선"
+  ],
+  "chars_text_raw": 126089,
+  "chars_text": 125371,
+  "date": "2008-10-20",
+  "committee_raw": "政務委員會",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 0,
+  "n_time_markers": 6,
+  "n_footer_sections": 4,
+  "orphan_other": 0,
+  "v9_meeting_id": "37780",
+  "xlsx_n_rows": 1553,
+  "pos_agree_dueum": 1.0,
+  "aligned_agree_dueum": 1.0
+ },
+ "32689": {
+  "status": "ok",
+  "n_turns": 526,
+  "first_labels": [
+   "위원장 이병석",
+   "경상북도지사 김관용",
+   "위원장 이병석"
+  ],
+  "last_labels": [
+   "독도경비대장 강석경",
+   "위원장 이병석"
+  ],
+  "chars_text_raw": 60325,
+  "chars_text": 59929,
+  "date": "2008-10-20",
+  "committee_raw": "國土海洋委員會",
+  "subcommittee": null,
+  "appendix_how": "appendix_heading",
+  "n_agenda_anchors": 0,
+  "n_time_markers": 7,
+  "n_footer_sections": 5,
+  "orphan_other": 0,
+  "n_sittings": 2,
+  "n_turns_after_end_marker": 0,
+  "n_weak_labels": 0,
+  "n_name_list_turns": 0,
+  "sittings": [
+   [
+    1,
+    1,
+    "2008-10-20",
+    "cover"
+   ],
+   [
+    2,
+    479,
+    "2008-10-20",
+    "inherited"
+   ]
+  ],
+  "v9_meeting_id": "37949",
+  "xlsx_n_rows": 478,
+  "pos_agree_dueum": 0.908745,
+  "aligned_agree_dueum": 0.908745
+ },
+ "33386": {
+  "status": "ok",
+  "n_turns": 867,
+  "first_labels": [
+   "위원장 이종걸",
+   "위원장 이종걸",
+   "안민석 위원"
+  ],
+  "last_labels": [
+   "최재성 위원",
+   "위원장 이종걸"
+  ],
+  "chars_text_raw": 93647,
+  "chars_text": 93515,
+  "date": "2009-10-07",
+  "committee_raw": "敎育科學技術委員會",
+  "subcommittee": null,
+  "appendix_how": "appendix_heading",
+  "n_agenda_anchors": 0,
+  "n_time_markers": 10,
+  "n_footer_sections": 5,
+  "orphan_other": 0,
+  "v9_meeting_id": "38733",
+  "xlsx_n_rows": 867,
+  "pos_agree_dueum": 1.0,
+  "aligned_agree_dueum": 1.0
+ },
+ "33499": {
+  "status": "ok",
+  "n_turns": 72,
+  "first_labels": [
+   "의장 김형오",
+   "의사국장 이종후",
+   "의장 김형오"
+  ],
+  "last_labels": [
+   "의장 김형오",
+   "캐나다총리 스티븐 하퍼"
+  ],
+  "chars_text_raw": 53115,
+  "chars_text": 51522,
+  "date": "2009-12-07",
+  "committee_raw": "國會本會議",
+  "subcommittee": null,
+  "appendix_how": "none",
+  "n_agenda_anchors": 56,
+  "n_time_markers": 18,
+  "n_footer_sections": 0,
+  "orphan_other": 0,
+  "n_sittings": 2,
+  "n_turns_after_end_marker": 0,
+  "n_weak_labels": 0,
+  "n_name_list_turns": 0,
+  "sittings": [
+   [
+    1,
+    1,
+    "2009-12-07",
+    "cover"
+   ],
+   [
+    2,
+    71,
+    "2009-12-07",
+    "sub_cover"
+   ]
+  ],
+  "n_turns_after_final_end_marker": 2
+ },
+ "33610": {
+  "status": "ok",
+  "n_turns": 1616,
+  "first_labels": [
+   "위원장 변웅전",
+   "국립의료원장 강재규",
+   "위원장 변웅전"
+  ],
+  "last_labels": [
+   "최영희 위원",
+   "위원장 변웅전"
+  ],
+  "chars_text_raw": 121776,
+  "chars_text": 120696,
+  "date": "2009-10-19",
+  "committee_raw": "保健福祉家族委員會",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 0,
+  "n_time_markers": 4,
+  "n_footer_sections": 4,
+  "orphan_other": 0,
+  "v9_meeting_id": "38976",
+  "xlsx_n_rows": 1616,
+  "pos_agree_dueum": 1.0,
+  "aligned_agree_dueum": 1.0
+ },
+ "33708": {
+  "status": "ok",
+  "n_turns": 888,
+  "first_labels": [
+   "위원장 이종걸",
+   "동북아역사재단이사장 정재정",
+   "위원장 이종걸"
+  ],
+  "last_labels": [
+   "안민석 위원",
+   "위원장 이종걸"
+  ],
+  "chars_text_raw": 92625,
+  "chars_text": 91990,
+  "date": "2009-10-12",
+  "committee_raw": "敎育科學技術委員會",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 0,
+  "n_time_markers": 4,
+  "n_footer_sections": 4,
+  "orphan_other": 0,
+  "v9_meeting_id": "39078",
+  "xlsx_n_rows": 906,
+  "pos_agree_dueum": 0.428256,
+  "aligned_agree_dueum": 0.980132
+ },
+ "33730": {
+  "status": "ok",
+  "n_turns": 267,
+  "first_labels": [
+   "委員長 秋美愛",
+   "委員長 秋美愛",
+   "委員長 秋美愛"
+  ],
+  "last_labels": [
+   "조원진 위원",
+   "委員長 秋美愛"
+  ],
+  "chars_text_raw": 35275,
+  "chars_text": 32696,
+  "date": "2009-12-30",
+  "committee_raw": "環境勞動委員會",
+  "subcommittee": null,
+  "appendix_how": "appendix_heading",
+  "n_agenda_anchors": 14,
+  "n_time_markers": 7,
+  "n_footer_sections": 3,
+  "orphan_other": 0,
+  "v9_meeting_id": "39100",
+  "xlsx_n_rows": 267,
+  "pos_agree_dueum": 1.0,
+  "aligned_agree_dueum": 1.0
+ },
+ "33754": {
+  "status": "ok",
+  "n_turns": 247,
+  "first_labels": [
+   "위원장대리 조영택",
+   "위원장대리 조영택",
+   "진술인 김정원"
+  ],
+  "last_labels": [
+   "진술인 하혜수",
+   "위원장대리 권경석"
+  ],
+  "chars_text_raw": 81328,
+  "chars_text": 81308,
+  "date": "2009-11-26",
+  "committee_raw": "地方行政體制改編特別委員會",
+  "subcommittee": null,
+  "appendix_how": "appendix_heading",
+  "n_agenda_anchors": 2,
+  "n_time_markers": 4,
+  "n_footer_sections": 3,
+  "orphan_other": 0,
+  "n_sittings": 2,
+  "n_turns_after_end_marker": 0,
+  "n_weak_labels": 0,
+  "n_name_list_turns": 0,
+  "sittings": [
+   [
+    1,
+    1,
+    "2009-11-26",
+    "cover"
+   ],
+   [
+    2,
+    99,
+    "2009-11-26",
+    "inherited"
+   ]
+  ],
+  "n_turns_after_final_end_marker": 149
+ },
+ "34092": {
+  "status": "ok",
+  "n_turns": 1160,
+  "first_labels": [
+   "소위원장 이계진",
+   "소위원장 이계진",
+   "전문위원 김병선"
+  ],
+  "last_labels": [
+   "조배숙 위원",
+   "소위원장 이계진"
+  ],
+  "chars_text_raw": 100955,
+  "chars_text": 100747,
+  "date": "2010-04-19",
+  "committee_raw": "農林水産食品委員會",
+  "subcommittee": "法律案審査小委員會",
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 80,
+  "n_time_markers": 6,
+  "n_footer_sections": 3,
+  "orphan_other": 0
+ },
+ "34629": {
+  "status": "ok",
+  "n_turns": 25,
+  "first_labels": [
+   "부의장 정의화",
+   "부의장 정의화",
+   "예산결산특별위원장 이주영"
+  ],
+  "last_labels": [
+   "부의장 정의화",
+   "부의장 정의화"
+  ],
+  "chars_text_raw": 12953,
+  "chars_text": 10262,
+  "date": "2010-12-08",
+  "committee_raw": "國會本會議",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 43,
+  "n_time_markers": 16,
+  "n_footer_sections": 56,
+  "orphan_other": 0
+ },
+ "34989": {
+  "status": "ok",
+  "n_turns": 320,
+  "first_labels": [
+   "소위원장 이범관",
+   "손범규 위원",
+   "소위원장 이범관"
+  ],
+  "last_labels": [
+   "홍희덕 위원",
+   "소위원장 이범관"
+  ],
+  "chars_text_raw": 27932,
+  "chars_text": 27905,
+  "date": "2011-03-18",
+  "committee_raw": "環境勞動委員會",
+  "subcommittee": "口蹄疫埋沒地周邊環境管理對策小委員會",
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 4,
+  "n_time_markers": 3,
+  "n_footer_sections": 70,
+  "orphan_other": 0,
+  "n_sittings": 1,
+  "n_turns_after_end_marker": 0,
+  "n_weak_labels": 0,
+  "n_name_list_turns": 0,
+  "sittings": [
+   [
+    1,
+    1,
+    "2011-03-18",
+    "cover"
+   ]
+  ]
+ },
+ "35452": {
+  "status": "ok",
+  "n_turns": 42,
+  "first_labels": [
+   "의장 박희태",
+   "의사국장 한공식",
+   "의장 박희태"
+  ],
+  "last_labels": [
+   "예산결산특별위원장대리 강기정",
+   "부의장 정의화"
+  ],
+  "chars_text_raw": 22030,
+  "chars_text": 21657,
+  "date": "2011-08-31",
+  "committee_raw": "國會本會議",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 10,
+  "n_time_markers": 16,
+  "n_footer_sections": 24,
+  "orphan_other": 0,
+  "n_sittings": 1,
+  "n_turns_after_end_marker": 0,
+  "n_weak_labels": 0,
+  "n_name_list_turns": 0,
+  "sittings": [
+   [
+    1,
+    1,
+    "2011-08-31",
+    "cover"
+   ]
+  ]
+ },
+ "36011": {
+  "status": "ok",
+  "n_turns": 247,
+  "first_labels": [
+   "소위원장 김재경",
+   "소위원장 김재경",
+   "수석전문위원 구기성"
+  ],
+  "last_labels": [
+   "李珍福 委員",
+   "소위원장 김재경"
+  ],
+  "chars_text_raw": 18274,
+  "chars_text": 18232,
+  "date": "2011-12-30",
+  "committee_raw": "氣候變化對應․綠色成長特別委員會",
+  "subcommittee": "法律案審査小委員會",
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 2,
+  "n_time_markers": 2,
+  "n_footer_sections": 3,
+  "orphan_other": 0
+ },
+ "36165": {
+  "status": "ok",
+  "n_turns": 533,
+  "first_labels": [
+   "위원장 우윤근",
+   "이애주 위원",
+   "위원장 우윤근"
+  ],
+  "last_labels": [
+   "朴俊宣 委員",
+   "위원장 우윤근"
+  ],
+  "chars_text_raw": 40697,
+  "chars_text": 40265,
+  "date": "2012-05-02",
+  "committee_raw": "法制司法委員會",
+  "subcommittee": null,
+  "appendix_how": "after_end_marker",
+  "n_agenda_anchors": 65,
+  "n_time_markers": 17,
+  "n_footer_sections": 7,
+  "orphan_other": 0,
+  "v9_meeting_id": "41696",
+  "xlsx_n_rows": 533,
+  "pos_agree_dueum": 1.0,
+  "aligned_agree_dueum": 1.0
+ }
+}

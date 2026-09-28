@@ -1,0 +1,34 @@
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+*.parquet
+*.npy
+*.npz
+.DS_Store
+*.csv
+.env
+.venv/
+
+# v10 build tree: only the pipeline code is versioned. Raw crawl pages, intermediate tables, the
+# release build and the local working reports stay out of git (release tables are published as
+# GitHub Release assets).
+v10/*
+!v10/code/
+v10/code/*
+!v10/code/pipeline/
+!v10/code/crawl.py
+!v10/code/build_crawl_tasks.py
+!v10/code/parse_viewer.py
+!v10/code/legacy_rules.py
+!v10/code/verify_minister_v2.py
+v10/code/pipeline/__pycache__/
+# hand-coded reference tables the pipeline reads (president calendar, party lineage)
+!v10/interim/
+v10/interim/*
+!v10/interim/president_calendar.csv
+!v10/interim/party_lineage.csv
+.pytest_cache/
