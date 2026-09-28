@@ -30,19 +30,19 @@
 
 | Table | File | Primary key | Rows |
 |---|---|---|---|
-| meetings | `meetings_v10.parquet` | `conf_num` | 26,264 |
-| turns | `turns_tNN_v10.parquet` | (`conf_num`, `turn_seq`) | 15,114,183 |
-| dyads | `dyads_tNN_v10.parquet` | (`conf_num`, `leg_turn_seq`, `wit_turn_seq`) | 11,279,607 |
-| agenda | `agenda_v10.parquet` | (`conf_num`, `ordinal`) | 377,889 |
-| agenda_header | `agenda_header_v10.parquet` | (`conf_num`, `item_seq`) | 508,708 |
-| events | `events_v10.parquet` | (`conf_num`, `event_seq`) | 162,504 |
-| footer | `footer_v10.parquet` | (`conf_num`, `row_seq`) | 5,301,479 |
-| attendance | `attendance_v10.parquet` | (`conf_num`, `row_seq`) | 1,395,805 |
-| rollcall | `rollcall_v10.parquet` | (`conf_num`, `vote_seq`, `vote_group`, `name_seq`) | 3,402,605 |
-| rollcall_groups | `rollcall_groups_v10.parquet` | (`conf_num`, `vote_seq`, `vote_group`) | 51,593 |
-| crosswalk_meetings | `crosswalk_meetings_v10.parquet` | `v9_meeting_id` for v9 rows, `conf_num` for `v10_only` rows | 26,872 |
-| crosswalk_turns | `crosswalk_turns_v10.parquet` | none (a v9 row can link to two turns and the reverse) | 8,603,114 |
-| duplicate_meetings | `duplicate_meetings_v10.parquet` | (`a`, `b`) | 5 |
+| meetings | `meetings_v10.1.parquet` | `conf_num` | 26,264 |
+| turns | `turns_tNN_v10.1.parquet` | (`conf_num`, `turn_seq`) | 15,114,183 |
+| dyads | `dyads_tNN_v10.1.parquet` | (`conf_num`, `leg_turn_seq`, `wit_turn_seq`) | 11,279,607 |
+| agenda | `agenda_v10.1.parquet` | (`conf_num`, `ordinal`) | 377,889 |
+| agenda_header | `agenda_header_v10.1.parquet` | (`conf_num`, `item_seq`) | 508,708 |
+| events | `events_v10.1.parquet` | (`conf_num`, `event_seq`) | 162,504 |
+| footer | `footer_v10.1.parquet` | (`conf_num`, `row_seq`) | 5,301,479 |
+| attendance | `attendance_v10.1.parquet` | (`conf_num`, `row_seq`) | 1,395,805 |
+| rollcall | `rollcall_v10.1.parquet` | (`conf_num`, `vote_seq`, `vote_group`, `name_seq`) | 3,402,605 |
+| rollcall_groups | `rollcall_groups_v10.1.parquet` | (`conf_num`, `vote_seq`, `vote_group`) | 51,593 |
+| crosswalk_meetings | `crosswalk_meetings_v10.1.parquet` | `v9_meeting_id` for v9 rows, `conf_num` for `v10_only` rows | 26,872 |
+| crosswalk_turns | `crosswalk_turns_v10.1.parquet` | none (a v9 row can link to two turns and the reverse) | 8,603,114 |
+| duplicate_meetings | `duplicate_meetings_v10.1.parquet` | (`a`, `b`) | 5 |
 | duplicate_turns | not a release asset (`duplicate_turns/tNN/part-*.parquet` in the build folder) | (`conf_num`, `turn_seq`) | 1,415 |
 | duplicate_dyads | not a release asset (`duplicate_dyads/tNN/dyads.parquet` in the build folder) | as dyads | 890 |
 
@@ -336,8 +336,8 @@ Section 11 gives the rules.
 | `ministry_family` | string | no lineage recorded | Rename-lineage key of the organisation (`education`, `health_welfare`, `finance_planning`). |
 | `ministry_rule` | string | never | Normalization rule that fired, for example `lexicon`, `hanja+lexicon`, `deputy_pm+lexicon`, `regional_office`, `overseas_mission`, `generic_commission`, `generic_suffix`, `typo_map`, or the reason for no ministry (`legislator`, `no_org`, `non_government`, `local_government`, `military`, `judiciary`, `assembly_body`, `empty`). |
 | `minister_panel_id` | string | not linked to a spell or an acting head | `spell_id` of the linked appointment spell of minister-data v2.0.0 (also for a nomination that led to a spell), or `acting_id` of the linked acting-head record. |
-| `dual_office` | bool | no spell linked | The linked minister holds an Assembly seat on the speech date. Null for acting heads and for nominations without a spell. 176,959 turns are true. |
-| `link_method` | string | the turn is outside the link scope (section 11) | How the link was made (`spell:exact` inside the spell, `spell:buffer` within the buffer days around it, `nomination:hearing`, `acting_head:pm`, `acting_head:lineage`), why it failed (`unlinked:name_not_in_panel`, `unlinked:lineage_unresolved`, `unlinked:vice_minister_title`, `unlinked:lineage_out_of_scope`, `unlinked:person_in_other_lineage`, `unlinked:outside_spell`, `unlinked:outside_hearing`, `unlinked:not_in_acting_heads`, `unlinked:outside_acting_period`, `unlinked:no_name`, `unlinked:no_date`) or why it was blocked (`unlinked:label_inconsistent_in_meeting`, `unlinked:label_confidence_low`, `unlinked:former_title`). |
+| `dual_office` | bool | no spell linked | The linked minister holds an Assembly seat on the speech date. Null for acting heads and for nominations without a spell. 177,634 turns are true. |
+| `link_method` | string | the turn is outside the link scope (section 11) | How the link was made (`spell:exact` inside the spell, `spell:buffer` within the buffer days around it, `nomination:hearing`, `nomination:committee_title` (a nominee title that names no office, read from the name of a prime-minister confirmation hearing committee), `acting_head:pm`, `acting_head:lineage`), why it failed (`unlinked:name_not_in_panel`, `unlinked:lineage_unresolved`, `unlinked:vice_minister_title`, `unlinked:lineage_out_of_scope`, `unlinked:person_in_other_lineage`, `unlinked:outside_spell`, `unlinked:outside_hearing`, `unlinked:not_in_acting_heads`, `unlinked:outside_acting_period`, `unlinked:no_name`, `unlinked:no_date`) or why it was blocked (`unlinked:label_inconsistent_in_meeting`, `unlinked:label_confidence_low`, `unlinked:former_title`). |
 | `gov_link_name` | string | not linked | Hangul name of the linked spell, nominee or acting head. |
 | `minister_spell_id` | string | no spell linked | `spell_id` of the linked spell (`spells.csv`), for spell links and for nominations that led to a spell. |
 | `minister_nomination_id` | string | not linked to a nomination | `nomination_id` of the linked nomination (`nominations.csv`). |
@@ -748,12 +748,13 @@ To code the partyless windows differently (for example every party `opposition`,
 | minister, prime_minister | appointment spell of the person and lineage | spell start to spell end, or to 2026-09-24 for a spell still open | `spell:exact` |
 | minister, prime_minister | appointment spell of the person and lineage | 1 day before the start or after the end (`spell_buffer_days`) | `spell:buffer` |
 | minister_nominee, and nominee with a cabinet title | nomination of the person and lineage | a hearing date within 1 day of the speech date | `nomination:hearing` |
+| nominee titled 公職候補者 in a prime-minister confirmation hearing committee | prime-minister nomination of the person | a hearing date within 1 day of the speech date | `nomination:committee_title` |
 | prime_minister titled 직무대행 or 직무대리 | acting-head record acting for the prime minister | the acting period | `acting_head:pm` |
 | minister_acting | acting-head record of the lineage | the acting period | `acting_head:lineage` |
 
 An acting head is never linked to an appointment spell. The acting-head records of minister-data cover the prime minister's office systematically and other ministries only incidentally. `dual_office` is set on the speech date from the seat dates of the linked spell.
 
-1,151,503 of 1,151,689 minister turns, all 138,743 minister_nominee turns (126,811 of them through a nomination that led to a spell), all 93,982 prime_minister turns (91,384 to a spell and 2,598 acting prime-minister turns to an acting-head record), 19,760 of 20,984 minister_acting turns and 17,724 of 17,735 cabinet-title nominee turns are linked. No link in the release falls in the buffer days (`spell:buffer`).
+1,151,503 of 1,151,689 minister turns, all 138,743 minister_nominee turns (126,811 of them through a nomination that led to a spell), all 93,982 prime_minister turns (91,384 to a spell and 2,598 acting prime-minister turns to an acting-head record), 19,760 of 20,984 minister_acting turns and 21,917 of 21,928 cabinet-title nominee turns are linked (4,193 of them through the name of the hearing committee). No link in the release falls in the buffer days (`spell:buffer`).
 
 `government.panel` = `legacy_296` restores the earlier 296-row panel with its tenure, buffer and nominee windows (`link_method` `tenure:…`, `buffer:…`, `nominee:…`, `nominee_in_tenure:…`), which reproduces the numbers of builds before 2026-09-28. The five `minister_*` id columns are null in that mode.
 
@@ -767,7 +768,7 @@ Meeting pairs flagged by the three duplicate checks (whole-meeting text, long tu
 | `near_identical` | Same number of turns, and at least 0.9 of them with equal normalized text. | Both kept, flagged in `overlap_with` and `overlap_kinds`. | 2 |
 | `partial` | Any other flagged pair. | Both kept, flagged in `overlap_with` and `overlap_kinds`. | 1 |
 
-The copy kept from an identical group is the one with the fewest mismatches between its printed date, sitting and committee and its Open API row, then the most matches, then the lower `conf_num`. 2 meetings are marked `duplicate_of` and 6 meetings carry an overlap flag. `duplicate_meetings_v10.parquet` records every pair with its evidence.
+The copy kept from an identical group is the one with the fewest mismatches between its printed date, sitting and committee and its Open API row, then the most matches, then the lower `conf_num`. 2 meetings are marked `duplicate_of` and 6 meetings carry an overlap flag. `duplicate_meetings_v10.1.parquet` records every pair with its evidence.
 
 In the release the whole-meeting text check found 2 identical pairs (35218 and 35291, 32740 and 32864). 32864 and 35218 are the removed copies. The near-duplicate checks also flagged 31578 and 31793 and 34499 and 34513, and 43313 and 43536 overlap partly. These are kept and flagged. The pair 42004 and 42009 found in the 2026-09-26 build is gone. The viewer XML of 42009 carried the minutes of 42004, so 42009 is now built from its HWP record (source_reason `override:xml_wrong_meeting`).
 
@@ -825,7 +826,7 @@ Counts are from the release tables unless a comment names another file.
 
 - **Minister links.** Government links use minister-data v2.0.0 (section 11). 186 of 1,151,689 minister turns are not linked. 168 of them are blocked by a gate (inconsistent title, low label confidence or former title), 13 print no name, and 5 fail on the name, lineage or spell dates.
 - **Acting ministers.** The acting-head records of minister-data cover the prime minister's office systematically and other ministries only incidentally. 1,224 of 20,984 minister_acting turns are not linked, 655 because no acting-head record names the person for the lineage and 569 because the date lies outside the recorded acting period.
-- **Prime-minister nominees of the 16th Assembly.** 4,193 turns in 8 confirmation hearings of prime-minister nominees (2000 to 2002) print the title 公職候補者, which names no office. They keep the role `nominee` and are not linked (`link_method` null).
+- **Prime-minister nominees of the 16th Assembly.** 4,193 turns in 8 confirmation hearings of prime-minister nominees (2000 to 2002) print the title 公職候補者, which names no office. Since v10.1 the office is read from the name of the hearing committee, and the turns link to their nominations (`nomination:committee_title`). They keep the role `nominee`.
 
 ### Meetings and tables
 

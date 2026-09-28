@@ -78,7 +78,9 @@ Rules (researcher decisions of 2026-09-25 and the component brief):
         B = spell_buffer_days (default 1; 'spell:exact' inside, else 'spell:buffer')
       - nominees (minister_nominee, and role 'nominee' whose title resolves to a cabinet lineage, e.g.
         '국무총리후보자'): nominations.csv (nominee, lineage) with a hearing date within 1 day
-        ('nomination:hearing'); spell_id null for withdrawn / rejected nominations
+        ('nomination:hearing'); spell_id null for withdrawn / rejected nominations. A role-'nominee'
+        title that names no office ('公職候補者') in a PM confirmation hearing committee is read as
+        '국무총리후보자' ('nomination:committee_title')
       - acting heads: role prime_minister with a 직무대행 / 직무대리 title -> acting_heads.csv rows acting for
         'pm' ('acting_head:pm'); minister_acting -> rows of the resolved lineage ('acting_head:lineage',
         coverage 'incidental, not exhaustive'); same person (name), from <= date <= (to or cutoff)
@@ -1237,16 +1239,47 @@ def is_bare_acting_pm(pos: Optional[str]) -> bool:
     return bool(_BARE_ACTING_PM_RE.match(s))
 
 
-def _v2_nominee_scope(out: pd.DataFrame, idx: "SpellIndex", dkeys: pd.Series) -> np.ndarray:
+# A nominee title that names no office ('公職候補者', printed in the PM confirmation hearings of the 16th
+# Assembly) takes its office from the committee: in a PM confirmation hearing committee
+# ('국무총리(이한동)임명동의에관한인사청문특별위원회') it is read as '국무총리후보자'. The nomination is still matched
+# by name and hearing date; link_method 'nomination:committee_title' marks these links.
+_OFFICELESS_NOMINEE_TITLES = frozenset({"公職候補者", "공직후보자"})
+_PM_HEARING_COMMITTEE_RE = re.compile(r"^국무총리\(.+\)임명동의에관한인사청문특별위원회$")
+COMMITTEE_PM_NOMINEE_TITLE = "국무총리후보자"
+
+
+def _committee_titles(out: pd.DataFrame, meetings: Optional[pd.DataFrame]) -> np.ndarray:
+    """Positional array: COMMITTEE_PM_NOMINEE_TITLE for a role-'nominee' turn with an office-less title
+    in a PM confirmation hearing committee (meetings.committee_raw), else None (the printed title holds)."""
+    res = np.full(len(out), None, dtype=object)
+    if meetings is None or "committee_raw" not in meetings.columns or "conf_num" not in out.columns:
+        return res
+    m = out["role"].eq("nominee").fillna(False).to_numpy(dtype=bool) & np.fromiter(
+        (_nk(x) in _OFFICELESS_NOMINEE_TITLES for x in out["speaker_pos"].to_numpy()), dtype=bool, count=len(out))
+    if not m.any():
+        return res
+    comm = out["conf_num"].map(meetings.drop_duplicates("conf_num").set_index("conf_num")["committee_raw"])
+    pm_comm = np.fromiter((bool(_PM_HEARING_COMMITTEE_RE.match(_nk(c))) for c in comm.to_numpy()), dtype=bool,
+                          count=len(out))
+    res[m & pm_comm] = COMMITTEE_PM_NOMINEE_TITLE
+    return res
+
+
+def _v2_nominee_scope(out: pd.DataFrame, idx: "SpellIndex", dkeys: pd.Series,
+                      titles: Optional[np.ndarray] = None) -> np.ndarray:
     """Positional mask of role-'nominee' turns whose title is a cabinet nominee title on the date
     (SpellIndex.nominee_title_lineage, e.g. '국무총리후보자' -> pm). They are linked like
-    minister_nominee; other nominees (대법관, 검찰총장, ...) keep link_method null."""
+    minister_nominee; other nominees (대법관, 검찰총장, ...) keep link_method null. `titles`: positional
+    replacement titles (None = the printed speaker_pos), see _committee_titles."""
     m = out["role"].isin(["nominee"]).to_numpy(dtype=bool)
     res = np.zeros(len(out), dtype=bool)
     pos = np.flatnonzero(m)
     if not len(pos):
         return res
-    cols = [out[c].to_numpy()[pos] for c in ("speaker_name", "speaker_pos", "ministry_normalized")]
+    printed = out["speaker_pos"].to_numpy()
+    if titles is not None:
+        printed = np.where(pd.notna(titles), titles, printed)
+    cols = [out["speaker_name"].to_numpy()[pos], printed[pos], out["ministry_normalized"].to_numpy()[pos]]
     cache = {}
     for j, t in zip(pos, zip(*cols, dkeys.to_numpy()[pos])):
         t = tuple(_nv(x) for x in t)
@@ -1385,9 +1418,11 @@ def enrich(turns: pd.DataFrame, meetings: Optional[pd.DataFrame] = None, *,
     diag["panel"] = "v2" if v2 else "legacy_296"
     diag["panel_release"] = idx.version if v2 else os.path.basename(LEGACY_PANEL_PATH)
     link_mask = out["role"].isin(LINK_ROLES).fillna(False).to_numpy(dtype=bool)
+    ctitle = _committee_titles(out, meetings) if v2 else np.full(n, None, dtype=object)
     if v2:
-        nom_scope = _v2_nominee_scope(out, idx, dkeys)
+        nom_scope = _v2_nominee_scope(out, idx, dkeys, ctitle)
         diag["nominee_cabinet_title_turns"] = int(nom_scope.sum())
+        diag["nominee_committee_title_turns"] = int(pd.notna(ctitle).sum())
         link_mask = link_mask | nom_scope
     pid = np.full(n, None, dtype=object)
     dual = np.full(n, None, dtype=object)
@@ -1417,7 +1452,7 @@ def enrich(turns: pd.DataFrame, meetings: Optional[pd.DataFrame] = None, *,
     posn = np.flatnonzero(link_mask & ~blocked_low & ~blocked_inc & ~blocked_former)
     if v2 and len(posn):
         names = out["speaker_name"].to_numpy()[posn]
-        poss = out["speaker_pos"].to_numpy()[posn]
+        poss = np.where(pd.notna(ctitle[posn]), ctitle[posn], out["speaker_pos"].to_numpy()[posn])
         mins = out["ministry_normalized"].to_numpy()[posn]
         dks = dkeys.to_numpy()[posn]
         rls = out["role"].to_numpy()[posn]
@@ -1429,6 +1464,8 @@ def enrich(turns: pd.DataFrame, meetings: Optional[pd.DataFrame] = None, *,
                 r = cache[t] = idx.link(*t)
             pid[j] = r.spell_id or r.acting_id
             dual[j], meth[j], lname[j] = r.dual_office, r.method, r.name
+            if ctitle[j] is not None and r.method == "nomination:hearing":
+                meth[j] = "nomination:committee_title"
             v2cols["minister_spell_id"][j], v2cols["minister_nomination_id"][j] = r.spell_id, r.nomination_id
             v2cols["minister_acting_id"][j], v2cols["minister_person_id"][j] = r.acting_id, r.person_id
             v2cols["minister_lineage"][j] = r.lineage

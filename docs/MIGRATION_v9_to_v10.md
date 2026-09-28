@@ -13,7 +13,7 @@ This file shows how to move an analysis from the v9 files (`all_speeches_16_22_v
 
 ## 2. Meetings: `crosswalk_meetings`
 
-`crosswalk_meetings_v10.parquet` has one row per v9 meeting (16,830 rows) and one row per v10 meeting that no v9 meeting carries (`relation` = `v10_only`).
+`crosswalk_meetings_v10.1.parquet` has one row per v9 meeting (16,830 rows) and one row per v10 meeting that no v9 meeting carries (`relation` = `v10_only`).
 
 Each v9 row has two v10 targets:
 
@@ -39,7 +39,7 @@ con = duckdb.connect()
 # v9 meetings mapped to the v10 meeting whose transcript they carry, primaries only
 m = con.sql("""
     SELECT v9_meeting_id, v9_source, relation, content_conf_num AS conf_num
-    FROM read_parquet('kr-hearings-v10/crosswalk_meetings_v10.parquet')
+    FROM read_parquet('kr-hearings-v10/crosswalk_meetings_v10.1.parquet')
     WHERE v9_meeting_id IS NOT NULL
       AND relation IN ('same', 'v9_wrong_content')
       AND NOT coalesce(is_second_copy, false)
@@ -62,7 +62,7 @@ The digits of a v9 id often equal the `conf_num` of a different meeting. In the 
 
 ## 3. Rows: `crosswalk_turns`
 
-`crosswalk_turns_v10.parquet` links v9 speech rows to v10 turns for every v9 meeting whose v10 meeting is built and aligned (`crosswalk_meetings.turn_alignment` = `aligned`). Every v9 row and every v10 turn of an aligned meeting appears, and the order is kept.
+`crosswalk_turns_v10.1.parquet` links v9 speech rows to v10 turns for every v9 meeting whose v10 meeting is built and aligned (`crosswalk_meetings.turn_alignment` = `aligned`). Every v9 row and every v10 turn of an aligned meeting appears, and the order is kept.
 
 | `match_type` | Meaning | Rows |
 |---|---|---|
@@ -83,9 +83,9 @@ rows = con.sql("""
     SELECT v.meeting_id, v.speech_order, v.role AS v9_role, v.ruling_status AS v9_ruling_status,
            c.match_type, t.conf_num, t.turn_seq, t.role, t.ruling_status, t.presidency_state
     FROM read_parquet('all_speeches_16_22_v9.parquet') v
-    JOIN read_parquet('kr-hearings-v10/crosswalk_turns_v10.parquet') c
+    JOIN read_parquet('kr-hearings-v10/crosswalk_turns_v10.1.parquet') c
       ON c.v9_meeting_id = v.meeting_id AND c.v9_speech_order = CAST(v.speech_order AS VARCHAR)
-    LEFT JOIN read_parquet('kr-hearings-v10/turns_t*_v10.parquet') t
+    LEFT JOIN read_parquet('kr-hearings-v10/turns_t*_v10.1.parquet') t
       ON t.conf_num = c.conf_num AND t.turn_seq = c.turn_seq
     WHERE c.match_type IN ('exact', 'normalized', 'similar')
 """).df()

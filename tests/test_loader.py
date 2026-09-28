@@ -10,16 +10,16 @@ def kh(tmp_path, monkeypatch):
     monkeypatch.setenv("KR_HEARINGS_CACHE", str(tmp_path))
     import kr_hearings_data._loader as L
     L = importlib.reload(L)
-    v = tmp_path / "v10"
+    v = tmp_path / L.LATEST_VERSION
     v.mkdir()
     pd.DataFrame({"conf_num": [1, 2, 3], "term": [20, 20, 21],
                   "hearing_type": ["상임위원회", "국정감사", "상임위원회"], "n_turns": [2, 1, 1]}
-                 ).to_parquet(v / "meetings_v10.parquet")
+                 ).to_parquet(v / f"meetings_{L.LATEST_VERSION}.parquet")
     pd.DataFrame({"conf_num": [1, 1, 2], "turn_seq": [1, 2, 1], "text": ["a", "b", "c"]}
-                 ).to_parquet(v / "turns_t20_v10.parquet")
-    pd.DataFrame({"conf_num": [3], "turn_seq": [1], "text": ["d"]}).to_parquet(v / "turns_t21_v10.parquet")
+                 ).to_parquet(v / f"turns_t20_{L.LATEST_VERSION}.parquet")
+    pd.DataFrame({"conf_num": [3], "turn_seq": [1], "text": ["d"]}).to_parquet(v / f"turns_t21_{L.LATEST_VERSION}.parquet")
     pd.DataFrame({"conf_num": [1], "leg_turn_seq": [1], "wit_turn_seq": [2], "hearing_type": ["상임위원회"]}
-                 ).to_parquet(v / "dyads_t20_v10.parquet")
+                 ).to_parquet(v / f"dyads_t20_{L.LATEST_VERSION}.parquet")
 
     def no_net(url, dest):
         raise AssertionError(f"unexpected download {url}")
@@ -30,6 +30,8 @@ def kh(tmp_path, monkeypatch):
 def test_asset_names(kh):
     assert kh._asset_name("turns", "v10", 21) == "turns_t21_v10.parquet"
     assert kh._asset_name("meetings", "v10") == "meetings_v10.parquet"
+    assert kh._asset_name("dyads", "v10.1", 16) == "dyads_t16_v10.1.parquet"
+    assert kh.LATEST_VERSION == "v10.1"
     with pytest.raises(ValueError, match="no longer distributed"):
         kh._asset_name("speeches", "v9")
     with pytest.raises(ValueError):

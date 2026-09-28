@@ -11,4 +11,4 @@ from kr_hearings_data._loader import (
 )
 
 __all__ = ["load_turns", "load_meetings", "load_dyads", "load_table", "load_speeches", "download", "info"]
-__version__ = "0.2.0"
+__version__ = "0.2.1"

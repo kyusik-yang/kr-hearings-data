@@ -2,6 +2,12 @@
 
 v10 is a rebuild from the official minutes, not an update of v9. This file lists every verified defect of the published v9 release (D1 to D12), what v10 does about it and which validation check guards it, followed by the other changes.
 
+## v10.1 (2026-09-28)
+
+- Prime-minister nominees of the 16th Assembly are linked to minister-data. The confirmation hearings of four nominees (이한동 in 2000, 장상, 장대환 and 김석수 in 2002), eight meetings in all, print the nominee as 公職候補者, a title that names no office. The office is now read from the name of the hearing committee, and all 4,193 turns link to their nominations (`link_method` `nomination:committee_title`). The 1,969 turns of the two appointed nominees also carry their appointment spell and `dual_office`.
+- Only the government link columns of these turns and the matching witness columns of 3,938 dyads changed. Every other table and column is identical to v10.
+- Package 0.2.1 reads v10.1 by default. The v10 files stay available in the release `v10`.
+
 ## Verified v9 defects
 
 | # | v9 defect | v10 |
@@ -83,7 +89,7 @@ v10 is a rebuild from the official minutes, not an update of v9. This file lists
 
 **v9.** 112 of the 252 numbers in the v9 README, CODEBOOK and PIPELINE do not match v9. No validation report was ever run on v9, and the existing count-based spot check would have failed it (73 of 100 meetings).
 
-**v10.** Every count in this documentation that describes the release was computed from the release tables by a query and checked against them before publication. `validate.py` also writes the counts it computes to `docs_numbers.json` in the build folder. The validation report is published with the release (`validation_report_v10.json`).
+**v10.** Every count in this documentation that describes the release was computed from the release tables by a query and checked against them before publication. `validate.py` also writes the counts it computes to `docs_numbers.json` in the build folder. The validation report is published with the release (`validation_report_v10.1.json`).
 
 ### D12. Coverage
 
@@ -104,7 +110,7 @@ v10 is a rebuild from the official minutes, not an update of v9. This file lists
 
 - The meeting-level tables `meetings`, `agenda`, `agenda_header`, `events`, `footer`, `attendance`, `rollcall` and `rollcall_groups` are new.
 - The crosswalk tables `crosswalk_meetings` and `crosswalk_turns` are new.
-- The release assets are one Parquet file per table, and one file per term for turns and dyads (`turns_t16_v10.parquet` to `turns_t22_v10.parquet`, `dyads_t16_v10.parquet` to `dyads_t22_v10.parquet`), with `MANIFEST_v10.json`, `validation_report_v10.json` and `SHA256SUMS`.
+- The release assets are one Parquet file per table, and one file per term for turns and dyads (`turns_t16_v10.1.parquet` to `turns_t22_v10.1.parquet`, `dyads_t16_v10.1.parquet` to `dyads_t22_v10.1.parquet`), with `MANIFEST_v10.1.json`, `validation_report_v10.1.json` and `SHA256SUMS`.
 - The dyad file is slim (39 columns). Other attributes join from the turns table on both turn positions.
 
 ### Turns

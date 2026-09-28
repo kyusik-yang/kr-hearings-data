@@ -703,7 +703,7 @@ FX_ALIASES = ("외교통상부장관", "외교통상부", "외교통상부차관
               "기획예산처", "법무부장관직무대행", "법무부장관", "법무부", "여성가족부장관후보자", "여성가족부장관", "여성가족부",
               "국가보훈처장", "산업자원부장관", "고용노동부장관", "부총리겸재정경제부장관", "재정경제부", "보건복지부장관",
               "보건복지부")
-FX_NOMS = ("N20b674a7", "Na5cc0d87", "N9ba2e231", "N585dce57")
+FX_NOMS = ("N20b674a7", "Na5cc0d87", "N9ba2e231", "N585dce57", "Nfa515ca2")
 FX_ACTING = ("H03914c1e", "Hba9ce0b1", "Hc11b4406", "H5c770c41")
 FX_VARIANTS = ("진임",)
 
@@ -974,6 +974,29 @@ def test_v2_dual_office_at_speech_date(v2):
 # ------------------------------------------------------------------ enrich (v2) contract, gates, admin
 @needs_cal
 @needs_v2_release
+def test_v2_officeless_nominee_title_takes_the_pm_committee(v2):
+    # 16th-Assembly PM hearings print the nominee as '公職候補者' (no office); the committee names the office
+    comm = "국무총리(이한동)임명동의에관한인사청문특별위원회"
+    t = pd.DataFrame({"conf_num": [1, 1, 1, 2, 1],
+                      "turn_seq": [1, 2, 3, 1, 4],
+                      "speaker_pos": ["公職候補者", "公職候補者", "국무총리후보자", "公職候補者", "위원장"],
+                      "speaker_name": ["李漢東", "李漢東", "이한동", "李漢東", "홍길동"],
+                      "speech_date": ["2000-06-26", "2000-07-20", "2000-06-27", "2000-06-26", "2000-06-26"],
+                      "role": ["nominee", "nominee", "nominee", "nominee", "chair"]})
+    m = pd.DataFrame({"conf_num": [1, 2], "date": ["2000-06-26", "2000-06-26"],
+                      "committee_raw": [comm, "법제사법위원회"]})
+    out = G.enrich(t, m, panel_index=v2)
+    r = out.iloc[0]
+    assert (r.link_method, r.minister_nomination_id, r.minister_spell_id, r.minister_lineage, r.gov_link_name) == \
+        ("nomination:committee_title", "Nfa515ca2", "P0daf481c-pm-1", "pm", "이한동")
+    assert out.iloc[1].link_method == "unlinked:outside_hearing"            # not a hearing date
+    assert out.iloc[2].link_method == "nomination:hearing"                  # printed office: unchanged rule
+    assert pd.isna(out.iloc[3].link_method)                                 # other committee: not in scope
+    assert pd.isna(out.iloc[4].link_method)
+    assert out.attrs["government"]["nominee_committee_title_turns"] == 2
+    assert pd.isna(G.enrich(t, None, panel_index=v2).iloc[0].link_method)  # no meetings: printed title only
+
+
 def test_v2_enrich_columns_gates_and_admin(v2, stub_index):
     t = pd.DataFrame({"conf_num": [9] * 7, "turn_seq": list(range(1, 8)),
                       "speaker_pos": ["외교통상부장관", "외교통상부장관", "외교통상부장관", "(전)외교통상부장관",
