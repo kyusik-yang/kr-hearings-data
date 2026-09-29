@@ -240,6 +240,7 @@ The main ones are below. [docs/CODEBOOK.md](docs/CODEBOOK.md#known-limitations) 
 - [docs/PIPELINE.md](docs/PIPELINE.md) describes how the release is built and validated and how to reproduce it.
 - [docs/CHANGELOG.md](docs/CHANGELOG.md) lists the verified v9 defects and the v10 changes.
 - [docs/MIGRATION_v9_to_v10.md](docs/MIGRATION_v9_to_v10.md) shows how to move an analysis from v9 to v10.
+- The [summary dashboard](https://kyusik-yang.github.io/kr-hearings-data/) summarizes the current release. It shows counts, compositions and lists of meetings, legislators, government bodies, ministers and confirmation hearings, with a link to the official minutes of each meeting. It holds no speech text.
 - [docs/v9/CODEBOOK_v9.md](docs/v9/CODEBOOK_v9.md) keeps the v9 codebook for readers who hold the v9 files, and [docs/v9/PIPELINE_v9.md](docs/v9/PIPELINE_v9.md) the v9 pipeline description that `v10/code/legacy_rules.py` reconstructs.
 
 ## Citation

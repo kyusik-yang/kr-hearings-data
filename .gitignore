@@ -20,6 +20,7 @@ v10/*
 !v10/code/
 v10/code/*
 !v10/code/pipeline/
+!v10/code/dashboard/
 !v10/code/crawl.py
 !v10/code/build_crawl_tasks.py
 !v10/code/parse_viewer.py

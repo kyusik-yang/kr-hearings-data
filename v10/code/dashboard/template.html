@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>kr-hearings-data 요약 · Summary</title>
+<meta name="description" content="kr-hearings-data 릴리스 요약. 국회 회의록의 회의, 발언 턴, 의원-증인 질의응답 쌍의 건수와 구성.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --page: #f3f5f7; --surface: #fcfdfd; --surface-2: #eef1f4; --band: #e9edf1;
+  --ink: #101419; --ink-2: #4a525d; --muted: #7f8792; --grid: #e1e5ea; --axis: #c3c9d1;
+  --ring: rgba(16, 20, 25, 0.10); --accent: #2a78d6; --accent-ink: #1c5cab; --accent-wash: rgba(42, 120, 214, 0.10);
+  --s0: #2a78d6; --s1: #eb6834; --s2: #1baf7a; --s3: #eda100; --s4: #8c63d9; --s5: #d03b3b; --s6: #7f8792; --s7: #16a3b4;
+  --shadow: 0 1px 2px rgba(16,20,25,.06), 0 8px 24px rgba(16,20,25,.06);
+  --sans: "IBM Plex Sans KR", system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0f12; --surface: #15181c; --surface-2: #1d2126; --band: #1a1e23;
+    --ink: #f3f5f7; --ink-2: #c1c7cf; --muted: #8b939e; --grid: #262b31; --axis: #3a4048;
+    --ring: rgba(255,255,255,0.10); --accent: #3987e5; --accent-ink: #86b6ef; --accent-wash: rgba(57,135,229,0.16);
+    --s0: #3987e5; --s1: #d95926; --s2: #199e70; --s3: #c98500; --s4: #9b7be0; --s5: #d85353; --s6: #8b939e; --s7: #1bb3c5;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0f12; --surface: #15181c; --surface-2: #1d2126; --band: #1a1e23;
+  --ink: #f3f5f7; --ink-2: #c1c7cf; --muted: #8b939e; --grid: #262b31; --axis: #3a4048;
+  --ring: rgba(255,255,255,0.10); --accent: #3987e5; --accent-ink: #86b6ef; --accent-wash: rgba(57,135,229,0.16);
+  --s0: #3987e5; --s1: #d95926; --s2: #199e70; --s3: #c98500; --s4: #9b7be0; --s5: #d85353; --s6: #8b939e; --s7: #1bb3c5;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--page); color: var(--ink); font-family: var(--sans); font-size: 14px; line-height: 1.55; }
+.wrap { max-width: 1280px; margin: 0 auto; padding: 28px 20px 64px; display: grid; gap: 20px; }
+@media (max-width: 600px) { .wrap { padding-inline: 16px; } }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+.num, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+a { color: var(--accent-ink); }
+.head { display: grid; gap: 10px; }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.badge { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .04em; padding: 2px 10px; border-radius: 999px;
+  background: var(--accent-wash); color: var(--accent-ink); margin-right: 8px; vertical-align: middle; }
+.head h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; }
+.head h1 .ko { display: block; font-size: .55em; font-weight: 500; color: var(--ink-2); letter-spacing: 0; margin-top: 6px; }
+.lede { max-width: 78ch; color: var(--ink-2); margin: 0; }
+.stamp { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 3px 10px; border-radius: 999px;
+  background: var(--surface); box-shadow: inset 0 0 0 1px var(--ring); color: var(--ink-2); text-decoration: none; }
+.chip b { color: var(--ink); font-weight: 600; }
+a.chip:hover { box-shadow: inset 0 0 0 1px var(--accent); }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
+.kpi .v { font-family: var(--mono); font-size: 22px; font-weight: 500; }
+.kpi .l { color: var(--muted); font-size: 12px; }
+.card { background: var(--surface); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow); min-width: 0; }
+.card-h { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.card-h h2 { font-size: 17px; font-weight: 600; }
+.card-h h2 small { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 6px; }
+.card-note { color: var(--muted); font-size: 12.5px; margin: 0 0 10px; max-width: 90ch; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr)); gap: 20px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--ink-2); margin-bottom: 8px; }
+.legend i.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+svg text { fill: var(--muted); font-family: var(--mono); font-size: 10.5px; }
+.chartbox { width: 100%; overflow-x: auto; }
+.ghost { background: transparent; border: 0; box-shadow: inset 0 0 0 1px var(--ring); border-radius: 8px; padding: 4px 10px;
+  cursor: pointer; color: var(--ink-2); font-size: 12.5px; }
+.ghost:hover { box-shadow: inset 0 0 0 1px var(--accent); color: var(--ink); }
+.ghost[aria-pressed="true"] { background: var(--accent-wash); color: var(--accent-ink); box-shadow: inset 0 0 0 1px var(--accent); }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 10px; }
+.filters label { font-size: 12px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+.filters select, .filters input[type=search] { background: var(--surface-2); border: 0; border-radius: 8px; padding: 5px 9px;
+  box-shadow: inset 0 0 0 1px var(--ring); }
+.filters input[type=search] { min-width: 220px; }
+.fcount { font-size: 12px; color: var(--muted); margin-left: auto; }
+.tbl-wrap { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.data th, table.data td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+table.data th { font-weight: 600; color: var(--ink-2); font-size: 12px; cursor: pointer; white-space: nowrap; user-select: none; }
+table.data th.num, table.data td.num { text-align: right; }
+table.data td.num, table.data td.nw { white-space: nowrap; }
+table.data th[aria-sort="ascending"]::after { content: " ▲"; font-size: 9px; }
+table.data th[aria-sort="descending"]::after { content: " ▼"; font-size: 9px; }
+table.data td .sub { color: var(--muted); font-size: 12px; }
+table.mini { font-size: 12px; }
+.pager { display: flex; gap: 10px; align-items: center; justify-content: flex-end; margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+.tag { display: inline-block; font-size: 11px; padding: 0 6px; border-radius: 4px; background: var(--surface-2); color: var(--ink-2); margin-left: 4px; }
+.methods { display: grid; gap: 8px; color: var(--ink-2); font-size: 13px; max-width: 100ch; }
+.methods p { margin: 0; }
+.methods code { font-family: var(--mono); font-size: 12px; background: var(--surface-2); padding: 0 4px; border-radius: 4px; }
+footer { color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="head">
+    <div class="eyebrow"><span class="badge">요약 · Summary</span>국회 회의록 발언 데이터 16-22대</div>
+    <h1>kr-hearings-data Summary<span class="ko">국회 회의록 발언 데이터 요약 대시보드</span></h1>
+    <p class="lede">이 페이지는 kr-hearings-data 릴리스의 <b>요약</b>입니다. 회의, 발언 턴, 의원-증인 질의응답 쌍(dyad)의 건수와 구성, 그리고 회의·의원·정부 기관·장관·인사청문회 목록만 담았습니다. 발언 원문과 분석 결과는 들어 있지 않습니다. 원문은 각 회의에 연결된 국회 공식 회의록에서 볼 수 있고, 전체 데이터는 GitHub 릴리스와 PyPI 패키지로 받을 수 있습니다.</p>
+    <div class="stamp" id="stamp"></div>
+  </header>
+
+  <section class="kpis" id="kpis" aria-label="요약 지표"></section>
+
+  <section class="card">
+    <div class="card-h"><h2>월별 회의 수 <small>meetings per month</small></h2></div>
+    <p class="card-note">회의 날짜 기준입니다. 막대 위에 마우스를 올리면 그 달의 유형별 회의 수가 보입니다.</p>
+    <div class="legend" id="monthLegend"></div>
+    <div class="chartbox" id="monthChart"></div>
+  </section>
+
+  <div class="grid2">
+    <section class="card">
+      <div class="card-h"><h2>대수별 회의 <small>meetings by term and type</small></h2></div>
+      <p class="card-note">회의 유형은 Open API의 회의 분류입니다. 상임위원회가 연 인사청문회는 상임위원회로 셉니다.</p>
+      <div class="legend" id="typeLegend"></div>
+      <div class="chartbox" id="typeChart"></div>
+      <button class="ghost" type="button" data-t="typeTable">표로 보기</button>
+      <div id="typeTable" hidden></div>
+    </section>
+    <section class="card">
+      <div class="card-h"><h2>발언 주체 구성 <small>turns by speaker group</small></h2></div>
+      <p class="card-note">대수별 발언 턴의 구성 비율입니다. 의원에는 위원장·의장 발언이 포함되고, 제외는 위원회 직원 등 질의응답 쌍에서 빼는 발언입니다.</p>
+      <div class="legend" id="groupLegend"></div>
+      <div class="chartbox" id="groupChart"></div>
+      <button class="ghost" type="button" data-t="groupTable">표로 보기</button>
+      <div id="groupTable" hidden></div>
+    </section>
+    <section class="card">
+      <div class="card-h"><h2>의원 발언의 여야 구성 <small>legislator turns by ruling status</small></h2></div>
+      <p class="card-note">발언일의 대통령 소속 정당 계보를 여당으로 보는 데이터의 규칙을 따릅니다. 권한대행 기간 등은 미상으로 둡니다.</p>
+      <div class="legend" id="rulingLegend"></div>
+      <div class="chartbox" id="rulingChart"></div>
+      <button class="ghost" type="button" data-t="rulingTable">표로 보기</button>
+      <div id="rulingTable" hidden></div>
+    </section>
+    <section class="card">
+      <div class="card-h"><h2>역할별 발언 수 <small>turns by role</small></h2></div>
+      <p class="card-note">발언자 직함에서 분류한 역할입니다. 상위 15개 역할을 보여 줍니다.</p>
+      <div class="chartbox" id="roleChart"></div>
+      <button class="ghost" type="button" data-t="roleTable">표로 보기</button>
+      <div id="roleTable" hidden></div>
+    </section>
+  </div>
+
+  <section class="card" id="lists">
+    <div class="card-h"><h2>목록 <small>lists</small></h2><span class="card-note" id="listNote"></span></div>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="filters" id="filters"></div>
+    <div class="tbl-wrap"><table class="data" id="tbl"><thead></thead><tbody></tbody></table></div>
+    <div class="pager"><button class="ghost" id="prev" type="button">이전</button><span id="pageInfo"></span><button class="ghost" id="next" type="button">다음</button></div>
+  </section>
+
+  <section class="card">
+    <div class="card-h"><h2>이 요약에 대해 <small>about this summary</small></h2></div>
+    <div class="methods" id="methods"></div>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script id="data" type="application/json">/*__DATA__*/null</script>
+<script>
+"use strict";
+const D = JSON.parse(document.getElementById("data").textContent);
+const M = D.meta, C = M.counts;
+const fmt = n => n == null ? "" : Number(n).toLocaleString("en-US");
+const short = n => n >= 1e6 ? (n / 1e6).toFixed(1) + "M" : n >= 1e3 ? (n / 1e3).toFixed(1) + "K" : String(n);
+const esc = s => s == null ? "" : String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const COLORS = ["var(--s0)", "var(--s1)", "var(--s2)", "var(--s3)", "var(--s4)", "var(--s5)", "var(--s6)", "var(--s7)"];
+const TERMS = [16, 17, 18, 19, 20, 21, 22];
+const GROUP_LABEL = {legislator: "의원", nonlegislator: "비의원 (정부·증인 등)", excluded: "제외 (직원 등)"};
+const RULING_LABEL = {ruling: "여당", opposition: "야당", independent: "무소속", unknown: "미상"};
+const OUTCOME_LABEL = {appointed: "임명", withdrawn: "지명 철회", nominee_withdrew: "후보자 사퇴", rejected: "국회 부결"};
+const REPO = "https://github.com/kyusik-yang/kr-hearings-data";
+// Korean names of the roles (docs/CODEBOOK.md section 8.1)
+const ROLE_LABEL = {legislator: "의원", chair: "위원장·의장", minister: "장관", minister_acting: "장관 직무대행",
+  minister_nominee: "장관 후보자", vice_minister: "차관", prime_minister: "국무총리", agency_head: "청장·검사장 등",
+  senior_bureaucrat: "실장·국장급", mid_bureaucrat: "정책관·과장급", witness: "증인", testifier: "진술인",
+  expert_witness: "참고인", nominee: "후보자 (국무위원 외)", public_corp_head: "공공기관장", org_head: "기관·단체장",
+  research_head: "연구기관장", financial_regulator: "금융감독기관", broadcasting: "방송기관", cooperative_head: "협동조합장",
+  local_gov_head: "지방자치단체장·교육감", military: "군", police: "경찰·소방", audit_official: "감사원",
+  election_official: "선거관리위원회", constitutional_court: "헌법재판소", assembly_official: "국회사무처",
+  independent_official: "위원회·독립기관", private_sector: "민간", cultural_institution_head: "문화기관장",
+  other_official: "기타 공무원", committee_staff: "위원회 직원 (전문위원 등)", other: "기타", unknown: "미상"};
+const roleName = r => ROLE_LABEL[r] ?? r;
+
+// ---------------------------------------------------------------- header, KPIs, notes
+function buildHeader() {
+  const v = M.validation || {};
+  const chips = [
+    `<span class="chip">릴리스 <b>${esc(M.version)}</b></span>`,
+    `<span class="chip">기간 <b>${esc(C.date_min)} ~ ${esc(C.date_max)}</b></span>`,
+    `<span class="chip">검증 <b>${fmt(v.PASS)} 통과</b> · 실패 ${fmt(v.FAIL)} · 경고 ${fmt(v.WARN)}</span>`,
+    `<a class="chip" href="${REPO}">GitHub</a>`,
+    `<a class="chip" href="https://pypi.org/project/kr-hearings-data/">PyPI</a>`,
+    `<a class="chip" href="${REPO}/blob/main/docs/CODEBOOK.md">Codebook</a>`,
+    `<a class="chip" href="https://kyusik-yang.github.io/minister-data/">Korean Cabinet Explorer</a>`,
+  ];
+  document.getElementById("stamp").innerHTML = chips.join("");
+  const k = [[C.meetings, "회의 meetings"], [C.turns, "발언 턴 speaker turns"], [C.dyads, "질의응답 쌍 dyads"],
+             [C.legislators, "발언한 의원 legislators"], [C.orgs, "정부 기관 government bodies"],
+             [C.ministers, "장관 재임 minister spells"], [C.hearings, "인사청문 회의 confirmation hearings"]];
+  document.getElementById("kpis").innerHTML = k.map(([v, l]) =>
+    `<div class="kpi"><div class="v">${fmt(v)}</div><div class="l">${l}</div></div>`).join("");
+}
+
+function buildMethods() {
+  const v = M.validation || {};
+  const items = [
+    `<b>요약입니다.</b> 이 페이지는 릴리스 ${esc(M.version)}(빌드 ${esc(M.run_id)})에서 계산한 건수와 비율, 목록만 보여 줍니다. 해석이나 분석 결과는 담지 않습니다. 원자료와 정의는 <a href="${REPO}/blob/main/docs/CODEBOOK.md">Codebook</a>, 만든 과정은 <a href="${REPO}/blob/main/docs/PIPELINE.md">Pipeline</a>, 버전별 변경은 <a href="${REPO}/blob/main/docs/CHANGELOG.md">Changelog</a>에 있습니다.`,
+    `<b>출처.</b> 국회 회의록 시스템(record.assembly.go.kr)의 발언자별 XML과, 18대 등 XML이 없는 회의의 HWP 회의록입니다. 회의 목록은 국회 Open API와 뷰어 ID 공백 조사로 만들었습니다. 장관·총리 이름과 재임은 <a href="https://github.com/kyusik-yang/minister-data">minister-data</a> v2.0.0과 연결했습니다.`,
+    `<b>단위.</b> 발언 턴은 회의록에서 한 발언자가 이어서 말한 한 덩어리입니다. 질의응답 쌍(dyad)은 번호가 이웃한 의원 발언과 비의원 발언의 쌍이며, 한 발언이 앞뒤 두 쌍에 들어갈 수 있습니다. 의원 목록의 dyad 수가 발언 턴 수보다 클 수 있는 이유입니다.`,
+    `<b>목록.</b> 회의마다 원문으로 가는 링크를 달았습니다. XML로 만든 회의는 회의록 뷰어로, HWP로 만든 회의는 공식 PDF로 연결됩니다. 서로 같은 내용으로 확인된 회의 사본 ${fmt(D.meetings.filter(m => m[11]).length)}건은 발언이 비어 있고 "중복 사본"으로 표시됩니다.`,
+    `<b>검증.</b> 릴리스 검증 ${fmt((v.PASS || 0) + (v.FAIL || 0) + (v.WARN || 0) + (v.SKIP || 0))}개 항목 가운데 ${fmt(v.PASS)}개가 통과했고 실패는 ${fmt(v.FAIL)}개입니다. 경고 ${fmt(v.WARN)}개는 문서화된 원자료의 특성입니다.`,
+    `<b>전체 데이터.</b> <code>pip install kr-hearings-data</code> 후 <code>load_turns</code>, <code>load_dyads</code>, <code>load_meetings</code>로 읽거나, <a href="${REPO}/releases">GitHub 릴리스</a>에서 Parquet 파일을 받습니다. 라이선스는 CC BY 4.0입니다.`,
+  ];
+  document.getElementById("methods").innerHTML = items.map(x => `<p>${x}</p>`).join("");
+  document.getElementById("foot").innerHTML =
+    `kr-hearings-data ${esc(M.version)} 요약 대시보드 · 빌드 ${esc(M.run_id)} · 페이지 생성 ${esc((M.built || "").slice(0, 10))}`;
+}
+
+// ---------------------------------------------------------------- charts
+function legend(el, labels, colors) {
+  document.getElementById(el).innerHTML = labels.map((l, i) =>
+    `<span><i class="sw" style="background:${colors[i]}"></i>${esc(l)}</span>`).join("");
+}
+
+// stacked vertical bars: cats = x labels, keys = series, val(cat, key) -> number
+function stacked(el, cats, keys, colors, val, opt = {}) {
+  const W = opt.width || Math.max(560, cats.length * (opt.bw || 60)), H = opt.height || 240;
+  const L = 52, R = 10, T = 10, B = opt.xlabels === false ? 12 : 26;
+  const totals = cats.map(c => keys.reduce((s, k) => s + (val(c, k) || 0), 0));
+  const max = opt.percent ? 1 : Math.max(1, ...totals);
+  const x0 = i => L + i * (W - L - R) / cats.length, bw = Math.max(1, (W - L - R) / cats.length * (opt.gap ?? 0.72));
+  const y = v => T + (H - T - B) * (1 - v / max);
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(opt.label || "")}">`;
+  for (let g = 0; g <= 4; g++) {
+    const v = max * g / 4, yy = y(v);
+    s += `<line x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}" stroke="var(--grid)"/>`;
+    s += `<text x="${L - 6}" y="${yy + 3}" text-anchor="end">${opt.percent ? Math.round(v * 100) + "%" : short(Math.round(v))}</text>`;
+  }
+  cats.forEach((c, i) => {
+    let acc = 0;
+    const tot = totals[i] || 1;
+    const lines = [];
+    keys.forEach((k, j) => {
+      const raw = val(c, k) || 0;
+      if (!raw) return;
+      const v = opt.percent ? raw / tot : raw;
+      const y1 = y(acc + v), y0 = y(acc);
+      s += `<rect x="${x0(i) + ((W - L - R) / cats.length - bw) / 2}" y="${y1}" width="${bw}" height="${Math.max(0, y0 - y1)}" fill="${colors[j]}"><title>${esc(opt.catLabel ? opt.catLabel(c) : c)} · ${esc(opt.keyLabel ? opt.keyLabel(k) : k)}: ${fmt(raw)}${opt.percent ? " (" + (100 * raw / tot).toFixed(1) + "%)" : ""}</title></rect>`;
+      acc += v;
+    });
+    if (opt.xlabels !== false && (!opt.every || i % opt.every === 0)) {
+      s += `<text x="${x0(i) + (W - L - R) / cats.length / 2}" y="${H - 8}" text-anchor="middle">${esc(opt.catLabel ? opt.catLabel(c) : c)}</text>`;
+    }
+  });
+  if (opt.ticks) opt.ticks.forEach(([i, lab]) => {
+    s += `<text x="${x0(i)}" y="${H - 8}" text-anchor="start">${esc(lab)}</text>`;
+    s += `<line x1="${x0(i)}" x2="${x0(i)}" y1="${H - B}" y2="${H - B + 4}" stroke="var(--axis)"/>`;
+  });
+  s += `<line x1="${L}" x2="${W - R}" y1="${H - B}" y2="${H - B}" stroke="var(--axis)"/></svg>`;
+  document.getElementById(el).innerHTML = s;
+}
+
+function miniTable(el, head, rows, numCols = []) {
+  document.getElementById(el).innerHTML = `<div class="tbl-wrap"><table class="data mini"><thead><tr>${head.map((h, i) =>
+    `<th class="${numCols.includes(i) ? "num" : ""}">${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(r =>
+    `<tr>${r.map((v, i) => `<td class="${numCols.includes(i) ? "num" : ""}">${numCols.includes(i) ? fmt(v) : esc(v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+
+function buildCharts() {
+  const types = D.types, tcol = types.map((_, i) => COLORS[i % COLORS.length]);
+  // monthly
+  const months = [], mv = {};
+  D.monthly.forEach(([ym, t, n]) => { (mv[ym] = mv[ym] || {})[t] = n; });
+  const first = C.date_min.slice(0, 7), last = C.date_max.slice(0, 7);
+  for (let [y, m] = first.split("-").map(Number); `${y}-${String(m).padStart(2, "0")}` <= last; m === 12 ? (y++, m = 1) : m++) {
+    months.push(`${y}-${String(m).padStart(2, "0")}`);
+  }
+  const ticks = months.map((ym, i) => [i, ym]).filter(([, ym]) => ym.endsWith("-01") && Number(ym.slice(0, 4)) % 2 === 0)
+    .map(([i, ym]) => [i, ym.slice(0, 4)]);
+  legend("monthLegend", types, tcol);
+  stacked("monthChart", months, types, tcol, (c, k) => (mv[c] || {})[k], {width: Math.max(900, months.length * 3.6), height: 220,
+    gap: 0.9, xlabels: false, ticks, label: "월별 회의 수"});
+  // by term and type
+  const bt = {}; D.by_type.forEach(([term, t, m, tu, dy]) => { (bt[term] = bt[term] || {})[t] = {m, tu, dy}; });
+  legend("typeLegend", types, tcol);
+  stacked("typeChart", TERMS, types, tcol, (c, k) => ((bt[c] || {})[k] || {}).m, {catLabel: c => c + "대", label: "대수별 회의"});
+  miniTable("typeTable", ["대수", "회의 유형", "회의", "발언 턴", "dyad"],
+    D.by_type.map(([term, t, m, tu, dy]) => [term + "대", t, m, tu, dy]), [2, 3, 4]);
+  // speaker groups
+  const gk = ["legislator", "nonlegislator", "excluded"], gv = {};
+  D.groups.forEach(([term, g, n]) => { (gv[term] = gv[term] || {})[g] = n; });
+  legend("groupLegend", gk.map(k => GROUP_LABEL[k]), [COLORS[0], COLORS[1], COLORS[6]]);
+  stacked("groupChart", TERMS, gk, [COLORS[0], COLORS[1], COLORS[6]], (c, k) => (gv[c] || {})[k],
+    {percent: true, catLabel: c => c + "대", keyLabel: k => GROUP_LABEL[k], label: "발언 주체 구성"});
+  miniTable("groupTable", ["대수", "구분", "발언 턴"], D.groups.map(([t, g, n]) => [t + "대", GROUP_LABEL[g] || g, n]), [2]);
+  // ruling status
+  const rk = ["ruling", "opposition", "independent", "unknown"], rv = {};
+  D.ruling.forEach(([term, s, n]) => { (rv[term] = rv[term] || {})[s] = n; });
+  const rcol = [COLORS[0], COLORS[1], COLORS[3], COLORS[6]];
+  legend("rulingLegend", rk.map(k => RULING_LABEL[k]), rcol);
+  stacked("rulingChart", TERMS, rk, rcol, (c, k) => (rv[c] || {})[k],
+    {percent: true, catLabel: c => c + "대", keyLabel: k => RULING_LABEL[k], label: "의원 발언의 여야 구성"});
+  miniTable("rulingTable", ["대수", "구분", "의원 발언 턴"], D.ruling.map(([t, s, n]) => [t + "대", RULING_LABEL[s] || s, n]), [2]);
+  // roles (horizontal bars)
+  const roles = D.roles.slice(0, 15), rmax = Math.max(...roles.map(r => r[2]));
+  const W = 560, rowH = 20, L = 170;
+  let s = `<svg viewBox="0 0 ${W} ${roles.length * rowH + 8}" width="${W}" height="${roles.length * rowH + 8}" role="img" aria-label="역할별 발언 수">`;
+  roles.forEach(([g, r, n], i) => {
+    const w = (W - L - 70) * n / rmax, yy = 4 + i * rowH;
+    s += `<text x="${L - 8}" y="${yy + 13}" text-anchor="end">${esc(roleName(r))}</text>`;
+    s += `<rect x="${L}" y="${yy + 3}" width="${w}" height="${rowH - 7}" rx="2" fill="${g === "legislator" ? COLORS[0] : g === "excluded" ? COLORS[6] : COLORS[1]}"><title>${esc(roleName(r))} (${esc(r)}): ${fmt(n)}</title></rect>`;
+    s += `<text x="${L + w + 6}" y="${yy + 13}">${short(n)}</text>`;
+  });
+  document.getElementById("roleChart").innerHTML = s + "</svg>";
+  miniTable("roleTable", ["구분", "역할", "코드", "발언 턴"], D.roles.map(([g, r, n]) => [GROUP_LABEL[g] || g, roleName(r), r, n]), [3]);
+  document.querySelectorAll("button[data-t]").forEach(b => b.addEventListener("click", () => {
+    const t = document.getElementById(b.dataset.t); t.hidden = !t.hidden; b.textContent = t.hidden ? "표로 보기" : "표 닫기";
+  }));
+}
+
+// ---------------------------------------------------------------- lists
+const link = (conf, src) => src === "x"
+  ? `<a href="${M.viewer.replace("{}", conf)}" target="_blank" rel="noopener">회의록</a>`
+  : `<a href="${M.pdf.replace("{}", conf)}" target="_blank" rel="noopener">PDF</a>`;
+const keyLabel = s => s ? s.split(" · ").map(k => D.key_labels[k] || k).join(", ") : "";
+const LISTS = {
+  meetings: {
+    label: "회의", note: `회의 ${fmt(C.meetings)}건. 제목·위원회·소위·감사반으로 검색합니다.`,
+    rows: () => D.meetings,
+    cols: [
+      {h: "날짜", v: r => r[1], s: r => r[1], nw: true},
+      {h: "대수", html: r => `${r[2]}대`, s: r => r[2], num: true},
+      {h: "유형", v: r => D.types[r[3]] ?? "", s: r => r[3], nw: true},
+      {h: "위원회", html: r => `${esc(D.comms[r[4]] ?? "")}${r[5] ? `<div class="sub">${esc(r[5])}</div>` : ""}${r[6] ? `<span class="tag">${esc(r[6])}</span>` : ""}${r[7] ? `<span class="tag">인사청문</span>` : ""}`, s: r => D.comms[r[4]] ?? ""},
+      {h: "제목", html: r => esc(r[10]) + (r[11] ? `<span class="tag">중복 사본</span>` : ""), s: r => r[10]},
+      {h: "발언 턴", v: r => r[8], s: r => r[8], num: true},
+      {h: "원문", html: r => link(r[0], r[9]), s: r => r[9], nw: true},
+    ],
+    text: r => `${D.comms[r[4]] ?? ""} ${r[5] ?? ""} ${r[6] ?? ""} ${r[10] ?? ""} ${r[0]}`,
+    filters: ["term", "type", "hearing"],
+    defaultSort: [0, -1],
+  },
+  legislators: {
+    label: "의원", note: "의원 역할로 발언하고 의원 코드가 연결된 발언을 셉니다. 정당은 마지막 발언일의 정당입니다.",
+    rows: () => D.legislators,
+    cols: [
+      {h: "이름", v: r => r[1], s: r => r[1]},
+      {h: "대수", v: r => r[2], s: r => r[2]},
+      {h: "발언 턴", v: r => r[3], s: r => r[3], num: true},
+      {h: "회의", v: r => r[4], s: r => r[4], num: true},
+      {h: "dyad", v: r => r[5], s: r => r[5], num: true},
+      {h: "최근 정당", v: r => r[6] ?? "", s: r => r[6] ?? ""},
+      {h: "주요 위원회 (발언 순)", v: r => keyLabel(r[7]), s: r => r[7] ?? ""},
+    ],
+    text: r => `${r[1]} ${r[0]} ${r[6] ?? ""} ${keyLabel(r[7])}`,
+    filters: ["termIn"],
+    defaultSort: [2, -1],
+  },
+  orgs: {
+    label: "정부 기관", note: "비의원 발언자의 소속을 정규화한 기관 이름입니다(부처 개편 전 이름은 그대로 둡니다).",
+    rows: () => D.orgs,
+    cols: [
+      {h: "기관", v: r => r[0], s: r => r[0]},
+      {h: "발언 턴", v: r => r[1], s: r => r[1], num: true},
+      {h: "회의", v: r => r[2], s: r => r[2], num: true},
+      {h: "dyad", v: r => r[3], s: r => r[3], num: true},
+      {h: "발언 연도", v: r => r[4] === r[5] ? r[4] : `${r[4]}-${r[5]}`, s: r => r[4], nw: true},
+    ],
+    text: r => r[0],
+    filters: [],
+    defaultSort: [1, -1],
+  },
+  ministers: {
+    label: "장관", note: "장관·총리 역할의 발언 가운데 minister-data 재임 기록에 연결된 것입니다. 겸직 턴은 발언일에 국회의원을 겸한 발언입니다.",
+    rows: () => D.ministers,
+    cols: [
+      {h: "이름", v: r => r[0], s: r => r[0]},
+      {h: "직위", v: r => r[1], s: r => r[1]},
+      {h: "재임", v: r => `${r[2] ?? ""} ~ ${r[3] ?? "재임 중"}`, s: r => r[2], nw: true},
+      {h: "발언 턴", v: r => r[4], s: r => r[4], num: true},
+      {h: "회의", v: r => r[5], s: r => r[5], num: true},
+      {h: "겸직 턴", v: r => r[6], s: r => r[6], num: true},
+      {h: "발언 기간", v: r => `${r[7] ?? ""} ~ ${r[8] ?? ""}`, s: r => r[7], nw: true},
+    ],
+    text: r => `${r[0]} ${r[1]}`,
+    filters: [],
+    defaultSort: [3, -1],
+  },
+  hearings: {
+    label: "인사청문회", note: `인사청문 회의로 표시된 ${fmt(C.hearings)}건입니다. 결과는 minister-data 지명 기록과 연결된 국무총리·국무위원 후보자만 있습니다.`,
+    rows: () => D.hearings,
+    cols: [
+      {h: "날짜", v: r => r[1], s: r => r[1], nw: true},
+      {h: "위원회", html: r => `${esc(r[4] ?? "")}<div class="sub">${esc(r[3] ?? "")}</div>`, s: r => r[4] ?? ""},
+      {h: "후보자", v: r => r[5] ?? "", s: r => r[5] ?? ""},
+      {h: "직위", v: r => r[6] ?? "", s: r => r[6] ?? ""},
+      {h: "결과", v: r => OUTCOME_LABEL[r[7]] ?? "", s: r => r[7] ?? ""},
+      {h: "발언 턴", v: r => r[8], s: r => r[8], num: true},
+      {h: "원문", html: r => link(r[0], D.meetings.find(m => m[0] === r[0])?.[9] ?? "x"), s: r => 0, nw: true},
+    ],
+    text: r => `${r[4] ?? ""} ${r[5] ?? ""} ${r[6] ?? ""}`,
+    filters: ["term"],
+    defaultSort: [0, -1],
+  },
+};
+
+const state = {list: "meetings", q: "", term: "", type: "", hearing: false, sort: null, page: 0};
+const PAGE = 50;
+
+function buildTabs() {
+  document.getElementById("tabs").innerHTML = Object.entries(LISTS).map(([k, L]) =>
+    `<button class="ghost" role="tab" type="button" data-list="${k}" aria-pressed="${k === state.list}">${L.label}</button>`).join("");
+  document.querySelectorAll("#tabs button").forEach(b => b.addEventListener("click", () => {
+    state.list = b.dataset.list; state.q = ""; state.term = ""; state.type = ""; state.hearing = false; state.sort = null; state.page = 0;
+    document.querySelectorAll("#tabs button").forEach(x => x.setAttribute("aria-pressed", x === b));
+    buildFilters(); render();
+  }));
+}
+
+function buildFilters() {
+  const L = LISTS[state.list];
+  let h = `<label>검색 <input type="search" id="q" placeholder="이름, 위원회, 제목" autocomplete="off"></label>`;
+  if (L.filters.includes("term") || L.filters.includes("termIn")) {
+    h += `<label>대수 <select id="fterm"><option value="">전체</option>${TERMS.map(t => `<option value="${t}">${t}대</option>`).join("")}</select></label>`;
+  }
+  if (L.filters.includes("type")) {
+    h += `<label>유형 <select id="ftype"><option value="">전체</option>${D.types.map((t, i) => `<option value="${i}">${esc(t)}</option>`).join("")}</select></label>`;
+  }
+  if (L.filters.includes("hearing")) h += `<label><input type="checkbox" id="fhear"> 인사청문 회의만</label>`;
+  h += `<span class="fcount" id="fcount"></span>`;
+  document.getElementById("filters").innerHTML = h;
+  document.getElementById("listNote").textContent = L.note;
+  const on = (id, ev, f) => { const e = document.getElementById(id); if (e) e.addEventListener(ev, f); };
+  on("q", "input", e => { state.q = e.target.value.trim(); state.page = 0; render(); });
+  on("fterm", "change", e => { state.term = e.target.value; state.page = 0; render(); });
+  on("ftype", "change", e => { state.type = e.target.value; state.page = 0; render(); });
+  on("fhear", "change", e => { state.hearing = e.target.checked; state.page = 0; render(); });
+}
+
+function filtered() {
+  const L = LISTS[state.list];
+  const q = state.q.toLowerCase();
+  return L.rows().filter(r => {
+    if (q && !L.text(r).toLowerCase().includes(q)) return false;
+    if (state.term) {
+      if (state.list === "legislators") { if (!r[2].split("·").includes(state.term)) return false; }
+      else if (String(r[2]) !== state.term) return false;
+    }
+    if (state.type !== "" && String(r[3]) !== state.type) return false;
+    if (state.hearing && !r[7]) return false;
+    return true;
+  });
+}
+
+function render() {
+  const L = LISTS[state.list];
+  const [si, sd] = state.sort || L.defaultSort;
+  const rows = filtered().slice();
+  const key = L.cols[si].s;
+  rows.sort((a, b) => { const x = key(a), y = key(b); return (x > y ? 1 : x < y ? -1 : 0) * sd; });
+  const pages = Math.max(1, Math.ceil(rows.length / PAGE));
+  state.page = Math.min(state.page, pages - 1);
+  const view = rows.slice(state.page * PAGE, state.page * PAGE + PAGE);
+  const thead = document.querySelector("#tbl thead"), tbody = document.querySelector("#tbl tbody");
+  thead.innerHTML = `<tr>${L.cols.map((c, i) => `<th data-i="${i}" class="${c.num ? "num" : ""}" ${i === si ? `aria-sort="${sd > 0 ? "ascending" : "descending"}"` : ""}>${esc(c.h)}</th>`).join("")}</tr>`;
+  tbody.innerHTML = view.map(r => `<tr>${L.cols.map(c => `<td class="${c.num ? "num" : ""}${c.nw ? " nw" : ""}">${c.html ? c.html(r) : (c.num ? fmt(c.v(r)) : esc(c.v(r)))}</td>`).join("")}</tr>`).join("");
+  thead.querySelectorAll("th").forEach(th => th.addEventListener("click", () => {
+    const i = Number(th.dataset.i); const cur = state.sort || L.defaultSort;
+    state.sort = [i, cur[0] === i ? -cur[1] : (L.cols[i].num ? -1 : 1)]; render();
+  }));
+  document.getElementById("fcount").textContent = `${fmt(rows.length)}건`;
+  document.getElementById("pageInfo").textContent = `${state.page + 1} / ${pages}`;
+  document.getElementById("prev").disabled = state.page === 0;
+  document.getElementById("next").disabled = state.page >= pages - 1;
+}
+document.getElementById("prev").addEventListener("click", () => { state.page--; render(); });
+document.getElementById("next").addEventListener("click", () => { state.page++; render(); });
+
+buildHeader(); buildCharts(); buildTabs(); buildFilters(); render(); buildMethods();
+</script>
+</body>
+</html>
