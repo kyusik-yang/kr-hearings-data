@@ -120,7 +120,9 @@ BUILDER_VERSION = "1.2"
 #   speaker_pos_norm; NULL instead of empty strings; footer / attendance row_seq and
 #   attendance.duplicate_of_row_seq; audited agencies split outside parentheses (xml) and read from
 #   HWP covers.
-SOURCE_VERSION = {"xml": "1.8", "xlsx": "1.8", "hwp": "1.8"}
+# 1.9 (all sources, v10.3 2026-10-13): agenda.bill_no read from the item text where the source
+#   gives none (HWP), agenda.bill_no_full (see agenda_bill_numbers()).
+SOURCE_VERSION = {"xml": "1.9", "xlsx": "1.9", "hwp": "1.9"}
 PRODUCTION_SOURCES = ("xml", "hwp")
 # The stored version is '<SOURCE_VERSION>+<parser sha8>+<adapter code sha8>':
 #   parser sha8  - the parser module the adapter runs, hashed from the bytes that were executed
@@ -250,7 +252,7 @@ SCHEMAS = {
         ("label_has_text", B), ("label_misattributed", B), ("speaker_name_norm", S), ("speaker_pos_norm", S)]),
     "agenda": pa.schema([
         ("conf_num", I64), ("ordinal", I32), ("anchor", S), ("level", S), ("text", S),
-        ("bill_id", S), ("bill_no", S), ("is_continued", B), ("after_turn_seq", I32),
+        ("bill_id", S), ("bill_no", S), ("bill_no_full", S), ("is_continued", B), ("after_turn_seq", I32),
         ("bill_url", S), ("match_rule", S), ("source", S), ("term", I16)]),
     "agenda_header": pa.schema([
         ("conf_num", I64), ("item_seq", I32), ("section", S), ("head_id", S), ("level", S),
@@ -658,9 +660,44 @@ def mark_attendance_duplicates(rows, counters):
     return rows
 
 
+# digits of the serial part of a bill number (의안번호) after the two-digit term: 171718, 2100233
+BILL_SERIAL_WIDTH = {17: 4, 18: 5, 19: 5, 20: 5, 21: 5, 22: 5}
+
+
+def bill_no_full(printed, term):
+    """Full bill number from the number printed in an agenda item of the given term. The 17th to
+    21st print the serial without the term (1718 for 171718, 233 for 2100233), the 21st and 22nd
+    mostly the full number. None for other terms and for a number that fits neither form."""
+    width = BILL_SERIAL_WIDTH.get(_int_or_none(term))
+    if not printed or width is None:
+        return None
+    t = str(int(term))
+    if len(printed) == len(t) + width and printed.startswith(t):
+        return printed
+    if len(printed) <= width:
+        return t + printed.zfill(width)
+    return None
+
+
+def agenda_bill_numbers(rows, counters):
+    """bill_no from the item text where the source gives none (HWP items print '(의안번호 N)' in
+    the text, as the XML anchors do), and bill_no_full."""
+    for a in rows:
+        if a.get("bill_no") is None:
+            m = pv.BILL_NO_RE.search(a.get("text") or "")
+            if m:
+                a["bill_no"] = m.group(1)
+                counters["agenda_bill_no_from_text"] += 1
+        a["bill_no_full"] = bill_no_full(a.get("bill_no"), a.get("term"))
+        if a.get("bill_no") and a["bill_no_full"] is None:
+            counters["agenda_bill_no_unmatched_form"] += 1
+
+
 def finalize_tables(tables, counters):
-    """Steps shared by the adapters (1.8): row_seq for footer / attendance, attendance duplicates,
-    label flags, matching forms, NULL policy."""
+    """Steps shared by the adapters (1.9): row_seq for footer / attendance, attendance duplicates,
+    label flags, matching forms, agenda bill numbers, NULL policy."""
+    if "agenda" in tables:
+        agenda_bill_numbers(tables["agenda"], counters)
     if "footer" in tables:
         number_rows(tables["footer"])
     if "attendance" in tables:

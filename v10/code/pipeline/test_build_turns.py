@@ -1239,3 +1239,27 @@ def test_audit_team_from_viewer_turn_and_running_header():
     assert rh(["2010년도국감-기획재정제1반"], None) == "제1반"                  # committee unknown: 제N반 only
     assert rh(None, "행정안전위원회") is None
     assert B._running_header('{"meeting": {"running_header": ["x"]}}') == ["x"] and B._running_header(None) is None
+
+
+@pytest.mark.parametrize("printed,term,expected", [
+    ("1718", 17, "171718"), ("171718", 17, "171718"), ("24", 17, "170024"),
+    ("233", 21, "2100233"), ("2100233", 21, "2100233"), ("12345", 19, "1912345"),
+    ("2212345", 22, "2212345"),
+    ("117135", 21, None),          # neither the serial nor the full number of the term
+    ("2012345", 21, None),         # full number of another term
+    ("1718", 16, None), (None, 21, None), ("233", None, None),
+])
+def test_bill_no_full(printed, term, expected):
+    assert bt.bill_no_full(printed, term) == expected
+
+
+def test_agenda_bill_numbers():
+    c = Counter()
+    rows = [{"text": "1. 주택법 일부개정법률안(홍길동 의원 대표발의)(의안번호 1718)", "bill_no": None, "term": 17},
+            {"text": "2. 국회법 일부개정법률안(정부 제출)(의안번호 2100233)", "bill_no": "2100233", "term": 21},
+            {"text": "3. 2024년도 예산안", "bill_no": None, "term": 22},
+            {"text": "4. 노동조합법 일부개정법률안(의안번호 117135)", "bill_no": "117135", "term": 21}]
+    bt.finalize_tables({"agenda": rows}, c)
+    assert [r["bill_no"] for r in rows] == ["1718", "2100233", None, "117135"]
+    assert [r["bill_no_full"] for r in rows] == ["171718", "2100233", None, None]
+    assert c["agenda_bill_no_from_text"] == 1 and c["agenda_bill_no_unmatched_form"] == 1

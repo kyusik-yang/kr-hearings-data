@@ -2,6 +2,13 @@
 
 v10 is a rebuild from the official minutes, not an update of v9. This file lists every verified defect of the published v9 release (D1 to D12), what v10 does about it and which validation check guards it, followed by the other changes.
 
+## v10.3 (2026-10-13)
+
+- Agenda bill numbers. `agenda.bill_no` held the number printed in the viewer's anchor text and was null for the HWP minutes. It is now also read from the item text of the HWP minutes, which print `(의안번호 N)` in the same way (7,963 items, 7,733 of them in the 18th Assembly). The 17th to 20th Assembly almost always print the serial without the term, such as `1718` for bill 171718, so the new column `agenda.bill_no_full` gives the full number. It is set for 128,483 of the 128,485 items with a number, and every value is a bill of the Open API bill list. Two printed numbers fit neither form and have no full number.
+- `agenda.bill_id` is unchanged. It is the bill that the viewer links, and the viewer links an item by its title. Where an item prints its number, the link names another bill in 653 of 717 items of the 17th Assembly and 1,147 of 6,045 of the 19th, almost always one with the same title. Section 6.1 of the codebook gives the counts for every term. The kna cross-check found both issues.
+- Only the `agenda` table changed (`bill_no` on 7,963 rows and the new column `bill_no_full`). Every other table, including the turns and dyads, is identical to v10.2.
+- Package 0.2.3 reads v10.3 by default. The earlier files stay available in their releases.
+
 ## v10.2 (2026-09-28)
 
 - 국정감사 audit teams. `audit_team` was filled for the 16th Assembly only (145 meetings). It is now also read from the running header of the 18th-Assembly HWP files (193 meetings) and from the viewer header of the 19th to 22nd Assembly (535 meetings), 873 meetings in all. The 17th-Assembly minutes do not print the team, so those team sittings stay null. The kna cross-check against the v9 labels found the gap, and every recovered team agrees with the v9 label where one exists.
@@ -96,7 +103,7 @@ v10 is a rebuild from the official minutes, not an update of v9. This file lists
 
 **v9.** 112 of the 252 numbers in the v9 README, CODEBOOK and PIPELINE do not match v9. No validation report was ever run on v9, and the existing count-based spot check would have failed it (73 of 100 meetings).
 
-**v10.** Every count in this documentation that describes the release was computed from the release tables by a query and checked against them before publication. `validate.py` also writes the counts it computes to `docs_numbers.json` in the build folder. The validation report is published with the release (`validation_report_v10.2.json`).
+**v10.** Every count in this documentation that describes the release was computed from the release tables by a query and checked against them before publication. `validate.py` also writes the counts it computes to `docs_numbers.json` in the build folder. The validation report is published with the release (`validation_report_v10.3.json`).
 
 ### D12. Coverage
 
@@ -117,7 +124,7 @@ v10 is a rebuild from the official minutes, not an update of v9. This file lists
 
 - The meeting-level tables `meetings`, `agenda`, `agenda_header`, `events`, `footer`, `attendance`, `rollcall` and `rollcall_groups` are new.
 - The crosswalk tables `crosswalk_meetings` and `crosswalk_turns` are new.
-- The release assets are one Parquet file per table, and one file per term for turns and dyads (`turns_t16_v10.2.parquet` to `turns_t22_v10.2.parquet`, `dyads_t16_v10.2.parquet` to `dyads_t22_v10.2.parquet`), with `MANIFEST_v10.2.json`, `validation_report_v10.2.json` and `SHA256SUMS`.
+- The release assets are one Parquet file per table, and one file per term for turns and dyads (`turns_t16_v10.3.parquet` to `turns_t22_v10.3.parquet`, `dyads_t16_v10.3.parquet` to `dyads_t22_v10.3.parquet`), with `MANIFEST_v10.3.json`, `validation_report_v10.3.json` and `SHA256SUMS`.
 - The dyad file is slim (39 columns). Other attributes join from the turns table on both turn positions.
 
 ### Turns

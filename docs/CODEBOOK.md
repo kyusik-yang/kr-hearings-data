@@ -30,19 +30,19 @@
 
 | Table | File | Primary key | Rows |
 |---|---|---|---|
-| meetings | `meetings_v10.2.parquet` | `conf_num` | 26,264 |
-| turns | `turns_tNN_v10.2.parquet` | (`conf_num`, `turn_seq`) | 15,114,183 |
-| dyads | `dyads_tNN_v10.2.parquet` | (`conf_num`, `leg_turn_seq`, `wit_turn_seq`) | 11,279,607 |
-| agenda | `agenda_v10.2.parquet` | (`conf_num`, `ordinal`) | 377,889 |
-| agenda_header | `agenda_header_v10.2.parquet` | (`conf_num`, `item_seq`) | 508,708 |
-| events | `events_v10.2.parquet` | (`conf_num`, `event_seq`) | 162,504 |
-| footer | `footer_v10.2.parquet` | (`conf_num`, `row_seq`) | 5,301,479 |
-| attendance | `attendance_v10.2.parquet` | (`conf_num`, `row_seq`) | 1,395,805 |
-| rollcall | `rollcall_v10.2.parquet` | (`conf_num`, `vote_seq`, `vote_group`, `name_seq`) | 3,402,605 |
-| rollcall_groups | `rollcall_groups_v10.2.parquet` | (`conf_num`, `vote_seq`, `vote_group`) | 51,593 |
-| crosswalk_meetings | `crosswalk_meetings_v10.2.parquet` | `v9_meeting_id` for v9 rows, `conf_num` for `v10_only` rows | 26,872 |
-| crosswalk_turns | `crosswalk_turns_v10.2.parquet` | none (a v9 row can link to two turns and the reverse) | 8,603,114 |
-| duplicate_meetings | `duplicate_meetings_v10.2.parquet` | (`a`, `b`) | 5 |
+| meetings | `meetings_v10.3.parquet` | `conf_num` | 26,264 |
+| turns | `turns_tNN_v10.3.parquet` | (`conf_num`, `turn_seq`) | 15,114,183 |
+| dyads | `dyads_tNN_v10.3.parquet` | (`conf_num`, `leg_turn_seq`, `wit_turn_seq`) | 11,279,607 |
+| agenda | `agenda_v10.3.parquet` | (`conf_num`, `ordinal`) | 377,889 |
+| agenda_header | `agenda_header_v10.3.parquet` | (`conf_num`, `item_seq`) | 508,708 |
+| events | `events_v10.3.parquet` | (`conf_num`, `event_seq`) | 162,504 |
+| footer | `footer_v10.3.parquet` | (`conf_num`, `row_seq`) | 5,301,479 |
+| attendance | `attendance_v10.3.parquet` | (`conf_num`, `row_seq`) | 1,395,805 |
+| rollcall | `rollcall_v10.3.parquet` | (`conf_num`, `vote_seq`, `vote_group`, `name_seq`) | 3,402,605 |
+| rollcall_groups | `rollcall_groups_v10.3.parquet` | (`conf_num`, `vote_seq`, `vote_group`) | 51,593 |
+| crosswalk_meetings | `crosswalk_meetings_v10.3.parquet` | `v9_meeting_id` for v9 rows, `conf_num` for `v10_only` rows | 26,872 |
+| crosswalk_turns | `crosswalk_turns_v10.3.parquet` | none (a v9 row can link to two turns and the reverse) | 8,603,114 |
+| duplicate_meetings | `duplicate_meetings_v10.3.parquet` | (`a`, `b`) | 5 |
 | duplicate_turns | not a release asset (`duplicate_turns/tNN/part-*.parquet` in the build folder) | (`conf_num`, `turn_seq`) | 1,415 |
 | duplicate_dyads | not a release asset (`duplicate_dyads/tNN/dyads.parquet` in the build folder) | as dyads | 890 |
 
@@ -417,8 +417,9 @@ One row per agenda anchor printed in the body.
 | `anchor` | string | HWP | XML anchor id (`itemN`). |
 | `level` | string | HWP | XML anchor level class (`pl10`, `pl20`, `pl30`). |
 | `text` | string | anchor printed without text (39 rows) | Anchor text as printed. |
-| `bill_id` | string | no bill link | Bill id of the anchor's link (likms `billId`). XML only. |
-| `bill_no` | string | no bill number printed | Bill number (의안번호). XML only. HWP bill numbers are not extracted. |
+| `bill_id` | string | no bill link | Bill id of the anchor's link (likms `billId`), as the viewer gives it. XML only. The viewer links an item by its title, so items of bills that share a title often link the same one of them. Checked against the bill list of the Open API, the link names the bill of the printed number in 64 of the 717 items of the 17th Assembly that print one (8.9%), 4,898 of 6,045 of the 19th (81.0%) and 98.0% to 99.3% of the 20th to 22nd. In 97.4% of the other items the linked bill has the item's title. Use `bill_no_full` where it is set. |
+| `bill_no` | string | no bill number printed | Bill number (의안번호) as printed in the item text, `(의안번호 N)`. The 17th to 20th Assembly almost always print the serial without the term (`1718` for bill 171718), the 21st mostly the full number (52,811 of 54,304 items) and the 22nd always. HWP items are read from the text since v10.3 (7,963 items, 7,733 of them in the 18th). 128,485 items. |
+| `bill_no_full` | string | no bill number printed, or a printed number that fits neither form (2 items) | Full bill number. `bill_no` when it is the full number of the meeting's term, else the term followed by `bill_no` padded with zeros to four digits (17th) or five digits (18th to 22nd). Every value is a bill of the Open API bill list. Added in v10.3. |
 | `bill_url` | string | no bill link | Link printed with the anchor. |
 | `is_continued` | bool | never | The anchor is marked `(계속)`. |
 | `after_turn_seq` | int32 | never | Position of the anchor in the turn sequence. |
@@ -768,7 +769,7 @@ Meeting pairs flagged by the three duplicate checks (whole-meeting text, long tu
 | `near_identical` | Same number of turns, and at least 0.9 of them with equal normalized text. | Both kept, flagged in `overlap_with` and `overlap_kinds`. | 2 |
 | `partial` | Any other flagged pair. | Both kept, flagged in `overlap_with` and `overlap_kinds`. | 1 |
 
-The copy kept from an identical group is the one with the fewest mismatches between its printed date, sitting and committee and its Open API row, then the most matches, then the lower `conf_num`. 2 meetings are marked `duplicate_of` and 6 meetings carry an overlap flag. `duplicate_meetings_v10.2.parquet` records every pair with its evidence.
+The copy kept from an identical group is the one with the fewest mismatches between its printed date, sitting and committee and its Open API row, then the most matches, then the lower `conf_num`. 2 meetings are marked `duplicate_of` and 6 meetings carry an overlap flag. `duplicate_meetings_v10.3.parquet` records every pair with its evidence.
 
 In the release the whole-meeting text check found 2 identical pairs (35218 and 35291, 32740 and 32864). 32864 and 35218 are the removed copies. The near-duplicate checks also flagged 31578 and 31793 and 34499 and 34513, and 43313 and 43536 overlap partly. These are kept and flagged. The pair 42004 and 42009 found in the 2026-09-26 build is gone. The viewer XML of 42009 carried the minutes of 42004, so 42009 is now built from its HWP record (source_reason `override:xml_wrong_meeting`).
 
@@ -805,7 +806,7 @@ Counts are from the release tables unless a comment names another file.
 - **Speech outside speaker blocks.** Some XML pages print speech paragraphs outside the speaker blocks. They are kept as events of kind `other` (9,798 rows). Meeting 24614 has 674 such rows (75,450 non-whitespace characters). In meeting 28769 the turns hold 1,600 non-whitespace characters and such rows 7,716. Both meetings are built from viewer XML, because the cross-check against the HWP record did not flag them.
 - **Truncated or wrong viewer pages.** The viewer page of meeting 24997 holds 1 turn of 126 characters, while the printed record and the v9 XLSX rows of the same meeting (v9 29668) hold 130. The XML-vs-HWP cross-check sends 24997 and the other meetings whose viewer XML is incomplete or carries another meeting's minutes to their HWP files (26 meetings, `source_reason` starting `override:`). A viewer page that is incomplete by less than the cross-check's thresholds stays the source.
 - **Weak HWP labels.** 1,128 turns have a `medium` and 968 a `low` label confidence.
-- **HWP fields.** HWP files print no member id and no constituency, so `speaker_mem_id` and `speaker_area` are null for HWP turns. Agenda bill numbers are not extracted from HWP files. The HWP clock goes backwards in 2,016 turns (`time_regress`).
+- **HWP fields.** HWP files print no member id and no constituency, so `speaker_mem_id` and `speaker_area` are null for HWP turns. Agenda bill numbers of HWP files are read from the item text (since v10.3). The HWP clock goes backwards in 2,016 turns (`time_regress`).
 
 ### Speakers, roles and links
 
